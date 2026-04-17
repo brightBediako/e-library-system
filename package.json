@@ -8,6 +8,8 @@
   "scripts": {
     "dev:web": "npm run dev --workspace apps/web",
     "build:web": "npm run build --workspace apps/web",
-    "lint:web": "npm run lint --workspace apps/web"
+    "lint:web": "npm run lint --workspace apps/web",
+    "guard:no-next": "node ./scripts/check-no-next-cache.mjs",
+    "verify:repo": "npm run guard:no-next && npm run lint:web"
   }
 }
