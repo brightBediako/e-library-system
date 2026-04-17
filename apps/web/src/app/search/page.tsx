@@ -1,3 +1,4 @@
+import { DashboardShell } from "@/components/app-shell/DashboardShell";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 
 type NavItem = { label: string; icon: string; active?: boolean };
@@ -43,53 +44,18 @@ export const dynamic = "force-dynamic";
 
 export default function Page() {
   return (
-    <div className="bg-background text-on-background antialiased">
-      <nav className="fixed top-0 z-50 flex h-16 w-full items-center justify-between bg-white/80 px-6 shadow-sm backdrop-blur-xl">
-        <div className="flex items-center gap-8">
-          <span className="text-xl font-bold tracking-tighter text-blue-900">NMTC Library</span>
-          <div className="group hidden w-96 items-center rounded-lg bg-slate-100 px-3 py-1.5 focus-within:ring-2 ring-primary/20 md:flex">
-            <MaterialIcon icon="search" className="mr-2 text-slate-400" />
-            <input
-              className="w-full border-none bg-transparent text-sm text-on-surface-variant focus:ring-0"
-              defaultValue="Digital Archival Theory"
-              placeholder="Search across catalog..."
-              type="text"
-            />
-          </div>
-        </div>
-        <div className="flex items-center space-x-4">
-          <div className="mr-6 hidden space-x-6 lg:flex">
-            <button className="border-b-2 border-blue-900 font-semibold text-blue-900" type="button">Catalog</button>
-            <button className="text-slate-500 hover:text-blue-700" type="button">Circulation</button>
-            <button className="text-slate-500 hover:text-blue-700" type="button">Resources</button>
-          </div>
-          <div className="flex items-center space-x-2">
-            <button className="rounded-full p-2 text-slate-500 transition-colors hover:bg-slate-50" type="button">
-              <MaterialIcon icon="notifications" />
-            </button>
-            <button className="rounded-full p-2 text-slate-500 transition-colors hover:bg-slate-50" type="button">
-              <MaterialIcon icon="settings" />
-            </button>
-            <button className="ml-2 rounded-lg bg-primary-container px-4 py-1.5 text-sm font-medium text-on-primary-container" type="button">
-              Quick Action
-            </button>
-            <div className="ml-2 h-8 w-8 overflow-hidden rounded-full border border-slate-200 bg-slate-200">
-              <img
-                alt="User profile avatar"
-                className="h-full w-full object-cover"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuALTWjQ5FdASITBHC07vg6t_C-6y3d3RJi9-b-uLQmlMEJaoVzQcoPgvRKwgNQbfgwslMBm46m0puLS3j9M9HP1OaObp7xVVVKwzz7ZU90Dr05xepQ-1t2QwpGGqgNclIOYKxH76pwKhFDsF42hSMHBqClGao8ZXfiE_sI3EIBsmTkHp60_X1zVnyRd1JXn2IgDfvoOYPObcXgeWHptcivZAYLbl5NXnFAzyRULRg23wuZJlG8ZgKUuRaWnYOH5N9TlOPQHRy0rz0Q"
-              />
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      <aside className="fixed left-0 top-0 hidden h-screen w-64 flex-col space-y-2 bg-slate-50 px-4 py-6 md:flex">
+    <DashboardShell
+      rootClassName="text-on-background antialiased"
+      mainClassName="min-h-screen"
+      contentClassName="mx-auto grid max-w-[1600px] grid-cols-12 gap-8 p-8"
+      sidebarHeader={
         <div className="mb-10 px-2 pt-16">
           <h2 className="mb-1 text-xs font-black uppercase tracking-widest text-blue-900">The Scholarly Curator</h2>
           <p className="text-[10px] text-slate-500">NMTC Management</p>
         </div>
-        <nav className="flex-1 space-y-1">
+      }
+      sidebarNav={
+        <>
           {navItems.map((item) => (
             <button
               key={item.label}
@@ -103,7 +69,9 @@ export default function Page() {
               <MaterialIcon icon={item.icon} className="mr-3" /> {item.label}
             </button>
           ))}
-        </nav>
+        </>
+      }
+      sidebarFooter={
         <div className="space-y-1 border-t border-slate-200 pt-6">
           <button className="mb-4 flex w-full items-center justify-center gap-2 rounded-md bg-gradient-to-br from-primary to-primary-container py-2.5 text-sm font-medium text-white shadow-md" type="button">
             <MaterialIcon icon="add" className="text-sm" /> New Entry
@@ -115,11 +83,58 @@ export default function Page() {
             <MaterialIcon icon="logout" className="mr-3 text-sm" /> Sign Out
           </button>
         </div>
-      </aside>
-
-      <main className="min-h-screen pt-16 md:ml-64">
-        <div className="mx-auto grid max-w-[1600px] grid-cols-12 gap-8 p-8">
-          <section className="col-span-12 space-y-6 lg:col-span-4 xl:col-span-3">
+      }
+      topbar={
+        <>
+          <div className="flex items-center gap-8">
+            <span className="text-xl font-bold tracking-tighter text-blue-900">NMTC Library</span>
+            <div className="group hidden w-96 items-center rounded-lg bg-slate-100 px-3 py-1.5 focus-within:ring-2 ring-primary/20 md:flex">
+              <MaterialIcon icon="search" className="mr-2 text-slate-400" />
+              <input
+                className="w-full border-none bg-transparent text-sm text-on-surface-variant focus:ring-0"
+                defaultValue="Digital Archival Theory"
+                placeholder="Search across catalog..."
+                type="text"
+              />
+            </div>
+          </div>
+          <div className="flex items-center space-x-4">
+            <div className="mr-6 hidden space-x-6 lg:flex">
+              <button className="border-b-2 border-blue-900 font-semibold text-blue-900" type="button">Catalog</button>
+              <button className="text-slate-500 hover:text-blue-700" type="button">Circulation</button>
+              <button className="text-slate-500 hover:text-blue-700" type="button">Resources</button>
+            </div>
+            <div className="flex items-center space-x-2">
+              <button className="rounded-full p-2 text-slate-500 transition-colors hover:bg-slate-50" type="button">
+                <MaterialIcon icon="notifications" />
+              </button>
+              <button className="rounded-full p-2 text-slate-500 transition-colors hover:bg-slate-50" type="button">
+                <MaterialIcon icon="settings" />
+              </button>
+              <button className="ml-2 rounded-lg bg-primary-container px-4 py-1.5 text-sm font-medium text-on-primary-container" type="button">
+                Quick Action
+              </button>
+              <div className="ml-2 h-8 w-8 overflow-hidden rounded-full border border-slate-200 bg-slate-200">
+                <img
+                  alt="User profile avatar"
+                  className="h-full w-full object-cover"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuALTWjQ5FdASITBHC07vg6t_C-6y3d3RJi9-b-uLQmlMEJaoVzQcoPgvRKwgNQbfgwslMBm46m0puLS3j9M9HP1OaObp7xVVVKwzz7ZU90Dr05xepQ-1t2QwpGGqgNclIOYKxH76pwKhFDsF42hSMHBqClGao8ZXfiE_sI3EIBsmTkHp60_X1zVnyRd1JXn2IgDfvoOYPObcXgeWHptcivZAYLbl5NXnFAzyRULRg23wuZJlG8ZgKUuRaWnYOH5N9TlOPQHRy0rz0Q"
+                />
+              </div>
+            </div>
+          </div>
+        </>
+      }
+      floatingAction={
+        <button className="group fixed bottom-8 right-8 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary-container text-white shadow-2xl transition-transform hover:scale-110 active:scale-95" type="button">
+          <MaterialIcon icon="add" className="text-3xl" />
+          <span className="absolute right-16 whitespace-nowrap rounded-lg bg-primary px-3 py-1.5 text-xs font-bold opacity-0 transition-opacity group-hover:opacity-100">
+            Request Document
+          </span>
+        </button>
+      }
+    >
+      <section className="col-span-12 space-y-6 lg:col-span-4 xl:col-span-3">
             <div className="rounded-2xl bg-surface-container-low p-6">
               <h3 className="mb-6 text-lg font-bold text-primary">Search Parameters</h3>
               <div className="mb-8 space-y-4">
@@ -188,7 +203,7 @@ export default function Page() {
             </div>
           </section>
 
-          <section className="col-span-12 space-y-8 lg:col-span-8 xl:col-span-9">
+      <section className="col-span-12 space-y-8 lg:col-span-8 xl:col-span-9">
             <div className="mb-4 flex items-end justify-between">
               <div>
                 <h1 className="text-3xl font-black tracking-tight text-primary">Search Results</h1>
@@ -317,16 +332,7 @@ export default function Page() {
                 </div>
               ))}
             </div>
-          </section>
-        </div>
-      </main>
-
-      <button className="group fixed bottom-8 right-8 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary-container text-white shadow-2xl transition-transform hover:scale-110 active:scale-95" type="button">
-        <MaterialIcon icon="add" className="text-3xl" />
-        <span className="absolute right-16 whitespace-nowrap rounded-lg bg-primary px-3 py-1.5 text-xs font-bold opacity-0 transition-opacity group-hover:opacity-100">
-          Request Document
-        </span>
-      </button>
-    </div>
+      </section>
+    </DashboardShell>
   );
 }

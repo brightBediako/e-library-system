@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { DashboardShell } from "@/components/app-shell/DashboardShell";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 
 type NavItem = {
@@ -134,12 +135,12 @@ function SidebarLink({
   icon,
   active = false,
   href = "#",
-}: {
+}: Readonly<{
   label: string;
   icon: string;
   active?: boolean;
   href?: string;
-}) {
+}>) {
   const activeClasses =
     "bg-white dark:bg-blue-900/20 text-blue-900 dark:text-blue-300 shadow-sm font-bold";
   const inactiveClasses =
@@ -162,8 +163,11 @@ export const dynamic = "force-dynamic";
 
 export default function Page() {
   return (
-    <div className="flex min-h-screen bg-background text-on-surface antialiased">
-      <aside className="fixed left-0 top-0 z-40 flex h-screen w-64 flex-col space-y-2 border-r-0 bg-slate-50 px-4 py-6 dark:bg-slate-950">
+    <DashboardShell
+      rootClassName="antialiased"
+      mainClassName="flex-1 bg-background"
+      contentClassName="mt-16 space-y-8 p-8"
+      sidebarHeader={
         <div className="mb-8 px-2">
           <div className="mb-1 flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary-container text-white shadow-lg">
@@ -177,13 +181,15 @@ export default function Page() {
             NMTC Management
           </p>
         </div>
-
-        <nav className="flex-1 space-y-1">
+      }
+      sidebarNav={
+        <>
           {navItems.map((item) => (
             <SidebarLink key={item.label} {...item} />
           ))}
-        </nav>
-
+        </>
+      }
+      sidebarFooter={
         <div className="space-y-1 border-t border-slate-200/50 pt-4 dark:border-slate-800/50">
           <button className="mb-4 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-primary to-primary-container px-4 py-3 font-bold text-on-primary shadow-md transition-transform active:scale-95">
             <MaterialIcon icon="add" className="text-sm" />
@@ -193,10 +199,9 @@ export default function Page() {
             <SidebarLink key={item.label} {...item} />
           ))}
         </div>
-      </aside>
-
-      <main className="ml-64 flex-1 bg-background min-h-screen">
-        <header className="fixed left-64 right-0 top-0 z-30 flex h-16 items-center justify-between bg-white/80 px-8 shadow-sm backdrop-blur-xl dark:bg-slate-900/80">
+      }
+      topbar={
+        <>
           <div className="flex flex-1 items-center gap-4">
             <div className="relative w-full max-w-md">
               <MaterialIcon
@@ -235,9 +240,50 @@ export default function Page() {
               />
             </div>
           </div>
-        </header>
+        </>
+      }
+    >
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
+        {/* Hero */}
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary to-primary-container p-8 text-white shadow-xl md:col-span-2">
+          <div className="relative z-10">
+            <h2 className="mb-1 text-lg font-medium opacity-80">Total Active Loans</h2>
+            <div className="mb-4 text-5xl font-black tracking-tighter">1,284</div>
+            <div className="flex items-center gap-2 text-sm">
+              <span className="rounded-full bg-white/20 px-2 py-1 font-bold">+12.5%</span>
+              <span className="opacity-70">than last month</span>
+            </div>
+          </div>
+          <div className="absolute bottom-[-20px] right-[-20px] opacity-10">
+            <MaterialIcon icon="menu_book" className="text-[160px]" />
+          </div>
+        </div>
 
-        <div className="mt-16 space-y-8 p-8">
+        <div className="space-y-2 rounded-3xl bg-surface-container-lowest p-6 shadow-sm">
+          <MaterialIcon icon="history" className="rounded-2xl bg-tertiary-fixed p-3 text-tertiary" />
+          <h3 className="text-sm font-bold uppercase tracking-wider text-on-surface-variant">
+            Overdue Items
+          </h3>
+          <div className="text-3xl font-black text-primary">42</div>
+          <p className="flex items-center gap-1 text-xs font-medium text-error">
+            <MaterialIcon icon="warning" className="text-xs" /> Requires immediate attention
+          </p>
+        </div>
+
+        <div className="space-y-2 rounded-3xl bg-surface-container-lowest p-6 shadow-sm">
+          <MaterialIcon
+            icon="support_agent"
+            className="rounded-2xl bg-primary-fixed p-3 text-primary"
+          />
+          <h3 className="text-sm font-bold uppercase tracking-wider text-on-surface-variant">
+            Open Tickets
+          </h3>
+          <div className="text-3xl font-black text-primary">08</div>
+          <p className="text-xs font-medium text-on-surface-variant">3 pending resolution</p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
             {/* Hero */}
             <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary to-primary-container p-8 text-white shadow-xl md:col-span-2">
@@ -442,8 +488,7 @@ export default function Page() {
               </section>
             </div>
           </div>
-        </div>
-      </main>
-    </div>
+      </div>
+    </DashboardShell>
   );
 }

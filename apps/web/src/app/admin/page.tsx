@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { DashboardShell } from "@/components/app-shell/DashboardShell";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 
 type NavItem = {
@@ -97,12 +98,12 @@ function SidebarLink({
   icon,
   active = false,
   href = "#",
-}: {
+}: Readonly<{
   label: string;
   icon: string;
   active?: boolean;
   href?: string;
-}) {
+}>) {
   const base =
     "flex items-center rounded-lg px-4 py-3 transition-transform duration-200 hover:translate-x-1";
   const classes = active
@@ -121,8 +122,9 @@ export const dynamic = "force-dynamic";
 
 export default function Page() {
   return (
-    <div className="bg-background text-on-surface antialiased min-h-screen">
-      <aside className="fixed left-0 top-0 z-40 flex h-screen w-64 flex-col space-y-2 border-r-0 bg-slate-50 px-4 py-6 dark:bg-slate-950">
+    <DashboardShell
+      rootClassName="antialiased"
+      sidebarHeader={
         <div className="mb-8 px-4">
           <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary-container text-white">
             <MaterialIcon icon="account_balance" filled />
@@ -132,54 +134,69 @@ export default function Page() {
           </h1>
           <p className="text-[10px] font-medium text-slate-500">NMTC Management</p>
         </div>
-
-        <nav className="flex flex-1 flex-col space-y-1">
+      }
+      sidebarNav={
+        <>
           {navItems.map((item) => (
             <SidebarLink key={item.label} {...item} />
           ))}
-        </nav>
-
-        <div className="mt-auto space-y-1 border-t border-slate-200 pt-6 dark:border-slate-800">
+        </>
+      }
+      sidebarFooter={
+        <div className="space-y-1 border-t border-slate-200 pt-6 dark:border-slate-800">
           {footerNavItems.map((item) => (
             <SidebarLink key={item.label} {...item} />
           ))}
         </div>
-      </aside>
+      }
+      topbar={
+        <>
+          <div className="flex flex-1 items-center">
+            <div className="relative w-full max-w-md">
+              <MaterialIcon
+                icon="search"
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"
+              />
+              <input
+                className="w-full rounded-xl border-none bg-surface-container-highest py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary/20"
+                placeholder="Search resources, students, or records..."
+                type="text"
+              />
+            </div>
+          </div>
 
-      <header className="fixed left-64 right-0 top-0 z-30 flex h-16 items-center justify-between bg-white/80 px-8 shadow-sm backdrop-blur-xl dark:bg-slate-900/80">
-        <div className="flex flex-1 items-center">
-          <div className="relative w-full max-w-md">
-            <MaterialIcon
-              icon="search"
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"
-            />
-            <input
-              className="w-full rounded-xl border-none bg-surface-container-highest py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary/20"
-              placeholder="Search resources, students, or records..."
-              type="text"
-            />
+          <div className="flex items-center space-x-4">
+            <button className="rounded-lg bg-gradient-to-br from-primary to-primary-container px-5 py-2 text-sm font-semibold text-white shadow-md transition-transform active:scale-95">
+              Quick Action
+            </button>
+            <div className="flex items-center space-x-2 text-slate-500">
+              <MaterialIcon icon="notifications" className="cursor-pointer rounded-full p-2 hover:bg-slate-50" />
+              <MaterialIcon icon="settings" className="cursor-pointer rounded-full p-2 hover:bg-slate-50" />
+              <MaterialIcon icon="help" className="cursor-pointer rounded-full p-2 hover:bg-slate-50" />
+            </div>
+            <div className="h-8 w-8 overflow-hidden rounded-full border-2 border-primary-fixed">
+              <img
+                alt="User profile avatar"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBye4wz8_4g1LiF1cgHC_ogA3CcYhxZ18uuRpD3Yh-HhPzlh473bsN0Y7PG0m6WFBGoAwZLIlzZB353_l-BD_m0M1QQ6tKhtYzElpAER_NVh-PcOWpoFwU--_y62VX1aEU3S5ATE9BWRQZDpuWM-BefEoifh0VhjkPXbt64etklH8lNzggf2UkLnflJ9645Mol0AkZ7vNsBKvGQApDgWzRjheOMGsXYmXh4r6PyHvoJHYKUtv_1SSub9WF6fx3OOHMOufPSwT2_u-I"
+              />
+            </div>
           </div>
-        </div>
-
-        <div className="flex items-center space-x-4">
-          <button className="rounded-lg bg-gradient-to-br from-primary to-primary-container px-5 py-2 text-sm font-semibold text-white shadow-md transition-transform active:scale-95">
-            Quick Action
-          </button>
-          <div className="flex items-center space-x-2 text-slate-500">
-            <MaterialIcon icon="notifications" className="cursor-pointer rounded-full p-2 hover:bg-slate-50" />
-            <MaterialIcon icon="settings" className="cursor-pointer rounded-full p-2 hover:bg-slate-50" />
-            <MaterialIcon icon="help" className="cursor-pointer rounded-full p-2 hover:bg-slate-50" />
-          </div>
-          <div className="h-8 w-8 overflow-hidden rounded-full border-2 border-primary-fixed">
-            <img
-              alt="User profile avatar"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBye4wz8_4g1LiF1cgHC_ogA3CcYhxZ18uuRpD3Yh-HhPzlh473bsN0Y7PG0m6WFBGoAwZLIlzZB353_l-BD_m0M1QQ6tKhtYzElpAER_NVh-PcOWpoFwU--_y62VX1aEU3S5ATE9BWRQZDpuWM-BefEoifh0VhjkPXbt64etklH8lNzggf2UkLnflJ9645Mol0AkZ7vNsBKvGQApDgWzRjheOMGsXYmXh4r6PyHvoJHYKUtv_1SSub9WF6fx3OOHMOufPSwT2_u-I"
-            />
-          </div>
-        </div>
+        </>
+      }
+      floatingAction={
+        <button className="fixed bottom-8 right-8 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary-container text-white shadow-2xl transition-all hover:scale-110 active:scale-95">
+          <MaterialIcon icon="add" />
+        </button>
+      }
+    >
+      <header className="mb-10">
+        <h2 className="text-3xl font-extrabold tracking-tight text-primary">Admin Dashboard</h2>
+        <p className="mt-1 text-on-surface-variant">
+          Institutional oversight for NMTC Library Services.
+        </p>
       </header>
 
-      <main className="ml-64 px-8 pb-12 pt-24">
+      <div className="grid grid-cols-12 gap-8">
         <header className="mb-10">
           <h2 className="text-3xl font-extrabold tracking-tight text-primary">Admin Dashboard</h2>
           <p className="mt-1 text-on-surface-variant">
@@ -239,9 +256,9 @@ export default function Page() {
           <aside className="col-span-12 rounded-3xl bg-surface-container-lowest p-8 shadow-sm lg:col-span-4">
             <h3 className="mb-6 text-xl font-bold text-primary">Library Visits</h3>
             <div className="mb-4 flex h-48 items-end justify-between space-x-2">
-              {visitHeights.map((height, idx) => (
+              {visitHeights.map((height) => (
                 <div
-                  key={idx}
+                  key={`${height}`}
                   className={`w-full rounded-t-lg transition-all ${
                     height === 100 ? "bg-gradient-to-br from-primary to-primary-container" : "bg-surface-container-high hover:bg-primary-fixed"
                   }`}
@@ -389,11 +406,7 @@ export default function Page() {
             </div>
           </section>
         </div>
-      </main>
-
-      <button className="fixed bottom-8 right-8 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary-container text-white shadow-2xl transition-all hover:scale-110 active:scale-95">
-        <MaterialIcon icon="add" />
-      </button>
-    </div>
+      </div>
+    </DashboardShell>
   );
 }

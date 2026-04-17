@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { DashboardShell } from "@/components/app-shell/DashboardShell";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 
 type NavItem = { label: string; icon: string; active?: boolean; href?: string; danger?: boolean };
@@ -29,12 +30,13 @@ const alerts: AlertItem[] = [
   { title: "System Update", body: "Digital Library will be under maintenance on Sunday from 02:00 AM.", color: "bg-outline-variant", muted: true },
 ];
 
-function SidebarLink({ item }: { item: NavItem }) {
-  const active = item.active
-    ? "bg-white dark:bg-blue-900/20 text-blue-900 dark:text-blue-300 shadow-sm font-bold"
-    : item.danger
-      ? "text-error hover:bg-error/5"
-      : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900";
+function SidebarLink({ item }: Readonly<{ item: NavItem }>) {
+  let active = "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900";
+  if (item.active) {
+    active = "bg-white dark:bg-blue-900/20 text-blue-900 dark:text-blue-300 shadow-sm font-bold";
+  } else if (item.danger) {
+    active = "text-error hover:bg-error/5";
+  }
   return (
     <Link href={item.href ?? "#"} className={`flex items-center gap-3 rounded-lg px-4 py-3 transition-transform duration-200 hover:translate-x-1 ${active}`}>
       <MaterialIcon icon={item.icon} />
@@ -47,53 +49,66 @@ export const dynamic = "force-dynamic";
 
 export default function Page() {
   return (
-    <div className="min-h-screen bg-background text-on-surface antialiased">
-      <header className="fixed top-0 z-50 flex h-16 w-full items-center justify-between bg-white/80 px-6 shadow-sm backdrop-blur-xl">
-        <div className="flex items-center gap-8">
-          <span className="text-xl font-bold tracking-tighter text-blue-900">NMTC Library</span>
-          <div className="hidden w-96 items-center rounded-full bg-surface-container-low px-4 py-2 md:flex">
-            <MaterialIcon icon="search" className="text-sm text-outline" />
-            <input className="ml-2 w-full border-none bg-transparent text-sm text-on-surface-variant focus:ring-0" placeholder="Search digital catalog..." type="text" />
-          </div>
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <button className="relative rounded-full p-2 text-slate-500 hover:bg-slate-50" type="button">
-              <MaterialIcon icon="notifications" />
-              <span className="absolute right-2 top-2 h-2 w-2 rounded-full border-2 border-white bg-error" />
-            </button>
-            <button className="rounded-full p-2 text-slate-500 hover:bg-slate-50" type="button"><MaterialIcon icon="settings" /></button>
-            <button className="rounded-full p-2 text-slate-500 hover:bg-slate-50" type="button"><MaterialIcon icon="help" /></button>
-          </div>
-          <div className="mx-2 h-8 w-px bg-outline-variant/30" />
-          <div className="flex items-center gap-3">
-            <div className="hidden text-right sm:block">
-              <p className="text-xs font-bold text-primary">Alex Sterling</p>
-              <p className="text-[10px] text-on-surface-variant">Nursing - Year 3</p>
-            </div>
-            <img alt="Student profile" className="h-10 w-10 rounded-full object-cover ring-2 ring-primary/10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXJgidGvkEZx4eXc5HR4v4nPw_ROU2bnGXonZE7-6ixhNg6t3btOQKxdGNiE765L_LJ4x1g2JdoRcR1Qv6OxYNdTlhn4xfY2BB-ifUEU7c9kD_DX6KI8pm4QlzKeqUR2CczS7Z7tR1PSi32-Jo1EDp8LW21iiGp6g7z7t2sYuudnAzAa-cIF02FQmt8c42uu_5WezZu3ylZq7_cVOCCqqhDU_rOeKUqfgLf_UNOpEYSU0_tph3BZ7Rr_mNUC7HniQ9G9oBNk3G2kU" />
-          </div>
-        </div>
-      </header>
-
-      <aside className="fixed left-0 top-0 flex h-screen w-64 flex-col space-y-2 border-r-0 bg-slate-50 px-4 pb-6 pt-20">
+    <DashboardShell
+      rootClassName="antialiased"
+      mainClassName="bg-background"
+      contentClassName="p-8 pt-20"
+      sidebarHeader={
         <div className="mb-8 px-4">
           <p className="text-[10px] font-black uppercase tracking-widest text-blue-900">The Scholarly Curator</p>
           <p className="mt-1 text-xs text-slate-500">NMTC Management</p>
         </div>
-        <nav className="flex-1 space-y-1">
+      }
+      sidebarNav={
+        <>
           {navItems.map((item) => (
             <SidebarLink key={item.label} item={item} />
           ))}
-        </nav>
+        </>
+      }
+      sidebarFooter={
         <div className="space-y-1 border-t border-slate-200/50 pt-6">
           <SidebarLink item={{ label: "Support", icon: "contact_support" }} />
           <SidebarLink item={{ label: "Sign Out", icon: "logout", href: "/", danger: true }} />
         </div>
-      </aside>
-
-      <main className="ml-64 min-h-screen bg-background p-8 pt-20">
-        <div className="mx-auto max-w-7xl space-y-8">
+      }
+      topbar={
+        <>
+          <div className="flex items-center gap-8">
+            <span className="text-xl font-bold tracking-tighter text-blue-900">NMTC Library</span>
+            <div className="hidden w-96 items-center rounded-full bg-surface-container-low px-4 py-2 md:flex">
+              <MaterialIcon icon="search" className="text-sm text-outline" />
+              <input className="ml-2 w-full border-none bg-transparent text-sm text-on-surface-variant focus:ring-0" placeholder="Search digital catalog..." type="text" />
+            </div>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <button className="relative rounded-full p-2 text-slate-500 hover:bg-slate-50" type="button">
+                <MaterialIcon icon="notifications" />
+                <span className="absolute right-2 top-2 h-2 w-2 rounded-full border-2 border-white bg-error" />
+              </button>
+              <button className="rounded-full p-2 text-slate-500 hover:bg-slate-50" type="button"><MaterialIcon icon="settings" /></button>
+              <button className="rounded-full p-2 text-slate-500 hover:bg-slate-50" type="button"><MaterialIcon icon="help" /></button>
+            </div>
+            <div className="mx-2 h-8 w-px bg-outline-variant/30" />
+            <div className="flex items-center gap-3">
+              <div className="hidden text-right sm:block">
+                <p className="text-xs font-bold text-primary">Alex Sterling</p>
+                <p className="text-[10px] text-on-surface-variant">Nursing - Year 3</p>
+              </div>
+              <img alt="Student profile" className="h-10 w-10 rounded-full object-cover ring-2 ring-primary/10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXJgidGvkEZx4eXc5HR4v4nPw_ROU2bnGXonZE7-6ixhNg6t3btOQKxdGNiE765L_LJ4x1g2JdoRcR1Qv6OxYNdTlhn4xfY2BB-ifUEU7c9kD_DX6KI8pm4QlzKeqUR2CczS7Z7tR1PSi32-Jo1EDp8LW21iiGp6g7z7t2sYuudnAzAa-cIF02FQmt8c42uu_5WezZu3ylZq7_cVOCCqqhDU_rOeKUqfgLf_UNOpEYSU0_tph3BZ7Rr_mNUC7HniQ9G9oBNk3G2kU" />
+            </div>
+          </div>
+        </>
+      }
+      floatingAction={
+        <button className="group fixed bottom-8 right-8 z-50 flex items-center gap-3 rounded-full bg-gradient-to-br from-primary to-primary-container px-6 py-4 text-white shadow-2xl transition-all hover:scale-105 active:scale-95" type="button">
+          <MaterialIcon icon="search" />
+          <span className="text-sm font-bold">Find a Resource</span>
+        </button>
+      }
+    >
+      <div className="mx-auto max-w-7xl space-y-8">
           <section className="grid grid-cols-1 items-start gap-8 lg:grid-cols-3">
             <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary to-primary-container p-8 text-white shadow-xl lg:col-span-2">
               <h1 className="mb-2 text-3xl font-bold tracking-tight">Welcome back, Alex.</h1>
@@ -213,7 +228,7 @@ export default function Page() {
                 <p className="mt-1 text-xs text-on-surface-variant">Based on 8 downloads</p>
                 <div className="mt-6 flex items-end gap-1">
                   {[8, 12, 24, 16, 10].map((h, i) => (
-                    <div key={i} className={`w-full rounded-t-md ${i === 2 ? "bg-primary" : "bg-surface-container-low"}`} style={{ height: `${h * 4}px` }} />
+                    <div key={`${h}-${i}`} className={`w-full rounded-t-md ${i === 2 ? "bg-primary" : "bg-surface-container-low"}`} style={{ height: `${h * 4}px` }} />
                   ))}
                 </div>
               </div>
@@ -234,13 +249,7 @@ export default function Page() {
               </div>
             </div>
           </section>
-        </div>
-      </main>
-
-      <button className="group fixed bottom-8 right-8 z-50 flex items-center gap-3 rounded-full bg-gradient-to-br from-primary to-primary-container px-6 py-4 text-white shadow-2xl transition-all hover:scale-105 active:scale-95" type="button">
-        <MaterialIcon icon="search" />
-        <span className="text-sm font-bold">Find a Resource</span>
-      </button>
-    </div>
+      </div>
+    </DashboardShell>
   );
 }

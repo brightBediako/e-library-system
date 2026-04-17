@@ -1,3 +1,4 @@
+import { DashboardShell } from "@/components/app-shell/DashboardShell";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 
 type NavItem = { label: string; icon: string; active?: boolean; danger?: boolean };
@@ -51,86 +52,97 @@ export const dynamic = "force-dynamic";
 export default function Page() {
   return (
     <div className="bg-background text-on-surface antialiased">
-      <aside className="fixed left-0 top-0 z-40 flex h-screen w-64 flex-col space-y-2 bg-slate-50 px-4 py-6">
-        <div className="mb-10 px-2">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary-container text-white shadow-lg">
-              <MaterialIcon icon="auto_stories" filled />
-            </div>
-            <div>
-              <h1 className="text-xs font-black uppercase leading-none tracking-widest text-blue-900">The Scholarly Curator</h1>
-              <p className="text-[10px] font-medium uppercase tracking-tighter text-slate-500">NMTC Management</p>
-            </div>
-          </div>
-        </div>
-        <nav className="flex-1 space-y-1">
-          {navItems.map((item) => (
-            <button
-              key={item.label}
-              className={`flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left transition-transform duration-200 hover:translate-x-1 ${
-                item.active
-                  ? "bg-white text-blue-900 shadow-sm font-bold"
-                  : "text-slate-600 hover:bg-slate-100"
-              }`}
-              type="button"
-            >
-              <MaterialIcon icon={item.icon} />
-              <span className="text-sm font-medium">{item.label}</span>
-            </button>
-          ))}
-        </nav>
-        <div className="mt-auto space-y-1 border-t border-slate-200 pt-6">
-          {bottomItems.map((item) => (
-            <button
-              key={item.label}
-              className={`flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left transition-transform duration-200 hover:translate-x-1 ${
-                item.danger ? "text-error hover:bg-error/10" : "text-slate-600 hover:bg-slate-100"
-              }`}
-              type="button"
-            >
-              <MaterialIcon icon={item.icon} />
-              <span className="text-sm font-medium">{item.label}</span>
-            </button>
-          ))}
-        </div>
-      </aside>
-
-      <main className="ml-64 min-h-screen">
-        <header className="fixed left-64 right-0 top-0 z-30 flex h-16 items-center justify-between bg-white/80 px-8 shadow-sm backdrop-blur-xl">
-          <div className="flex w-96 items-center rounded-full bg-slate-100 px-4 py-1.5">
-            <MaterialIcon icon="search" className="mr-2 text-sm text-slate-400" />
-            <input
-              className="w-full border-none bg-transparent text-sm placeholder:text-slate-500 focus:ring-0"
-              placeholder="Search catalog, notes, or members..."
-              type="text"
-            />
-          </div>
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-4 text-slate-500">
-              {["notifications", "settings", "help"].map((icon) => (
-                <button key={icon} className="transition-colors hover:text-blue-900" type="button">
-                  <MaterialIcon icon={icon} />
-                </button>
-              ))}
-            </div>
-            <button className="rounded-lg bg-gradient-to-br from-primary to-primary-container px-5 py-2 text-sm font-semibold text-white shadow-md transition-transform active:scale-95" type="button">
-              Quick Action
-            </button>
-            <div className="flex items-center gap-3 border-l border-slate-200 pl-6">
-              <div className="text-right">
-                <p className="text-sm font-bold text-primary">Dr. Araba Mensah</p>
-                <p className="text-[10px] font-medium text-on-surface-variant">Senior Lecturer</p>
+      <DashboardShell
+        contentClassName="mx-auto max-w-7xl space-y-10 px-10 pb-12 pt-24"
+        sidebarHeader={
+          <div className="mb-10 px-2">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary-container text-white shadow-lg">
+                <MaterialIcon icon="auto_stories" filled />
               </div>
-              <img
-                alt="Lecturer profile avatar"
-                className="h-10 w-10 rounded-full object-cover ring-2 ring-surface-container-highest"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJ8-PDoLcTtELPtY8KaBUrNggqrtcaahe2sETNXCOToMIj4mTwMj74DsJPbTStS-ZGDTRwj2zwP2a9ZRW1YaSHiwsDCqoKhZQFY35aF-0W8JdqMdAx9lbGAh21psGjD4N8GSpOV0QXIQUD2qt6fyM6LSGcAYA4ablVg6EM9osCwtBmOyVepuWMpvUS0N4HhgY2x2aFcX8YmeQrFqms3YniQJCeD34UACwsq6UifWiEjG509fx6wMUUmO3CBX5e0Qh2t6JLTI8nrew"
+              <div>
+                <h1 className="text-xs font-black uppercase leading-none tracking-widest text-blue-900">The Scholarly Curator</h1>
+                <p className="text-[10px] font-medium uppercase tracking-tighter text-slate-500">NMTC Management</p>
+              </div>
+            </div>
+          </div>
+        }
+        sidebarNav={
+          <>
+            {navItems.map((item) => (
+              <button
+                key={item.label}
+                className={`flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left transition-transform duration-200 hover:translate-x-1 ${
+                  item.active
+                    ? "bg-white text-blue-900 shadow-sm font-bold"
+                    : "text-slate-600 hover:bg-slate-100"
+                }`}
+                type="button"
+              >
+                <MaterialIcon icon={item.icon} />
+                <span className="text-sm font-medium">{item.label}</span>
+              </button>
+            ))}
+          </>
+        }
+        sidebarFooter={
+          <div className="space-y-1 border-t border-slate-200 pt-6">
+            {bottomItems.map((item) => (
+              <button
+                key={item.label}
+                className={`flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left transition-transform duration-200 hover:translate-x-1 ${
+                  item.danger ? "text-error hover:bg-error/10" : "text-slate-600 hover:bg-slate-100"
+                }`}
+                type="button"
+              >
+                <MaterialIcon icon={item.icon} />
+                <span className="text-sm font-medium">{item.label}</span>
+              </button>
+            ))}
+          </div>
+        }
+        topbar={
+          <>
+            <div className="flex w-96 items-center rounded-full bg-slate-100 px-4 py-1.5">
+              <MaterialIcon icon="search" className="mr-2 text-sm text-slate-400" />
+              <input
+                className="w-full border-none bg-transparent text-sm placeholder:text-slate-500 focus:ring-0"
+                placeholder="Search catalog, notes, or members..."
+                type="text"
               />
             </div>
-          </div>
-        </header>
-
-        <div className="mx-auto max-w-7xl space-y-10 px-10 pb-12 pt-24">
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-4 text-slate-500">
+                {["notifications", "settings", "help"].map((icon) => (
+                  <button key={icon} className="transition-colors hover:text-blue-900" type="button">
+                    <MaterialIcon icon={icon} />
+                  </button>
+                ))}
+              </div>
+              <button className="rounded-lg bg-gradient-to-br from-primary to-primary-container px-5 py-2 text-sm font-semibold text-white shadow-md transition-transform active:scale-95" type="button">
+                Quick Action
+              </button>
+              <div className="flex items-center gap-3 border-l border-slate-200 pl-6">
+                <div className="text-right">
+                  <p className="text-sm font-bold text-primary">Dr. Araba Mensah</p>
+                  <p className="text-[10px] font-medium text-on-surface-variant">Senior Lecturer</p>
+                </div>
+                <img
+                  alt="Lecturer profile avatar"
+                  className="h-10 w-10 rounded-full object-cover ring-2 ring-surface-container-highest"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJ8-PDoLcTtELPtY8KaBUrNggqrtcaahe2sETNXCOToMIj4mTwMj74DsJPbTStS-ZGDTRwj2zwP2a9ZRW1YaSHiwsDCqoKhZQFY35aF-0W8JdqMdAx9lbGAh21psGjD4N8GSpOV0QXIQUD2qt6fyM6LSGcAYA4ablVg6EM9osCwtBmOyVepuWMpvUS0N4HhgY2x2aFcX8YmeQrFqms3YniQJCeD34UACwsq6UifWiEjG509fx6wMUUmO3CBX5e0Qh2t6JLTI8nrew"
+                />
+              </div>
+            </div>
+          </>
+        }
+        floatingAction={
+          <button className="fixed bottom-8 right-8 z-50 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary-container text-white shadow-2xl transition-transform hover:scale-110 active:scale-90" type="button">
+            <MaterialIcon icon="add" className="text-3xl" />
+          </button>
+        }
+      >
+        <section className="grid grid-cols-1 gap-6 md:grid-cols-4">
           <section className="grid grid-cols-1 gap-6 md:grid-cols-4">
             <div className="relative flex h-56 flex-col justify-between overflow-hidden rounded-[1.5rem] bg-gradient-to-br from-primary to-primary-container p-8 text-white shadow-xl md:col-span-2">
               <div className="relative z-10">
@@ -254,12 +266,8 @@ export default function Page() {
               </div>
             </aside>
           </div>
-        </div>
-
-        <button className="fixed bottom-8 right-8 z-50 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary-container text-white shadow-2xl transition-transform hover:scale-110 active:scale-90" type="button">
-          <MaterialIcon icon="add" className="text-3xl" />
-        </button>
-      </main>
+        </section>
+      </DashboardShell>
 
       <nav className="fixed bottom-0 left-0 z-50 flex w-full justify-around border-t border-slate-100 bg-white px-4 py-3 shadow-[0_-4px_20px_-5px_rgba(0,0,0,0.1)] md:hidden">
         {[

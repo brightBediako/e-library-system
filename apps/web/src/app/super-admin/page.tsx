@@ -1,4 +1,6 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
+import { DashboardShell } from "@/components/app-shell/DashboardShell";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 
 type NavItem = {
@@ -85,12 +87,12 @@ function SidebarLink({
   icon,
   active = false,
   href = "#",
-}: {
+}: Readonly<{
   label: string;
   icon: string;
   active?: boolean;
   href?: string;
-}) {
+}>) {
   const classes = active
     ? "bg-white text-blue-900 shadow-sm font-bold"
     : "text-slate-600 hover:bg-slate-100 hover:translate-x-1";
@@ -115,7 +117,7 @@ function StatCard({
   meta,
   metaClassName,
   positive = false,
-}: {
+}: Readonly<{
   label: string;
   value: string;
   icon: string;
@@ -124,7 +126,28 @@ function StatCard({
   meta?: string;
   metaClassName?: string;
   positive?: boolean;
-}) {
+}>) {
+  const detailClassName = positive ? "font-medium text-primary" : "text-slate-400";
+  let detailContent: ReactNode = null;
+
+  if (typeof progress === "number") {
+    detailContent = (
+      <>
+        <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-surface-container-high">
+          <div className="h-full bg-primary" style={{ width: `${progress}%` }} />
+        </div>
+        {detail ? <p className="mt-2 text-[10px] text-slate-400">{detail}</p> : null}
+      </>
+    );
+  } else if (detail) {
+    detailContent = (
+      <p className={`mt-2 flex items-center gap-1 text-[10px] ${detailClassName}`}>
+        {positive ? <span className="h-1.5 w-1.5 rounded-full bg-green-500" /> : null}
+        {detail}
+      </p>
+    );
+  }
+
   return (
     <div className="rounded-xl bg-surface-container-lowest p-6 shadow-[0_4px_24px_rgba(25,28,30,0.04)]">
       <div className="mb-4 flex items-start justify-between">
@@ -141,41 +164,34 @@ function StatCard({
           </span>
         ) : null}
       </div>
-      {typeof progress === "number" ? (
-        <>
-          <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-surface-container-high">
-            <div className="h-full bg-primary" style={{ width: `${progress}%` }} />
-          </div>
-          {detail ? <p className="mt-2 text-[10px] text-slate-400">{detail}</p> : null}
-        </>
-      ) : detail ? (
-        <p
-          className={`mt-2 flex items-center gap-1 text-[10px] ${
-            positive ? "font-medium text-primary" : "text-slate-400"
-          }`}
-        >
-          {positive ? <span className="h-1.5 w-1.5 rounded-full bg-green-500" /> : null}
-          {detail}
-        </p>
-      ) : null}
+      {detailContent}
     </div>
   );
+}
+
+function getLatencyBarClassName(index: number) {
+  if (index === 5) return "bg-white";
+  if (index === 2) return "bg-white/40";
+  if (index === 6) return "bg-white/50";
+  if (index === 4) return "bg-white/10";
+  return "bg-white/20";
 }
 
 export const dynamic = "force-dynamic";
 
 export default function Page() {
   return (
-    <div className="min-h-screen bg-background text-on-surface">
-      <aside className="fixed left-0 top-0 z-40 flex h-screen w-64 flex-col space-y-2 bg-slate-50 px-4 py-6">
+    <DashboardShell
+      sidebarHeader={
         <div className="mb-8 px-2">
           <h1 className="text-sm font-black uppercase tracking-widest text-blue-900">
             The Scholarly Curator
           </h1>
           <p className="text-[10px] font-medium text-slate-500">NMTC Management</p>
         </div>
-
-        <nav className="flex-1 space-y-1">
+      }
+      sidebarNav={
+        <>
           {navItems.map((item) => (
             <SidebarLink
               key={item.label}
@@ -184,17 +200,17 @@ export default function Page() {
               active={item.active}
             />
           ))}
-        </nav>
-
+        </>
+      }
+      sidebarFooter={
         <div className="space-y-1 border-t border-slate-200 pt-4">
           {footerNavItems.map((item) => (
             <SidebarLink key={item.label} label={item.label} icon={item.icon} href={item.href} />
           ))}
         </div>
-      </aside>
-
-      <main className="ml-64 min-h-screen">
-        <header className="fixed left-64 right-0 top-0 z-30 flex h-16 items-center justify-between border-b border-transparent bg-white/80 px-8 shadow-sm backdrop-blur-xl">
+      }
+      topbar={
+        <>
           <div className="flex items-center gap-4">
             <span className="text-xl font-extrabold tracking-tighter text-primary">
               NMTC Library <span className="font-light text-slate-400">| Super Admin</span>
@@ -224,9 +240,17 @@ export default function Page() {
               />
             </div>
           </div>
-        </header>
+        </>
+      }
+      contentClassName="mx-auto max-w-7xl space-y-8 px-8 pb-12 pt-24"
+    >
+      <section className="grid grid-cols-1 gap-6 md:grid-cols-4">
+        {stats.map((stat) => (
+          <StatCard key={stat.label} {...stat} />
+        ))}
+      </section>
 
-        <div className="mx-auto max-w-7xl space-y-8 px-8 pb-12 pt-24">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           <section className="grid grid-cols-1 gap-6 md:grid-cols-4">
             {stats.map((stat) => (
               <StatCard key={stat.label} {...stat} />
@@ -327,18 +351,8 @@ export default function Page() {
                   <div className="mb-4 flex h-12 items-end gap-1">
                     {[40, 60, 30, 80, 50, 20, 45].map((height, index) => (
                       <div
-                        key={index}
-                        className={`w-2 rounded-t ${
-                          index === 5
-                            ? "bg-white"
-                            : index === 2
-                              ? "bg-white/40"
-                              : index === 6
-                                ? "bg-white/50"
-                                : index === 4
-                                  ? "bg-white/10"
-                                  : "bg-white/20"
-                        }`}
+                        key={`${height}-${index}`}
+                        className={`w-2 rounded-t ${getLatencyBarClassName(index)}`}
                         style={{ height: `${height}%` }}
                       />
                     ))}
@@ -449,8 +463,7 @@ export default function Page() {
               </div>
             </aside>
           </div>
-        </div>
-      </main>
-    </div>
+      </div>
+    </DashboardShell>
   );
 }
