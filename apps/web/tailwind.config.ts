@@ -1,0 +1,77 @@
+import type { Config } from "tailwindcss";
+import forms from "@tailwindcss/forms";
+import containerQueries from "@tailwindcss/container-queries";
+
+const config: Config = {
+  darkMode: "class",
+  content: ["./src/**/*.{ts,tsx}"],
+  theme: {
+    extend: {
+      colors: {
+        "surface-container-lowest": "#ffffff",
+        "primary-container": "#1a365d",
+        "on-background": "#191c1e",
+        error: "#ba1a1a",
+        tertiary: "#321b00",
+        "secondary-fixed-dim": "#afc8f1",
+        "surface-dim": "#d8dadc",
+        "surface-bright": "#f7f9fb",
+        "inverse-primary": "#adc7f7",
+        primary: "#002045",
+        "tertiary-fixed": "#ffddba",
+        "primary-fixed-dim": "#adc7f7",
+        "inverse-surface": "#2d3133",
+        "on-surface-variant": "#43474e",
+        "on-secondary-fixed": "#001c3a",
+        "on-tertiary-fixed": "#2b1700",
+        "on-error": "#ffffff",
+        "surface-variant": "#e0e3e5",
+        "on-primary-container": "#86a0cd",
+        "surface-container-low": "#f2f4f6",
+        "surface-container": "#eceef0",
+        "surface-container-highest": "#e0e3e5",
+        "on-secondary-container": "#445d80",
+        outline: "#74777f",
+        "on-tertiary-container": "#c6955e",
+        "on-tertiary-fixed-variant": "#633f0f",
+        "on-error-container": "#93000a",
+        surface: "#f7f9fb",
+        "outline-variant": "#c4c6cf",
+        "on-primary-fixed": "#001b3c",
+        "on-secondary-fixed-variant": "#2f486a",
+        "on-surface": "#191c1e",
+        "on-primary-fixed-variant": "#2d476f",
+        "on-secondary": "#ffffff",
+        "surface-container-high": "#e6e8ea",
+        "secondary-container": "#bdd6ff",
+        "error-container": "#ffdad6",
+        "tertiary-fixed-dim": "#f2bc82",
+        "on-tertiary": "#ffffff",
+        secondary: "#475f83",
+        "primary-fixed": "#d6e3ff",
+        "tertiary-container": "#4f2e00",
+        background: "#f7f9fb",
+        "secondary-fixed": "#d4e3ff",
+        "inverse-on-surface": "#eff1f3",
+        "on-primary": "#ffffff",
+        "surface-tint": "#455f88",
+      },
+      borderRadius: {
+        DEFAULT: "0.25rem",
+        lg: "0.5rem",
+        xl: "0.75rem",
+        xxl: "1.5rem",
+        full: "9999px",
+      },
+      fontFamily: {
+        headline: ["Inter", "sans-serif"],
+        body: ["Inter", "sans-serif"],
+        label: ["Inter", "sans-serif"],
+      },
+    },
+  },
+  plugins: [forms, containerQueries],
+};
+
+export default config;
+
