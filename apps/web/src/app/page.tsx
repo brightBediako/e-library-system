@@ -30,9 +30,11 @@ export default function HomePage() {
   useEffect(() => {
     if (globalThis.window === undefined) return;
     const params = new URLSearchParams(globalThis.window.location.search);
-    setReason(params.get("reason"));
-    setFromPath(params.get("from"));
-    setCurrentRole(params.get("role"));
+    queueMicrotask(() => {
+      setReason(params.get("reason"));
+      setFromPath(params.get("from"));
+      setCurrentRole(params.get("role"));
+    });
   }, []);
 
   useEffect(() => {

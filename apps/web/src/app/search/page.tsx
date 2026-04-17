@@ -13,11 +13,11 @@ export default function Page() {
     <DashboardShell
       rootClassName="text-on-background antialiased"
       mainClassName="min-h-screen"
-      contentClassName="mx-auto grid max-w-[1400px] grid-cols-12 gap-8 px-8 pb-12 pt-24"
+      contentClassName="relative mx-auto grid max-w-[1400px] grid-cols-12 gap-6 px-4 pb-12 pt-20 sm:gap-8 sm:px-6 md:px-8 md:pt-24 lg:px-10"
       sidebarHeader={
         <div className="mb-10 px-2 pt-16">
-          <h2 className="mb-1 text-xs font-black uppercase tracking-widest text-blue-900">The Scholarly Curator</h2>
-          <p className="text-[10px] text-slate-500">NMTC Management</p>
+          <h2 className="mb-1 text-xs font-black uppercase tracking-widest text-primary">The Scholarly Curator</h2>
+          <p className="text-[10px] text-on-surface-variant">NMTC Management</p>
         </div>
       }
       sidebarNav={
@@ -45,9 +45,9 @@ export default function Page() {
       topbar={
         <>
           <div className="flex items-center gap-8">
-            <span className="text-xl font-bold tracking-tighter text-blue-900">NMTC Library</span>
-            <div className="group hidden w-96 items-center rounded-lg bg-slate-100 px-3 py-1.5 focus-within:ring-2 ring-primary/20 md:flex">
-              <MaterialIcon icon="search" className="mr-2 text-slate-400" />
+            <span className="text-xl font-bold tracking-tighter text-primary">NMTC Library</span>
+            <div className="group hidden w-96 items-center rounded-lg bg-surface-container-low px-3 py-1.5 focus-within:ring-2 ring-primary/20 md:flex">
+              <MaterialIcon icon="search" className="mr-2 text-on-surface-variant/70" />
               <input
                 className="w-full border-none bg-transparent text-sm text-on-surface-variant focus:ring-0"
                 defaultValue="Digital Archival Theory"
@@ -59,16 +59,16 @@ export default function Page() {
           <div className="flex items-center space-x-4">
             <TopBarNavTabs tabs={topTabs} className="mr-6 hidden space-x-6 lg:flex" />
             <div className="flex items-center space-x-2">
-              <button className="rounded-full p-2 text-slate-500 transition-colors hover:bg-slate-50" type="button">
+              <button className="rounded-full p-2 text-on-surface-variant transition-colors hover:bg-surface-container-low" type="button">
                 <MaterialIcon icon="notifications" />
               </button>
-              <button className="rounded-full p-2 text-slate-500 transition-colors hover:bg-slate-50" type="button">
+              <button className="rounded-full p-2 text-on-surface-variant transition-colors hover:bg-surface-container-low" type="button">
                 <MaterialIcon icon="settings" />
               </button>
               <button className="ml-2 rounded-lg bg-primary-container px-4 py-1.5 text-sm font-medium text-on-primary-container" type="button">
                 Quick Action
               </button>
-              <div className="ml-2 h-8 w-8 overflow-hidden rounded-full bg-slate-200">
+              <div className="ml-2 h-8 w-8 overflow-hidden rounded-full bg-surface-container-high">
                 <img
                   alt="User profile avatar"
                   className="h-full w-full object-cover"
@@ -92,7 +92,7 @@ export default function Page() {
             <div className="rounded-2xl bg-surface-container-low p-6">
               <h3 className="mb-6 text-lg font-bold text-primary">Search Parameters</h3>
               <div className="mb-8 space-y-4">
-                <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Category</p>
+                <p className="text-xs font-bold uppercase tracking-widest text-on-surface-variant/70">Category</p>
                 <div className="space-y-2">
                   {categories.map((c) => (
                     <label
@@ -109,17 +109,17 @@ export default function Page() {
               </div>
               <div className="mb-8 space-y-4">
                 <div className="flex items-center justify-between">
-                  <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Publication Year</p>
+                  <p className="text-xs font-bold uppercase tracking-widest text-on-surface-variant/70">Publication Year</p>
                   <span className="text-xs font-mono font-bold text-primary">2018 — 2024</span>
                 </div>
-                <div className="relative h-1.5 w-full rounded-full bg-slate-200">
+                <div className="relative h-1.5 w-full rounded-full bg-surface-container-high">
                   <div className="absolute left-1/4 right-0 h-full rounded-full bg-primary" />
                   <div className="absolute left-1/4 top-1/2 h-4 w-4 -translate-y-1/2 rounded-full bg-primary shadow-[0_0_0_2px_rgba(255,255,255,1)]" />
                   <div className="absolute right-0 top-1/2 h-4 w-4 -translate-y-1/2 rounded-full bg-primary shadow-[0_0_0_2px_rgba(255,255,255,1)]" />
                 </div>
               </div>
               <div className="space-y-4">
-                <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Academic Level</p>
+                <p className="text-xs font-bold uppercase tracking-widest text-on-surface-variant/70">Academic Level</p>
                 <select className="w-full rounded-lg border-none bg-surface-container-lowest text-sm focus:ring-2 focus:ring-primary/20">
                   <option>All Levels</option>
                   <option>Undergraduate</option>
@@ -159,7 +159,7 @@ export default function Page() {
                 <p className="mt-1 text-on-surface-variant">Showing 142 items for &quot;Digital Archival Theory&quot;</p>
               </div>
               <div className="flex gap-2">
-                <button className="rounded-lg bg-white p-2 text-slate-400 transition-colors hover:text-primary" type="button">
+                <button className="rounded-lg bg-white p-2 text-on-surface-variant/70 transition-colors hover:text-primary" type="button">
                   <MaterialIcon icon="grid_view" />
                 </button>
                 <button className="rounded-lg bg-white p-2 text-primary shadow-sm" type="button">
@@ -172,40 +172,40 @@ export default function Page() {
               <div className="flex flex-1 flex-col bg-surface-container-low">
                 <div className="z-10 flex h-14 items-center justify-between bg-white px-4">
                   <div className="flex items-center gap-1">
-                    <button className="rounded-lg p-2 hover:bg-slate-50" type="button"><MaterialIcon icon="menu" className="text-slate-600" /></button>
-                    <div className="mx-2 h-6 w-px bg-slate-200" />
-                    <button className="rounded-lg p-2 hover:bg-slate-50" type="button"><MaterialIcon icon="zoom_out" className="text-slate-600" /></button>
-                    <span className="px-2 text-sm font-medium text-slate-700">100%</span>
-                    <button className="rounded-lg p-2 hover:bg-slate-50" type="button"><MaterialIcon icon="zoom_in" className="text-slate-600" /></button>
+                    <button className="rounded-lg p-2 hover:bg-surface-container-low" type="button"><MaterialIcon icon="menu" className="text-on-surface" /></button>
+                    <div className="mx-2 h-6 w-px bg-surface-container-high" />
+                    <button className="rounded-lg p-2 hover:bg-surface-container-low" type="button"><MaterialIcon icon="zoom_out" className="text-on-surface" /></button>
+                    <span className="px-2 text-sm font-medium text-on-surface-variant">100%</span>
+                    <button className="rounded-lg p-2 hover:bg-surface-container-low" type="button"><MaterialIcon icon="zoom_in" className="text-on-surface" /></button>
                   </div>
-                  <div className="flex items-center rounded-lg bg-slate-100 px-3 py-1.5">
-                    <button className="text-sm text-slate-600" type="button"><MaterialIcon icon="chevron_left" className="text-sm" /></button>
-                    <span className="mx-3 text-xs font-bold text-slate-800">PAGE 12 / 248</span>
-                    <button className="text-sm text-slate-600" type="button"><MaterialIcon icon="chevron_right" className="text-sm" /></button>
+                  <div className="flex items-center rounded-lg bg-surface-container-low px-3 py-1.5">
+                    <button className="text-sm text-on-surface" type="button"><MaterialIcon icon="chevron_left" className="text-sm" /></button>
+                    <span className="mx-3 text-xs font-bold text-on-surface">PAGE 12 / 248</span>
+                    <button className="text-sm text-on-surface" type="button"><MaterialIcon icon="chevron_right" className="text-sm" /></button>
                   </div>
                   <div className="flex items-center gap-1">
-                    <button className="rounded-lg p-2 hover:bg-slate-50" type="button"><MaterialIcon icon="bookmark" filled className="text-slate-600" /></button>
-                    <button className="rounded-lg p-2 hover:bg-slate-50" type="button"><MaterialIcon icon="print" className="text-slate-600" /></button>
-                    <button className="rounded-lg p-2 hover:bg-slate-50" type="button"><MaterialIcon icon="download" className="text-slate-600" /></button>
+                    <button className="rounded-lg p-2 hover:bg-surface-container-low" type="button"><MaterialIcon icon="bookmark" filled className="text-on-surface" /></button>
+                    <button className="rounded-lg p-2 hover:bg-surface-container-low" type="button"><MaterialIcon icon="print" className="text-on-surface" /></button>
+                    <button className="rounded-lg p-2 hover:bg-surface-container-low" type="button"><MaterialIcon icon="download" className="text-on-surface" /></button>
                   </div>
                 </div>
                 <div className="flex flex-1 justify-center overflow-y-auto bg-surface-container-highest p-8">
                   <div className="min-h-[1000px] w-full max-w-2xl space-y-8 bg-white p-16 shadow-xl">
                     <div className="rounded-xl bg-surface-container-low p-6">
-                      <h2 className="font-serif text-3xl leading-tight text-slate-900">Towards a Unified Digital Preservation Framework</h2>
-                      <p className="mt-4 text-sm tracking-wide text-slate-500">THE SCHOLARLY CURATOR | VOLUME 24, ISSUE 2</p>
+                      <h2 className="font-serif text-3xl leading-tight text-on-surface">Towards a Unified Digital Preservation Framework</h2>
+                      <p className="mt-4 text-sm tracking-wide text-on-surface-variant">THE SCHOLARLY CURATOR | VOLUME 24, ISSUE 2</p>
                     </div>
                     <div className="space-y-6">
-                      <p className="leading-relaxed text-slate-700 first-letter:float-left first-letter:mr-3 first-letter:text-5xl first-letter:font-bold">
+                      <p className="leading-relaxed text-on-surface-variant first-letter:float-left first-letter:mr-3 first-letter:text-5xl first-letter:font-bold">
                         Digital curation is the management and preservation of digital data over its entire lifecycle. In the contemporary academic landscape, the sheer volume of data produced requires a more nuanced approach than simple storage. We must consider the meta-data, the provenance, and the long-term accessibility of formats...
                       </p>
-                      <p className="leading-relaxed text-slate-700">
+                      <p className="leading-relaxed text-on-surface-variant">
                         The evolution of archival theory has transitioned from physical containment to distributed accessibility. This paper explores the theoretical underpinnings of digital governance...
                       </p>
-                      <div className="rounded-lg bg-primary-container/30 p-6 italic text-slate-600">
+                      <div className="rounded-lg bg-primary-container/30 p-6 italic text-on-surface">
                         &quot;Knowledge is not static; it is a flowing river that requires constant dredging and mapping to remain navigable.&quot;
                       </div>
-                      <p className="leading-relaxed text-slate-700">
+                      <p className="leading-relaxed text-on-surface-variant">
                         Furthermore, the integration of AI-driven cataloging systems has redefined how researchers interact with deep archives. By leveraging semantic search patterns...
                       </p>
                     </div>
@@ -220,31 +220,31 @@ export default function Page() {
                 </div>
                 <div className="mb-8 space-y-6">
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Publication Title</p>
-                    <p className="text-sm font-semibold text-slate-800">The Modern Archive: Volume II</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/70">Publication Title</p>
+                    <p className="text-sm font-semibold text-on-surface">The Modern Archive: Volume II</p>
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Authors</p>
-                    <p className="text-sm font-semibold text-slate-800">Dr. Eleanor Rigby, M. Phil</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/70">Authors</p>
+                    <p className="text-sm font-semibold text-on-surface">Dr. Eleanor Rigby, M. Phil</p>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Year</p>
-                      <p className="text-sm font-semibold text-slate-800">2023</p>
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/70">Year</p>
+                      <p className="text-sm font-semibold text-on-surface">2023</p>
                     </div>
                     <div>
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Pages</p>
-                      <p className="text-sm font-semibold text-slate-800">248</p>
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/70">Pages</p>
+                      <p className="text-sm font-semibold text-on-surface">248</p>
                     </div>
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">ISBN / DOI</p>
-                    <p className="font-mono text-xs text-slate-600">10.1038/s41586-023-00000-x</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/70">ISBN / DOI</p>
+                    <p className="font-mono text-xs text-on-surface">10.1038/s41586-023-00000-x</p>
                   </div>
                 </div>
                 <div className="mt-auto rounded-xl bg-surface-container-low p-6">
                   <h5 className="mb-4 text-xs font-bold text-primary">Quick Citation (APA)</h5>
-                  <div className="group relative mb-4 rounded-lg bg-slate-50 p-3 text-xs leading-relaxed text-slate-600">
+                  <div className="group relative mb-4 rounded-lg bg-surface-container-low p-3 text-xs leading-relaxed text-on-surface">
                     Rigby, E. (2023). Towards a Unified Digital Preservation Framework. The Modern Archive, 24(2), 112-248.{" "}
                     <button className="absolute right-2 top-2 opacity-0 transition-opacity group-hover:opacity-100" type="button">
                       <MaterialIcon icon="content_copy" className="text-sm" />
@@ -260,7 +260,7 @@ export default function Page() {
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               {secondaryResults.map((r) => (
                 <div key={r.title} className="flex gap-6 rounded-2xl bg-surface-container-lowest p-6 transition-transform duration-300 hover:-translate-y-1">
-                  <div className="h-32 w-24 shrink-0 overflow-hidden rounded-lg bg-slate-100 shadow-sm">
+                  <div className="h-32 w-24 shrink-0 overflow-hidden rounded-lg bg-surface-container-low shadow-sm">
                     <img alt={r.title} className="h-full w-full object-cover" src={r.img} />
                   </div>
                   <div className="flex-1">
@@ -273,7 +273,7 @@ export default function Page() {
                       <button className="flex items-center gap-1 text-xs font-bold text-primary" type="button">
                         <MaterialIcon icon="visibility" className="text-sm" /> VIEW
                       </button>
-                      <button className="flex items-center gap-1 text-xs font-bold text-slate-400" type="button">
+                      <button className="flex items-center gap-1 text-xs font-bold text-on-surface-variant/70" type="button">
                         <MaterialIcon icon="bookmark_add" className="text-sm" /> SAVE
                       </button>
                     </div>

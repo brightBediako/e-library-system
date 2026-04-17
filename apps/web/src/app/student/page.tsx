@@ -13,11 +13,11 @@ export default function Page() {
     <DashboardShell
       rootClassName="antialiased"
       mainClassName="bg-background"
-      contentClassName="mx-auto max-w-[1400px] p-8 pb-12 pt-20"
+      contentClassName="relative mx-auto max-w-[1400px] px-4 pb-12 pt-20 sm:px-6 md:px-8 lg:px-10"
       sidebarHeader={
         <div className="mb-8 px-4">
-          <p className="text-[10px] font-black uppercase tracking-widest text-blue-900">The Scholarly Curator</p>
-          <p className="mt-1 text-xs text-slate-500">NMTC Management</p>
+          <p className="text-[10px] font-black uppercase tracking-widest text-primary">The Scholarly Curator</p>
+          <p className="mt-1 text-xs text-on-surface-variant">NMTC Management</p>
         </div>
       }
       sidebarNav={
@@ -36,7 +36,7 @@ export default function Page() {
       topbar={
         <>
           <div className="flex items-center gap-8">
-            <span className="text-xl font-bold tracking-tighter text-blue-900">NMTC Library</span>
+            <span className="text-xl font-bold tracking-tighter text-primary">NMTC Library</span>
             <div className="hidden w-96 items-center rounded-full bg-surface-container-low px-4 py-2 md:flex">
               <MaterialIcon icon="search" className="text-sm text-outline" />
               <input className="ml-2 w-full border-none bg-transparent text-sm text-on-surface-variant focus:ring-0" placeholder="Search digital catalog..." type="text" />
@@ -44,14 +44,14 @@ export default function Page() {
           </div>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <button className="relative rounded-full p-2 text-slate-500 hover:bg-slate-50" type="button">
+              <button className="relative rounded-full p-2 text-on-surface-variant hover:bg-surface-container-low" type="button">
                 <MaterialIcon icon="notifications" />
                 <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-error shadow-[0_0_0_2px_rgba(255,255,255,1)]" />
               </button>
-              <button className="rounded-full p-2 text-slate-500 hover:bg-slate-50" type="button"><MaterialIcon icon="settings" /></button>
-              <button className="rounded-full p-2 text-slate-500 hover:bg-slate-50" type="button"><MaterialIcon icon="help" /></button>
+              <button className="rounded-full p-2 text-on-surface-variant hover:bg-surface-container-low" type="button"><MaterialIcon icon="settings" /></button>
+              <button className="rounded-full p-2 text-on-surface-variant hover:bg-surface-container-low" type="button"><MaterialIcon icon="help" /></button>
             </div>
-            <div className="mx-2 h-8 w-px bg-outline-variant/30" />
+            <div className="mx-1 hidden h-8 w-px bg-surface-container-high sm:block" aria-hidden />
             <div className="flex items-center gap-3">
               <div className="hidden text-right sm:block">
                 <p className="text-xs font-bold text-primary">{profile.name}</p>
@@ -63,7 +63,7 @@ export default function Page() {
         </>
       }
       floatingAction={
-        <button className="group fixed bottom-8 right-8 z-50 flex items-center gap-3 rounded-full bg-gradient-to-br from-primary to-primary-container px-6 py-4 text-white shadow-2xl transition-all hover:scale-105 active:scale-95" type="button">
+        <button className="group fixed bottom-5 right-4 z-50 flex items-center gap-3 rounded-full bg-gradient-to-br from-primary to-primary-container px-5 py-3.5 text-white shadow-[0_20px_48px_-24px_rgba(0,32,69,0.45)] transition-all hover:scale-[1.02] active:scale-95 sm:bottom-8 sm:right-8 sm:px-6 sm:py-4" type="button">
           <MaterialIcon icon="search" />
           <span className="text-sm font-bold">Find a Resource</span>
         </button>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import { TopBarNavTabs } from "@/components/app-shell/TopBarNavTabs";
+import { DecorativeBackdrop } from "@/components/ui/DecorativeBackdrop";
 import { selectGuestLandingData } from "@/lib/mock/guestLanding";
 
 export const dynamic = "force-dynamic";
@@ -9,19 +10,20 @@ export default function Page() {
   const { catalogItems, topTabs, hero } = selectGuestLandingData();
 
   return (
-    <div className="bg-background bg-academic text-on-surface antialiased">
-      <header className="fixed top-0 z-50 flex h-16 w-full max-w-full items-center justify-between bg-white/80 px-8 shadow-sm backdrop-blur-xl">
-        <div className="flex items-center gap-8">
-          <span className="text-xl font-bold tracking-tighter text-blue-900">NMTC Library</span>
-          <TopBarNavTabs tabs={topTabs} className="hidden gap-6 text-sm tracking-tight md:flex" />
+    <div className="relative min-h-screen bg-background text-on-surface antialiased">
+      <DecorativeBackdrop />
+      <header className="fixed top-0 z-50 flex h-16 w-full max-w-full items-center justify-between gap-3 bg-surface-container-lowest/90 px-4 shadow-[0_12px_32px_-28px_rgba(17,28,45,0.16)] backdrop-blur-xl sm:px-6 lg:px-8">
+        <div className="flex min-w-0 flex-1 items-center gap-4 md:gap-8">
+          <span className="shrink-0 text-lg font-bold tracking-tight text-primary sm:text-xl">NMTC Library</span>
+          <TopBarNavTabs tabs={topTabs} className="hidden min-w-0 flex-1 gap-2 text-sm tracking-tight md:flex md:flex-wrap md:justify-center lg:gap-4" />
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex shrink-0 items-center gap-2 sm:gap-4">
           <div className="relative hidden sm:block">
-            <input className="w-64 rounded-full border-none bg-surface-container-highest px-10 py-2 text-sm focus:ring-2 focus:ring-primary/40" placeholder="Search catalog..." type="text" />
-            <MaterialIcon icon="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-lg text-on-surface-variant" />
+            <input className="w-52 rounded-full border-0 bg-surface-container-highest py-2 pl-10 pr-4 text-sm text-on-surface shadow-none outline-none transition-shadow focus:ring-2 focus:ring-primary/30 lg:w-64" placeholder="Search catalog..." type="text" />
+            <MaterialIcon icon="search" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-lg text-on-surface-variant/80" />
           </div>
-          <div className="flex items-center gap-2">
-            <button className="cursor-pointer rounded-full p-2 text-slate-500 transition-colors hover:bg-slate-50" type="button"><MaterialIcon icon="notifications" /></button>
+          <div className="flex items-center gap-1 sm:gap-2">
+            <button className="cursor-pointer rounded-full p-2 text-on-surface-variant transition-colors hover:bg-surface-container-low" type="button"><MaterialIcon icon="notifications" /></button>
             <Link className="rounded-lg bg-gradient-to-br from-primary to-primary-container px-5 py-2 text-sm font-semibold text-on-primary transition-all active:scale-95" href="/">
               Sign In
             </Link>
@@ -29,7 +31,7 @@ export default function Page() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-[1400px] px-8 pb-12 pt-24">
+      <main className="relative mx-auto max-w-[1400px] px-4 pb-12 pt-20 sm:px-6 sm:pt-24 lg:px-10">
         <section className="mb-16 grid grid-cols-1 gap-8 lg:grid-cols-12">
           <div className="flex flex-col justify-center lg:col-span-8">
             <h1 className="mb-6 text-5xl font-black leading-tight tracking-tighter text-primary md:text-6xl">

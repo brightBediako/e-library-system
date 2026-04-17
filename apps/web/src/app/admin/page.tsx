@@ -17,10 +17,10 @@ export default function Page() {
           <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary-container text-white">
             <MaterialIcon icon="account_balance" filled />
           </div>
-          <h1 className="text-sm font-black uppercase tracking-widest text-blue-900 dark:text-blue-100">
+          <h1 className="text-sm font-black uppercase tracking-widest text-primary">
             The Scholarly Curator
           </h1>
-          <p className="text-[10px] font-medium text-slate-500">NMTC Management</p>
+          <p className="text-[10px] font-medium text-on-surface-variant">NMTC Management</p>
         </div>
       }
       sidebarNav={
@@ -31,7 +31,7 @@ export default function Page() {
         </>
       }
       sidebarFooter={
-        <div className="space-y-1 pt-6 dark:border-slate-800">
+        <div className="space-y-1 pt-6">
           {footerNavItems.map((item) => (
             <SidebarNavLink
               key={item.label}
@@ -49,7 +49,7 @@ export default function Page() {
             <div className="relative w-full max-w-md">
               <MaterialIcon
                 icon="search"
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/70 text-sm"
               />
               <input
                 className="w-full rounded-xl border-none bg-surface-container-highest py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary/20"
@@ -63,10 +63,10 @@ export default function Page() {
             <button className="rounded-lg bg-gradient-to-br from-primary to-primary-container px-5 py-2 text-sm font-semibold text-white shadow-md transition-transform active:scale-95">
               Quick Action
             </button>
-            <div className="flex items-center space-x-2 text-slate-500">
-              <MaterialIcon icon="notifications" className="cursor-pointer rounded-full p-2 hover:bg-slate-50" />
-              <MaterialIcon icon="settings" className="cursor-pointer rounded-full p-2 hover:bg-slate-50" />
-              <MaterialIcon icon="help" className="cursor-pointer rounded-full p-2 hover:bg-slate-50" />
+            <div className="flex items-center space-x-2 text-on-surface-variant">
+              <MaterialIcon icon="notifications" className="cursor-pointer rounded-full p-2 hover:bg-surface-container-low" />
+              <MaterialIcon icon="settings" className="cursor-pointer rounded-full p-2 hover:bg-surface-container-low" />
+              <MaterialIcon icon="help" className="cursor-pointer rounded-full p-2 hover:bg-surface-container-low" />
             </div>
             <div className="h-8 w-8 overflow-hidden rounded-full ring-2 ring-primary-fixed">
               <img
@@ -82,7 +82,7 @@ export default function Page() {
           <MaterialIcon icon="add" />
         </button>
       }
-      contentClassName="mx-auto max-w-[1400px] px-8 pb-12 pt-24"
+      contentClassName="relative mx-auto max-w-[1400px] px-4 pb-12 pt-20 sm:px-6 md:px-8 md:pt-24 lg:px-10"
     >
       <header className="mb-10">
         <h2 className="text-3xl font-extrabold tracking-tight text-primary">{header.title}</h2>
@@ -238,7 +238,7 @@ export default function Page() {
             </div>
 
             <div className="overflow-x-auto">
-              <table className="w-full border-collapse">
+              <table className="app-data-table">
                 <thead className="bg-surface-container-high">
                   <tr className="text-left">
                     {["Resource Name", "Type", "Contributor", "Date Added"].map((h) => (

@@ -24,7 +24,7 @@ function StatCard({
   metaClassName?: string;
   positive?: boolean;
 }>) {
-  const detailClassName = positive ? "font-medium text-primary" : "text-slate-400";
+  const detailClassName = positive ? "font-medium text-primary" : "text-on-surface-variant/65";
   let detailContent: ReactNode = null;
 
   if (typeof progress === "number") {
@@ -33,7 +33,7 @@ function StatCard({
         <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-surface-container-high">
           <div className="h-full bg-primary" style={{ width: `${progress}%` }} />
         </div>
-        {detail ? <p className="mt-2 text-[10px] text-slate-400">{detail}</p> : null}
+        {detail ? <p className="mt-2 text-[10px] text-on-surface-variant/70">{detail}</p> : null}
       </>
     );
   } else if (detail) {
@@ -84,10 +84,10 @@ export default function Page() {
       rootClassName="antialiased"
       sidebarHeader={
         <div className="mb-8 px-2">
-          <h1 className="text-sm font-black uppercase tracking-widest text-blue-900">
+          <h1 className="text-sm font-black uppercase tracking-widest text-primary">
             The Scholarly Curator
           </h1>
-          <p className="text-[10px] font-medium text-slate-500">NMTC Management</p>
+          <p className="text-[10px] font-medium text-on-surface-variant">NMTC Management</p>
         </div>
       }
       sidebarNav={
@@ -119,7 +119,7 @@ export default function Page() {
         <>
           <div className="flex items-center gap-4">
             <span className="text-xl font-extrabold tracking-tighter text-primary">
-              {topbar.title} <span className="font-light text-slate-400">| {topbar.subtitle}</span>
+              {topbar.title} <span className="font-light text-on-surface-variant/70">| {topbar.subtitle}</span>
             </span>
           </div>
 
@@ -127,13 +127,13 @@ export default function Page() {
             <div className="relative">
               <MaterialIcon
                 icon="notifications"
-                className="cursor-pointer text-slate-500 transition-colors hover:text-blue-700"
+                className="cursor-pointer text-on-surface-variant transition-colors hover:text-primary"
               />
               <span className="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-error" />
             </div>
             <MaterialIcon
               icon="settings"
-              className="cursor-pointer text-slate-500 transition-colors hover:text-blue-700"
+              className="cursor-pointer text-on-surface-variant transition-colors hover:text-primary"
             />
             <button className="rounded-lg bg-gradient-to-br from-primary to-primary-container px-5 py-2 text-sm font-semibold text-white shadow-md transition-all active:opacity-80">
               Quick Action
@@ -148,7 +148,7 @@ export default function Page() {
           </div>
         </>
       }
-      contentClassName="mx-auto max-w-[1400px] space-y-8 px-8 pb-12 pt-24"
+      contentClassName="relative mx-auto max-w-[1400px] space-y-8 px-4 pb-12 pt-20 sm:px-6 md:px-8 md:pt-24 lg:px-10"
     >
       <section className="grid grid-cols-1 gap-6 md:grid-cols-4">
         {stats.map((stat) => (
@@ -171,7 +171,7 @@ export default function Page() {
               </div>
 
               <div className="overflow-hidden rounded-xl bg-surface-container-lowest shadow-[0_4px_24px_rgba(25,28,30,0.04)]">
-                <table className="w-full border-collapse text-left">
+                <table className="app-data-table">
                   <thead>
                     <tr className="bg-surface-container-high">
                       <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-primary">
@@ -202,7 +202,7 @@ export default function Page() {
                             </div>
                             <div>
                               <div className="text-sm font-bold text-primary">{institution.name}</div>
-                              <div className="text-[10px] text-slate-400">ID: {institution.id}</div>
+                              <div className="text-[10px] text-on-surface-variant/70">ID: {institution.id}</div>
                             </div>
                           </div>
                         </td>
@@ -217,7 +217,7 @@ export default function Page() {
                         <td className="px-6 py-5 text-right">
                           <div className="flex flex-col items-end">
                             <span className="text-sm font-bold text-primary">{institution.storage}</span>
-                            <div className="mt-1 h-1 w-16 overflow-hidden rounded-full bg-slate-100">
+                            <div className="mt-1 h-1 w-16 overflow-hidden rounded-full bg-surface-container-low">
                               <div
                                 className="h-full bg-primary"
                                 style={{ width: `${institution.storagePercent}%` }}
@@ -226,7 +226,7 @@ export default function Page() {
                           </div>
                         </td>
                         <td className="px-6 py-5 text-right">
-                          <button className="text-slate-400 transition-colors hover:text-primary">
+                          <button className="text-on-surface-variant/70 transition-colors hover:text-primary">
                             <MaterialIcon icon="more_vert" />
                           </button>
                         </td>
@@ -271,18 +271,18 @@ export default function Page() {
                       {sessionImages.map((src) => (
                         <img
                           key={src}
-                          className="h-10 w-10 rounded-full border-4 border-white object-cover"
+                          className="h-10 w-10 rounded-full object-cover ring-4 ring-surface-container-lowest shadow-sm"
                           src={src}
                           alt="Active session user"
                         />
                       ))}
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full border-4 border-white bg-slate-100 text-[10px] font-bold text-slate-500">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-container-low ring-4 ring-surface-container-lowest shadow-sm text-[10px] font-bold text-on-surface-variant">
                         +42
                       </div>
                     </div>
                     <MaterialIcon icon="hub" className="text-3xl text-primary" />
                   </div>
-                  <p className="mt-4 text-[10px] text-slate-400">Current concurrent connections</p>
+                  <p className="mt-4 text-[10px] text-on-surface-variant/70">Current concurrent connections</p>
                 </div>
               </div>
             </div>
@@ -298,7 +298,7 @@ export default function Page() {
                   <div key={toggle.title} className="flex items-center justify-between">
                     <div>
                       <h5 className="text-sm font-bold text-primary">{toggle.title}</h5>
-                      <p className="text-[11px] text-slate-400">{toggle.description}</p>
+                      <p className="text-[11px] text-on-surface-variant/70">{toggle.description}</p>
                     </div>
                     <div className="relative flex h-6 w-10 cursor-pointer items-center rounded-full bg-primary-container px-1">
                       <div className="h-4 w-4 translate-x-4 rounded-full bg-white" />
@@ -317,7 +317,7 @@ export default function Page() {
                     <span className="text-sm font-medium">5m (Aggressive)</span>
                     <MaterialIcon icon="expand_more" className="text-sm" />
                   </div>
-                  <p className="mt-2 text-[10px] text-slate-400">
+                  <p className="mt-2 text-[10px] text-on-surface-variant/70">
                     Recommended for high-concurrency periods
                   </p>
                 </div>

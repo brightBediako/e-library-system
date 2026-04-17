@@ -84,3 +84,43 @@ select {
       transparent 50%
     );
 }
+
+@layer components {
+  /* DESIGN.md — no-divider tables: tonal rows only (plain CSS for Tailwind v4 @apply limits) */
+  .app-data-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    text-align: left;
+  }
+  .app-data-table thead tr {
+    background-color: #e6e8ea;
+  }
+  .app-data-table th {
+    padding: 0.875rem 1rem;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #002045;
+  }
+  .app-data-table tbody tr:nth-child(even) {
+    background-color: rgba(242, 244, 246, 0.72);
+  }
+  .app-data-table tbody tr:nth-child(odd) {
+    background-color: #ffffff;
+  }
+  .app-data-table td {
+    padding: 0.875rem 1rem;
+    vertical-align: middle;
+    font-size: 0.875rem;
+    color: #191c1e;
+  }
+  .app-data-table tbody tr {
+    transition: background-color 150ms ease;
+  }
+  .app-data-table tbody tr:hover {
+    background-color: #f2f4f6;
+  }
+}

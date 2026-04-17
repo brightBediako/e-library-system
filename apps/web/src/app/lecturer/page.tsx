@@ -13,7 +13,7 @@ export default function Page() {
   return (
     <div className="bg-background text-on-surface antialiased">
       <DashboardShell
-        contentClassName="mx-auto max-w-[1400px] space-y-10 px-8 pb-12 pt-24"
+        contentClassName="relative mx-auto max-w-[1400px] space-y-10 px-4 pb-24 pt-20 sm:px-6 md:px-8 md:pb-12 md:pt-24 lg:px-10"
         sidebarHeader={
           <div className="mb-10 px-2">
             <div className="flex items-center gap-3">
@@ -21,8 +21,8 @@ export default function Page() {
                 <MaterialIcon icon="auto_stories" filled />
               </div>
               <div>
-                <h1 className="text-xs font-black uppercase leading-none tracking-widest text-blue-900">The Scholarly Curator</h1>
-                <p className="text-[10px] font-medium uppercase tracking-tighter text-slate-500">NMTC Management</p>
+                <h1 className="text-xs font-black uppercase leading-none tracking-widest text-primary">The Scholarly Curator</h1>
+                <p className="text-[10px] font-medium uppercase tracking-tighter text-on-surface-variant">NMTC Management</p>
               </div>
             </div>
           </div>
@@ -54,18 +54,18 @@ export default function Page() {
         }
         topbar={
           <>
-            <div className="flex w-96 items-center rounded-full bg-slate-100 px-4 py-1.5">
-              <MaterialIcon icon="search" className="mr-2 text-sm text-slate-400" />
+            <div className="flex w-96 items-center rounded-full bg-surface-container-low px-4 py-1.5">
+              <MaterialIcon icon="search" className="mr-2 text-sm text-on-surface-variant/75" />
               <input
-                className="w-full border-none bg-transparent text-sm placeholder:text-slate-500 focus:ring-0"
+                className="w-full border-none bg-transparent text-sm placeholder:text-on-surface-variant focus:ring-0"
                 placeholder={topbar.searchPlaceholder}
                 type="text"
               />
             </div>
             <div className="flex items-center gap-6">
-              <div className="flex items-center gap-4 text-slate-500">
+              <div className="flex items-center gap-4 text-on-surface-variant">
                 {["notifications", "settings", "help"].map((icon) => (
-                  <button key={icon} className="transition-colors hover:text-blue-900" type="button">
+                  <button key={icon} className="transition-colors hover:text-primary" type="button">
                     <MaterialIcon icon={icon} />
                   </button>
                 ))}
@@ -88,7 +88,7 @@ export default function Page() {
           </>
         }
         floatingAction={
-          <button className="fixed bottom-8 right-8 z-50 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary-container text-white shadow-2xl transition-transform hover:scale-110 active:scale-90" type="button">
+          <button className="fixed bottom-20 right-4 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary-container text-white shadow-[0_20px_48px_-24px_rgba(0,32,69,0.45)] transition-transform hover:scale-105 active:scale-95 md:bottom-8 md:right-8 md:h-16 md:w-16" type="button">
             <MaterialIcon icon="add" className="text-3xl" />
           </button>
         }
@@ -129,7 +129,7 @@ export default function Page() {
                 <p className="text-sm text-on-surface-variant">Distribute new materials to your courses.</p>
               </div>
               <div className="rounded-[1.5rem] bg-surface-container-low p-1">
-                <div className="group cursor-pointer rounded-[1.25rem] bg-surface-container-lowest p-12 text-center transition-all hover:bg-slate-50">
+                <div className="group cursor-pointer rounded-[1.25rem] bg-surface-container-lowest p-12 text-center transition-all hover:bg-surface-container-low">
                   <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary-container text-white shadow-lg transition-transform group-hover:scale-110">
                     <MaterialIcon icon="cloud_upload" className="text-3xl" />
                   </div>
@@ -170,7 +170,7 @@ export default function Page() {
             <aside className="space-y-10">
               <div className="rounded-[1.5rem] bg-surface-container-low p-6">
                 <h3 className="mb-6 flex items-center gap-2 text-lg font-bold text-primary">
-                  <MaterialIcon icon="map" className="text-blue-600" />
+                  <MaterialIcon icon="map" className="text-primary" />
                   Course Mapping
                 </h3>
                 <div className="space-y-3">
@@ -201,8 +201,8 @@ export default function Page() {
                         <h4 className="line-clamp-2 text-sm font-bold text-primary">{book.title}</h4>
                         <p className="mt-1 text-xs text-on-surface-variant">{book.author}</p>
                         <div className="mt-2 flex items-center gap-2">
-                          <span className="text-[10px] font-black uppercase text-blue-600">{book.tag}</span>
-                          <span className="h-1 w-1 rounded-full bg-slate-300" />
+                          <span className="text-[10px] font-black uppercase text-primary">{book.tag}</span>
+                          <span className="h-1 w-1 rounded-full bg-outline-variant/80" />
                           <span className="text-[10px] text-on-surface-variant">{book.edition}</span>
                         </div>
                       </div>

@@ -23,18 +23,19 @@ export function SidebarNavLink({
   const isActive = pathname === href;
 
   let stateClassName =
-    "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900";
+    "text-on-surface-variant hover:bg-surface-container-low active:scale-[0.99]";
 
   if (danger) {
-    stateClassName = "text-error hover:bg-error/10";
+    stateClassName = "text-error hover:bg-error-container/40";
   } else if (isActive) {
-    stateClassName = "bg-white dark:bg-blue-900/20 text-blue-900 dark:text-blue-300 shadow-sm font-bold";
+    stateClassName =
+      "bg-primary-fixed/35 font-semibold text-primary shadow-[0_8px_24px_-18px_rgba(0,32,69,0.2)]";
   }
 
   return (
     <Link
       href={href}
-      className={`flex items-center gap-3 rounded-lg px-4 py-3 transition-transform duration-200 hover:translate-x-1 ${stateClassName} ${className ?? ""}`}
+      className={`flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200 hover:translate-x-0.5 ${stateClassName} ${className ?? ""}`}
     >
       <MaterialIcon icon={icon} />
       <span className="text-sm font-medium">{label}</span>

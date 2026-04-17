@@ -42,18 +42,18 @@ export default function Page() {
     <DashboardShell
       rootClassName="antialiased"
       mainClassName="flex-1 bg-background"
-      contentClassName="mx-auto mt-16 max-w-[1400px] space-y-8 px-8 pb-12"
+      contentClassName="relative mx-auto mt-14 max-w-[1400px] space-y-8 px-4 pb-12 pt-4 sm:mt-16 sm:px-6 md:px-8 lg:px-10"
       sidebarHeader={
         <div className="mb-8 px-2">
           <div className="mb-1 flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary-container text-white shadow-lg">
               <MaterialIcon icon="menu_book" className="text-2xl" />
             </div>
-            <h1 className="text-sm font-black uppercase tracking-widest text-blue-900 dark:text-blue-100">
+            <h1 className="text-sm font-black uppercase tracking-widest text-primary">
               The Scholarly Curator
             </h1>
           </div>
-          <p className="px-1 text-xs font-medium uppercase tracking-tighter text-slate-500">
+          <p className="px-1 text-xs font-medium uppercase tracking-tighter text-on-surface-variant">
             NMTC Management
           </p>
         </div>
@@ -66,7 +66,7 @@ export default function Page() {
         </>
       }
       sidebarFooter={
-        <div className="space-y-1 pt-4 dark:border-slate-800/50">
+        <div className="space-y-1 pt-4">
           <button className="mb-4 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-primary to-primary-container px-4 py-3 font-bold text-on-primary shadow-md transition-transform active:scale-95">
             <MaterialIcon icon="add" className="text-sm" />
             New Entry
@@ -88,10 +88,10 @@ export default function Page() {
             <div className="relative w-full max-w-md">
               <MaterialIcon
                 icon="search"
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl"
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/70 text-xl"
               />
               <input
-                className="w-full rounded-xl border-none bg-surface-container-low py-2 pl-10 pr-4 text-sm placeholder:text-slate-500 focus:ring-2 focus:ring-primary/20"
+                className="w-full rounded-xl border-none bg-surface-container-low py-2 pl-10 pr-4 text-sm placeholder:text-on-surface-variant/65 focus:ring-2 focus:ring-primary/20"
                 placeholder={topbar.searchPlaceholder}
                 type="text"
               />
@@ -103,18 +103,18 @@ export default function Page() {
               {(["notifications", "settings", "help"] as const).map((icon) => (
                 <button
                   key={icon}
-                  className="cursor-pointer rounded-lg p-2 text-slate-500 transition-colors hover:bg-slate-50 active:opacity-80 dark:hover:bg-slate-800"
+                  className="cursor-pointer rounded-lg p-2 text-on-surface-variant transition-colors hover:bg-surface-container-low active:opacity-80"
                   type="button"
                 >
                   <MaterialIcon icon={icon} />
                 </button>
               ))}
             </div>
-            <div className="mx-2 h-8 w-px bg-slate-200 dark:bg-slate-700" />
+            <div className="mx-2 hidden h-8 w-px bg-surface-container-high sm:block" aria-hidden />
             <button className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-on-primary shadow-sm transition-all hover:opacity-90 active:scale-95">
               Quick Action
             </button>
-            <div className="ml-2 h-8 w-8 overflow-hidden rounded-full bg-slate-200">
+            <div className="ml-2 h-8 w-8 overflow-hidden rounded-full bg-surface-container-high">
               <img
                 alt="User profile avatar"
                 className="h-full w-full object-cover"
@@ -187,7 +187,7 @@ export default function Page() {
 
               <div className="overflow-hidden rounded-3xl bg-surface-container-lowest shadow-sm">
                 <div className="overflow-x-auto">
-                  <table className="w-full border-collapse text-left">
+                  <table className="app-data-table">
                     <thead className="bg-surface-container-high text-[10px] font-black uppercase tracking-widest text-primary">
                       <tr>
                         <th className="px-6 py-4">Title &amp; Author</th>
@@ -205,7 +205,7 @@ export default function Page() {
                         >
                           <td className="px-6 py-5">
                             <div className="flex items-center gap-3">
-                              <div className="h-14 w-10 flex-shrink-0 overflow-hidden rounded-lg bg-slate-100 shadow-sm">
+                              <div className="h-14 w-10 flex-shrink-0 overflow-hidden rounded-lg bg-surface-container-low shadow-sm">
                                 <img alt="Book cover" className="h-full w-full object-cover" src={row.coverUrl} />
                               </div>
                               <div>
@@ -217,7 +217,7 @@ export default function Page() {
                           <td className="px-6 py-5 font-medium text-on-surface">{row.shelf}</td>
                           <td className="px-6 py-5">
                             <div className="text-xs font-bold text-on-surface-variant">{row.copiesText}</div>
-                            <div className="mt-1 h-1.5 w-24 overflow-hidden rounded-full bg-slate-100">
+                            <div className="mt-1 h-1.5 w-24 overflow-hidden rounded-full bg-surface-container-low">
                               <div
                                 className={`h-full ${row.copiesColor === "error" ? "bg-error opacity-30" : "bg-primary"}`}
                                 style={{ width: `${row.copiesPercent}%` }}
@@ -231,7 +231,7 @@ export default function Page() {
                           </td>
                           <td className="px-6 py-5 text-right">
                             <button className="rounded-lg p-2 transition-colors hover:bg-white" type="button">
-                              <MaterialIcon icon="more_vert" className="text-slate-400" />
+                              <MaterialIcon icon="more_vert" className="text-on-surface-variant/70" />
                             </button>
                           </td>
                         </tr>
@@ -314,7 +314,7 @@ export default function Page() {
                         <span className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
                           {q.id}
                         </span>
-                        <span className="text-[10px] font-medium text-slate-400">{q.when}</span>
+                        <span className="text-[10px] font-medium text-on-surface-variant/70">{q.when}</span>
                       </div>
                       <p className="line-clamp-1 text-xs font-bold text-on-surface transition-colors group-hover:text-primary">
                         {q.title}

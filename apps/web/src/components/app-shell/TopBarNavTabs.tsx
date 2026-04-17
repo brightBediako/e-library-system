@@ -21,8 +21,8 @@ export function TopBarNavTabs({ tabs, className }: TopBarNavTabsProps) {
       {tabs.map((tab) => {
         const isActive = pathname === tab.href;
         const activeClass = isActive
-          ? "border-b-2 border-blue-900 font-semibold text-blue-900"
-          : "text-slate-500 transition-colors hover:text-blue-700";
+          ? "rounded-lg bg-primary-fixed/40 px-3 py-1.5 font-semibold text-primary"
+          : "rounded-lg px-3 py-1.5 text-on-surface-variant transition-colors hover:bg-surface-container-low hover:text-primary";
 
         return (
           <Link key={tab.label} href={tab.href} className={activeClass}>
