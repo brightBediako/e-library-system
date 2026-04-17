@@ -18,8 +18,42 @@ body {
   background: var(--background);
 }
 
+body {
+  min-height: 100vh;
+  color: #0f172a;
+  font-family: Inter, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.5;
+  background-image: radial-gradient(
+      at 0% 0%,
+      rgba(26, 54, 93, 0.04) 0px,
+      transparent 50%
+    ),
+    radial-gradient(
+      at 100% 100%,
+      rgba(26, 54, 93, 0.06) 0px,
+      transparent 50%
+    );
+  background-attachment: fixed;
+}
+
+a,
+button {
+  transition: all 180ms ease;
+}
+
+input,
+textarea,
+select {
+  outline-color: rgba(0, 32, 69, 0.25);
+}
+
+::selection {
+  background: rgba(0, 32, 69, 0.16);
+  color: #ffffff;
+}
+
 .material-symbols-outlined {
-  font-family: "Material Symbols Outlined";
+  font-family: "Material Symbols Outlined", sans-serif;
   font-style: normal;
   font-weight: normal;
   line-height: 1;
@@ -27,7 +61,9 @@ body {
   text-transform: none;
   white-space: nowrap;
   direction: ltr;
-  font-feature-settings: "liga";
+  font-feature-settings: "liga" 1;
+  -webkit-font-feature-settings: "liga" 1;
+  font-variant-ligatures: common-ligatures discretionary-ligatures;
   -webkit-font-smoothing: antialiased;
   font-variation-settings:
     "FILL" 0,

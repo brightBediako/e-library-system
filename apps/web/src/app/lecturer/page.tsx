@@ -1,59 +1,19 @@
+import Link from "next/link";
 import { DashboardShell } from "@/components/app-shell/DashboardShell";
+import { MobileBottomNav } from "@/components/app-shell/MobileBottomNav";
+import { SidebarNavLink } from "@/components/app-shell/SidebarNavLink";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
-
-type NavItem = { label: string; icon: string; active?: boolean; danger?: boolean };
-
-const navItems: NavItem[] = [
-  { label: "Dashboard", icon: "dashboard", active: true },
-  { label: "My Resources", icon: "folder_open" },
-  { label: "Course Mapping", icon: "map" },
-  { label: "Analytics", icon: "analytics" },
-  { label: "Recommendations", icon: "recommend" },
-];
-
-const bottomItems: NavItem[] = [
-  { label: "Support", icon: "contact_support" },
-  { label: "Sign Out", icon: "logout", danger: true },
-];
-
-const engagement = [
-  { title: "Anatomy & Physiology Notes - Sem 1", views: "450 views", width: "85%", trend: "trending_up" },
-  { title: "Pharmacology Past Questions 2023", views: "312 views", width: "62%", trend: "trending_up" },
-  { title: "Midwifery Clinical Guidelines", views: "188 views", width: "40%", trend: "trending_flat" },
-] as const;
-
-const mappings = [
-  { meta: "Level 100 • Semester 1", title: "General Nursing Foundations", resources: "12 Resources", students: "32 Students", border: "border-primary" },
-  { meta: "Level 200 • Semester 2", title: "Surgical Nursing II", resources: "8 Resources", students: "28 Students", border: "border-secondary-container" },
-  { meta: "Level 300 • Semester 1", title: "Pediatric Healthcare", resources: "15 Resources", students: "45 Students", border: "border-tertiary-fixed" },
-] as const;
-
-const suggestions = [
-  {
-    title: "Principles of Anatomy & Physiology",
-    author: "Gerard J. Tortora",
-    tag: "Core Text",
-    edition: "4th Edition",
-    image:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuAFn37UCNlQjsgNB43vgw-vC15m7igeNkCxt-ETQJ567H8s4Kxz8vjZuVHbr-W0UOBHFJYyopQja1E2QfbZPySUPGsBukt1P1SMNeWKMEfeReo15ppoXikiQlD3pjzBOIXBVzyfu8filCJDkcpfbRBuYZI0XjzlrvXkH19SsXuhPDc4UDtTsbecbQAorY3ekfsyP4G3KpBqwZJFwMcouoguBg5ZLNU5PgQBa8OVlNWoN-F39ItyziirNWGlSSwQcUFdX8w77fhsx_A",
-  },
-  {
-    title: "Clinical Nursing Skills and Techniques",
-    author: "Anne Griffin Perry",
-    tag: "Reference",
-    edition: "10th Edition",
-    image:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuCkGSd_C88ZPNbWrH6THsrqoh0FUJkOw6aOasvn_KDrtrBYfsBOv_N59FfZ1xbKqUtJlAvbtggtsHCLmuws2Wjgs1WDnLZcYbZZjuC8PVbLTqooI89U0R04gqig4KGbOv7P7LIb_pAnfUMAlgBdELKpIFUfvn-X-yUBRfJOx-btRmSCK_wDRa7ugRHlowjwF7G2mMnt5A6uQd5l4crvitI-R-EuP4C1PluR_hsdwsA2PoTjQP8qME3eu8hvizCNnKp6eO3sAhcrqGg",
-  },
-] as const;
+import { selectLecturerDashboardData } from "@/lib/mock/lecturerDashboard";
 
 export const dynamic = "force-dynamic";
 
 export default function Page() {
+  const { navItems, bottomItems, engagement, mappings, suggestions, mobileNavItems, topbar, hero } = selectLecturerDashboardData();
+
   return (
     <div className="bg-background text-on-surface antialiased">
       <DashboardShell
-        contentClassName="mx-auto max-w-7xl space-y-10 px-10 pb-12 pt-24"
+        contentClassName="mx-auto max-w-[1400px] space-y-10 px-8 pb-12 pt-24"
         sidebarHeader={
           <div className="mb-10 px-2">
             <div className="flex items-center gap-3">
@@ -70,34 +30,25 @@ export default function Page() {
         sidebarNav={
           <>
             {navItems.map((item) => (
-              <button
+              <SidebarNavLink
                 key={item.label}
-                className={`flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left transition-transform duration-200 hover:translate-x-1 ${
-                  item.active
-                    ? "bg-white text-blue-900 shadow-sm font-bold"
-                    : "text-slate-600 hover:bg-slate-100"
-                }`}
-                type="button"
-              >
-                <MaterialIcon icon={item.icon} />
-                <span className="text-sm font-medium">{item.label}</span>
-              </button>
+                label={item.label}
+                icon={item.icon}
+                href={item.href ?? "/lecturer"}
+              />
             ))}
           </>
         }
         sidebarFooter={
-          <div className="space-y-1 border-t border-slate-200 pt-6">
+          <div className="space-y-1 pt-6">
             {bottomItems.map((item) => (
-              <button
+              <SidebarNavLink
                 key={item.label}
-                className={`flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left transition-transform duration-200 hover:translate-x-1 ${
-                  item.danger ? "text-error hover:bg-error/10" : "text-slate-600 hover:bg-slate-100"
-                }`}
-                type="button"
-              >
-                <MaterialIcon icon={item.icon} />
-                <span className="text-sm font-medium">{item.label}</span>
-              </button>
+                label={item.label}
+                icon={item.icon}
+                href={item.href ?? "/lecturer"}
+                danger={item.danger}
+              />
             ))}
           </div>
         }
@@ -107,7 +58,7 @@ export default function Page() {
               <MaterialIcon icon="search" className="mr-2 text-sm text-slate-400" />
               <input
                 className="w-full border-none bg-transparent text-sm placeholder:text-slate-500 focus:ring-0"
-                placeholder="Search catalog, notes, or members..."
+                placeholder={topbar.searchPlaceholder}
                 type="text"
               />
             </div>
@@ -122,15 +73,15 @@ export default function Page() {
               <button className="rounded-lg bg-gradient-to-br from-primary to-primary-container px-5 py-2 text-sm font-semibold text-white shadow-md transition-transform active:scale-95" type="button">
                 Quick Action
               </button>
-              <div className="flex items-center gap-3 border-l border-slate-200 pl-6">
+              <div className="flex items-center gap-3 pl-6">
                 <div className="text-right">
-                  <p className="text-sm font-bold text-primary">Dr. Araba Mensah</p>
-                  <p className="text-[10px] font-medium text-on-surface-variant">Senior Lecturer</p>
+                  <p className="text-sm font-bold text-primary">{topbar.profileName}</p>
+                  <p className="text-[10px] font-medium text-on-surface-variant">{topbar.profileRole}</p>
                 </div>
                 <img
                   alt="Lecturer profile avatar"
                   className="h-10 w-10 rounded-full object-cover ring-2 ring-surface-container-highest"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJ8-PDoLcTtELPtY8KaBUrNggqrtcaahe2sETNXCOToMIj4mTwMj74DsJPbTStS-ZGDTRwj2zwP2a9ZRW1YaSHiwsDCqoKhZQFY35aF-0W8JdqMdAx9lbGAh21psGjD4N8GSpOV0QXIQUD2qt6fyM6LSGcAYA4ablVg6EM9osCwtBmOyVepuWMpvUS0N4HhgY2x2aFcX8YmeQrFqms3YniQJCeD34UACwsq6UifWiEjG509fx6wMUUmO3CBX5e0Qh2t6JLTI8nrew"
+                  src={topbar.avatarUrl}
                 />
               </div>
             </div>
@@ -143,14 +94,13 @@ export default function Page() {
         }
       >
         <section className="grid grid-cols-1 gap-6 md:grid-cols-4">
-          <section className="grid grid-cols-1 gap-6 md:grid-cols-4">
             <div className="relative flex h-56 flex-col justify-between overflow-hidden rounded-[1.5rem] bg-gradient-to-br from-primary to-primary-container p-8 text-white shadow-xl md:col-span-2">
               <div className="relative z-10">
-                <h2 className="text-lg font-medium opacity-80">Welcome back, Curator.</h2>
-                <p className="mt-2 text-3xl font-bold tracking-tight">Your resources reached 2,480 students this week.</p>
+                <h2 className="text-lg font-medium opacity-80">{hero.title}</h2>
+                <p className="mt-2 text-3xl font-bold tracking-tight">{hero.subtitle}</p>
               </div>
               <div className="relative z-10 flex items-center gap-4">
-                <span className="rounded-full bg-white/20 px-4 py-1.5 text-xs font-bold uppercase tracking-wider backdrop-blur-md">+12% from last month</span>
+                <span className="rounded-full bg-white/20 px-4 py-1.5 text-xs font-bold uppercase tracking-wider backdrop-blur-md">{hero.delta}</span>
               </div>
               <div className="absolute -bottom-10 -right-10 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
             </div>
@@ -171,7 +121,6 @@ export default function Page() {
                 <p className="text-4xl font-bold tracking-tighter text-primary">1,128</p>
               </div>
             </div>
-          </section>
 
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-3">
             <div className="space-y-6 lg:col-span-2">
@@ -180,7 +129,7 @@ export default function Page() {
                 <p className="text-sm text-on-surface-variant">Distribute new materials to your courses.</p>
               </div>
               <div className="rounded-[1.5rem] bg-surface-container-low p-1">
-                <div className="group cursor-pointer rounded-[1.25rem] border-2 border-dashed border-outline-variant bg-surface-container-lowest p-12 text-center transition-all hover:bg-slate-50">
+                <div className="group cursor-pointer rounded-[1.25rem] bg-surface-container-lowest p-12 text-center transition-all hover:bg-slate-50">
                   <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary-container text-white shadow-lg transition-transform group-hover:scale-110">
                     <MaterialIcon icon="cloud_upload" className="text-3xl" />
                   </div>
@@ -195,9 +144,9 @@ export default function Page() {
               <div className="rounded-[1.5rem] bg-surface-container-lowest p-8">
                 <div className="mb-8 flex items-center justify-between">
                   <h3 className="text-xl font-bold text-primary">Engagement Metrics</h3>
-                  <button className="flex items-center gap-1 text-sm font-bold text-primary hover:underline" type="button">
+                  <Link className="flex items-center gap-1 text-sm font-bold text-primary hover:underline" href="/lecturer">
                     Full Report <MaterialIcon icon="arrow_forward" className="text-sm" />
-                  </button>
+                  </Link>
                 </div>
                 <div className="space-y-6">
                   {engagement.map((item) => (
@@ -226,7 +175,7 @@ export default function Page() {
                 </h3>
                 <div className="space-y-3">
                   {mappings.map((item) => (
-                    <div key={item.title} className={`rounded-xl border-l-4 bg-surface-container-lowest p-4 shadow-sm ${item.border}`}>
+                    <div key={item.title} className={`rounded-xl bg-surface-container-lowest p-4 shadow-sm ${item.border}`}>
                       <p className="text-[10px] font-black uppercase tracking-wider text-on-surface-variant">{item.meta}</p>
                       <h4 className="mt-1 font-bold text-primary">{item.title}</h4>
                       <div className="mt-3 flex gap-2">
@@ -236,7 +185,7 @@ export default function Page() {
                     </div>
                   ))}
                 </div>
-                <button className="mt-6 w-full rounded-xl border-2 border-primary/10 py-3 text-sm font-bold text-primary transition-colors hover:bg-primary/5" type="button">
+                <button className="mt-6 w-full rounded-xl bg-primary-fixed py-3 text-sm font-bold text-primary transition-colors hover:bg-primary-container/40" type="button">
                   Add New Mapping
                 </button>
               </div>
@@ -269,19 +218,7 @@ export default function Page() {
         </section>
       </DashboardShell>
 
-      <nav className="fixed bottom-0 left-0 z-50 flex w-full justify-around border-t border-slate-100 bg-white px-4 py-3 shadow-[0_-4px_20px_-5px_rgba(0,0,0,0.1)] md:hidden">
-        {[
-          { label: "Home", icon: "dashboard", active: true },
-          { label: "Resources", icon: "folder", active: false },
-          { label: "Stats", icon: "analytics", active: false },
-          { label: "Profile", icon: "person", active: false },
-        ].map((item) => (
-          <button key={item.label} className={`flex flex-col items-center gap-1 ${item.active ? "font-bold text-blue-900" : "text-slate-400"}`} type="button">
-            <MaterialIcon icon={item.icon} filled={item.active} />
-            <span className="text-[10px] uppercase tracking-tighter">{item.label}</span>
-          </button>
-        ))}
-      </nav>
+      <MobileBottomNav items={mobileNavItems} />
     </div>
   );
 }

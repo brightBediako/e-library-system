@@ -1,126 +1,14 @@
 import Link from "next/link";
 import { DashboardShell } from "@/components/app-shell/DashboardShell";
+import { SidebarNavLink } from "@/components/app-shell/SidebarNavLink";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
-
-type NavItem = {
-  label: string;
-  icon: string;
-  active?: boolean;
-  href?: string;
-};
-
-const navItems: NavItem[] = [
-  { label: "Dashboard", icon: "dashboard", active: true },
-  { label: "User Management", icon: "group" },
-  { label: "Library Config", icon: "settings" },
-  { label: "Content Oversight", icon: "inventory_2" },
-  { label: "Reports", icon: "analytics" },
-];
-
-const footerNavItems: NavItem[] = [
-  { label: "Support", icon: "contact_support" },
-  { label: "Sign Out", icon: "logout", href: "/" },
-];
-
-type UserStat = {
-  label: string;
-  value: string;
-  delta?: string;
-  urgent?: boolean;
-};
-
-const userStats: UserStat[] = [
-  { label: "Librarians", value: "8", delta: "+1 this month" },
-  { label: "Staff", value: "24" },
-  { label: "Pending Students", value: "112", urgent: true },
-];
-
-const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"] as const;
-const visitHeights = [40, 65, 85, 100, 70, 55, 60] as const;
-
-const borrowingRules = [
-  { label: "Max Loan Period", value: "14 days" },
-  { label: "Renewal Limit", value: "2 times" },
-] as const;
-
-const fineRates = [
-  { label: "Daily Overdue Rate", value: "GHS 1.00/day" },
-  { label: "Lost Item Fee", value: "Cost + 20%" },
-] as const;
-
-const departments = [
-  "Nursing",
-  "Midwifery",
-  "Public Health",
-  "Obstetrics",
-  "Pediatrics",
-  "Anatomy",
-] as const;
-
-const oversightItems = [
-  {
-    name: "Advanced Pharmacology PQs 2023",
-    size: "12.4 MB",
-    type: "Past Questions",
-    typeClassName: "bg-primary-fixed text-on-primary-fixed",
-    contributor: "Dr. Samuel Appiah",
-    date: "Oct 24, 2023",
-    icon: "description",
-    iconBoxClassName: "bg-tertiary-fixed text-on-tertiary-fixed",
-    stripe: "bg-surface-container-lowest",
-  },
-  {
-    name: "Maternal Health Nursing Notes",
-    size: "45.1 MB",
-    type: "Lecture Notes",
-    typeClassName: "bg-tertiary-fixed text-on-tertiary-fixed",
-    contributor: "Prof. Elena Mensah",
-    date: "Oct 23, 2023",
-    icon: "menu_book",
-    iconBoxClassName: "bg-secondary-container text-on-secondary-container",
-    stripe: "bg-surface-container-low/30",
-  },
-  {
-    name: "Surgical Procedures Seminar Video",
-    size: "1.2 GB",
-    type: "Video Resource",
-    typeClassName: "bg-surface-container-highest text-on-surface",
-    contributor: "ICT Department",
-    date: "Oct 22, 2023",
-    icon: "videocam",
-    iconBoxClassName: "bg-error-container text-on-error-container",
-    stripe: "bg-surface-container-lowest",
-  },
-] as const;
-
-function SidebarLink({
-  label,
-  icon,
-  active = false,
-  href = "#",
-}: Readonly<{
-  label: string;
-  icon: string;
-  active?: boolean;
-  href?: string;
-}>) {
-  const base =
-    "flex items-center rounded-lg px-4 py-3 transition-transform duration-200 hover:translate-x-1";
-  const classes = active
-    ? "bg-white text-blue-900 shadow-sm font-bold dark:bg-blue-900/20 dark:text-blue-300"
-    : "text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-900";
-
-  return (
-    <Link href={href} className={`${base} ${classes}`}>
-      <MaterialIcon icon={icon} className="mr-3" />
-      <span className="text-sm font-medium">{label}</span>
-    </Link>
-  );
-}
+import { selectAdminDashboardData } from "@/lib/mock/adminDashboard";
 
 export const dynamic = "force-dynamic";
 
 export default function Page() {
+  const { navItems, footerNavItems, userStats, weekDays, visitHeights, borrowingRules, fineRates, departments, oversightItems, header, topbar } = selectAdminDashboardData();
+
   return (
     <DashboardShell
       rootClassName="antialiased"
@@ -138,14 +26,20 @@ export default function Page() {
       sidebarNav={
         <>
           {navItems.map((item) => (
-            <SidebarLink key={item.label} {...item} />
+            <SidebarNavLink key={item.label} label={item.label} icon={item.icon} href={item.href ?? "/admin"} />
           ))}
         </>
       }
       sidebarFooter={
-        <div className="space-y-1 border-t border-slate-200 pt-6 dark:border-slate-800">
+        <div className="space-y-1 pt-6 dark:border-slate-800">
           {footerNavItems.map((item) => (
-            <SidebarLink key={item.label} {...item} />
+            <SidebarNavLink
+              key={item.label}
+              label={item.label}
+              icon={item.icon}
+              href={item.href ?? "/admin"}
+              danger={item.label === "Sign Out"}
+            />
           ))}
         </div>
       }
@@ -159,7 +53,7 @@ export default function Page() {
               />
               <input
                 className="w-full rounded-xl border-none bg-surface-container-highest py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary/20"
-                placeholder="Search resources, students, or records..."
+                placeholder={topbar.searchPlaceholder}
                 type="text"
               />
             </div>
@@ -174,10 +68,10 @@ export default function Page() {
               <MaterialIcon icon="settings" className="cursor-pointer rounded-full p-2 hover:bg-slate-50" />
               <MaterialIcon icon="help" className="cursor-pointer rounded-full p-2 hover:bg-slate-50" />
             </div>
-            <div className="h-8 w-8 overflow-hidden rounded-full border-2 border-primary-fixed">
+            <div className="h-8 w-8 overflow-hidden rounded-full ring-2 ring-primary-fixed">
               <img
                 alt="User profile avatar"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBye4wz8_4g1LiF1cgHC_ogA3CcYhxZ18uuRpD3Yh-HhPzlh473bsN0Y7PG0m6WFBGoAwZLIlzZB353_l-BD_m0M1QQ6tKhtYzElpAER_NVh-PcOWpoFwU--_y62VX1aEU3S5ATE9BWRQZDpuWM-BefEoifh0VhjkPXbt64etklH8lNzggf2UkLnflJ9645Mol0AkZ7vNsBKvGQApDgWzRjheOMGsXYmXh4r6PyHvoJHYKUtv_1SSub9WF6fx3OOHMOufPSwT2_u-I"
+                src={topbar.avatarUrl}
               />
             </div>
           </div>
@@ -188,23 +82,16 @@ export default function Page() {
           <MaterialIcon icon="add" />
         </button>
       }
+      contentClassName="mx-auto max-w-[1400px] px-8 pb-12 pt-24"
     >
       <header className="mb-10">
-        <h2 className="text-3xl font-extrabold tracking-tight text-primary">Admin Dashboard</h2>
+        <h2 className="text-3xl font-extrabold tracking-tight text-primary">{header.title}</h2>
         <p className="mt-1 text-on-surface-variant">
-          Institutional oversight for NMTC Library Services.
+          {header.subtitle}
         </p>
       </header>
 
       <div className="grid grid-cols-12 gap-8">
-        <header className="mb-10">
-          <h2 className="text-3xl font-extrabold tracking-tight text-primary">Admin Dashboard</h2>
-          <p className="mt-1 text-on-surface-variant">
-            Institutional oversight for NMTC Library Services.
-          </p>
-        </header>
-
-        <div className="grid grid-cols-12 gap-8">
           <section className="col-span-12 rounded-3xl bg-surface-container-low p-8 lg:col-span-8">
             <div className="mb-8 flex items-end justify-between">
               <div>
@@ -213,7 +100,7 @@ export default function Page() {
                   Active personnel and pending verification
                 </p>
               </div>
-              <button className="text-sm font-bold text-primary hover:underline">View All Users</button>
+              <Link className="text-sm font-bold text-primary hover:underline" href="/admin">View All Users</Link>
             </div>
 
             <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
@@ -288,7 +175,7 @@ export default function Page() {
               </div>
               <div className="space-y-4">
                 {borrowingRules.map((r) => (
-                  <div key={r.label} className="flex items-center justify-between border-b border-surface-container py-3">
+                  <div key={r.label} className="flex items-center justify-between rounded-lg bg-surface-container-low py-3 px-2">
                     <span className="text-sm text-on-surface-variant">{r.label}</span>
                     <span className="text-sm font-bold text-primary">{r.value}</span>
                   </div>
@@ -306,7 +193,7 @@ export default function Page() {
               </div>
               <div className="space-y-4">
                 {fineRates.map((r) => (
-                  <div key={r.label} className="flex items-center justify-between border-b border-surface-container py-3">
+                  <div key={r.label} className="flex items-center justify-between rounded-lg bg-surface-container-low py-3 px-2">
                     <span className="text-sm text-on-surface-variant">{r.label}</span>
                     <span className="text-sm font-bold text-primary">{r.value}</span>
                   </div>
@@ -328,7 +215,7 @@ export default function Page() {
                     {dep}
                   </span>
                 ))}
-                <button className="rounded-full border-2 border-dashed border-outline-variant px-4 py-2 text-xs font-bold text-on-surface-variant hover:bg-surface-container-lowest">
+                <button className="rounded-full bg-surface-container-high px-4 py-2 text-xs font-bold text-on-surface-variant hover:bg-surface-container-lowest">
                   + Add New
                 </button>
               </div>
@@ -405,7 +292,6 @@ export default function Page() {
               </table>
             </div>
           </section>
-        </div>
       </div>
     </DashboardShell>
   );

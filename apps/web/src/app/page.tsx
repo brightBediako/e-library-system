@@ -1,77 +1,114 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
-
-type Role =
-  | "super_admin"
-  | "school_admin"
-  | "librarian"
-  | "lecturer"
-  | "student"
-  | "guest";
-
-const roleToPath: Record<Role, string> = {
-  super_admin: "/super-admin",
-  school_admin: "/admin",
-  librarian: "/librarian",
-  lecturer: "/lecturer",
-  student: "/student",
-  guest: "/guest",
-};
+import { AUTH_COOKIE_NAME, roleToHomePath, type AppRole } from "@/lib/auth/session";
 
 export default function HomePage() {
   const router = useRouter();
-  const [role, setRole] = useState<Role | "">("");
+  const [role, setRole] = useState<AppRole | "">("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [reason, setReason] = useState<string | null>(null);
+  const [fromPath, setFromPath] = useState<string | null>(null);
+  const [currentRole, setCurrentRole] = useState<string | null>(null);
 
   const canSubmit = useMemo(() => Boolean(role), [role]);
+  const redirectMessage = useMemo(() => {
+    if (reason === "auth-required") {
+      return "Please sign in to continue.";
+    }
+    if (reason === "role-mismatch") {
+      return "Your current role cannot access that page. Sign in with another role to continue.";
+    }
+    return null;
+  }, [reason]);
 
-  function onSubmit(e: React.FormEvent) {
+  useEffect(() => {
+    if (globalThis.window === undefined) return;
+    const params = new URLSearchParams(globalThis.window.location.search);
+    setReason(params.get("reason"));
+    setFromPath(params.get("from"));
+    setCurrentRole(params.get("role"));
+  }, []);
+
+  useEffect(() => {
+    if (reason) return;
+    if (typeof document === "undefined") return;
+
+    const roleCookieValue = document.cookie
+      .split("; ")
+      .find((item) => item.startsWith(`${AUTH_COOKIE_NAME}=`))
+      ?.split("=")[1] as AppRole | undefined;
+
+    if (roleCookieValue && roleCookieValue in roleToHomePath) {
+      router.replace(roleToHomePath[roleCookieValue]);
+    }
+  }, [reason, router]);
+
+  function onSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!role) return;
-    router.push(roleToPath[role] ?? "/search");
+    document.cookie = `${AUTH_COOKIE_NAME}=${role}; path=/; max-age=86400; samesite=lax`;
+    router.push(roleToHomePath[role] ?? "/search");
   }
 
+  const fieldClass =
+    "w-full rounded-lg border-0 bg-[#f0f2f5] py-3 pl-11 pr-3 text-sm font-medium text-on-surface shadow-none outline-none transition-shadow placeholder:text-[#6b7280] focus:ring-2 focus:ring-primary/25 focus:ring-offset-0 sm:pl-12 sm:pr-4";
+
   return (
-    <div className="min-h-screen bg-background bg-academic flex flex-col items-center justify-start p-6 relative overflow-hidden pt-14 pb-10">
-      {/* Background shapes (match login.png) */}
-      <div className="absolute -left-24 top-8 w-80 h-80 rounded-full bg-surface-container-highest opacity-60 flex items-center justify-center">
-        <div className="text-on-surface-variant/15 font-bold text-[12px] uppercase tracking-[0.3em]">
-          ACADEMIC AMBIENT
-        </div>
-      </div>
+    <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[#f4f7f9] px-4 py-12 sm:px-6 sm:py-16">
+      {/* Background: soft circle + tilted texture panel (match login.png) */}
       <div
-        className="absolute -right-40 bottom-[-70px] w-[620px] h-[340px] rounded-3xl bg-surface-container-highest/60 rotate-12 overflow-hidden"
+        aria-hidden
+        className="pointer-events-none absolute -left-24 top-[10%] h-56 w-56 rounded-full bg-[#e8ecf1]/90 blur-[1px] sm:h-64 sm:w-64 lg:h-72 lg:w-72"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-32 bottom-[-8%] h-[220px] w-[min(92vw,420px)] rotate-[11deg] overflow-hidden rounded-[28px] bg-[#e4e9ef]/75 sm:h-[280px] sm:w-[480px] lg:bottom-[-5%] lg:h-[320px] lg:w-[560px]"
         style={{
-          backgroundImage:
-            "repeating-linear-gradient(135deg, rgba(0,32,69,0.14) 0px, rgba(0,32,69,0.14) 1px, transparent 1px, transparent 14px)",
-          backgroundSize: "auto",
+          backgroundImage: `repeating-linear-gradient(
+            125deg,
+            rgba(0, 32, 69, 0.07) 0px,
+            rgba(0, 32, 69, 0.07) 1px,
+            transparent 1px,
+            transparent 11px
+          )`,
         }}
-        aria-hidden="true"
       />
 
-      <div className="w-full max-w-md z-10">
-        <header className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary shadow-lg mb-5">
-            <MaterialIcon icon="menu_book" className="text-white text-4xl" />
+      <div className="relative z-10 w-full max-w-[420px]">
+        <header className="mb-9 text-center sm:mb-10">
+          <div className="mx-auto mb-5 inline-flex h-[4.25rem] w-[4.25rem] items-center justify-center rounded-2xl bg-primary shadow-[0_18px_36px_-20px_rgba(0,32,69,0.45)]">
+            <MaterialIcon icon="menu_book" className="text-[2.25rem] text-white" />
           </div>
-          <h1 className="text-2xl font-black tracking-tight text-primary uppercase">
-            NMTCLIBRARY
+          <h1 className="text-[1.35rem] font-black uppercase leading-tight tracking-[-0.03em] text-primary sm:text-[1.5rem]">
+            NMTC <span className="whitespace-nowrap">LIBRARY</span>
           </h1>
-          <p className="text-[10px] font-bold tracking-[0.25em] text-on-surface-variant mt-1 uppercase">
+          <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.28em] text-[#6b7280] sm:text-[11px]">
             MANAGEMENT SYSTEM
           </p>
         </header>
 
         <main>
-          <div className="bg-surface-container-lowest rounded-[22px] p-8 shadow-[0_24px_48px_-20px_rgba(0,32,69,0.12)]">
-            <div className="flex items-center gap-3 mb-8">
-              <span className="block h-8 w-1.5 bg-primary rounded-full" />
-              <h2 className="text-lg font-extrabold tracking-tight text-primary">
+          <div className="rounded-[28px] bg-white p-8 shadow-[0_28px_64px_-32px_rgba(17,45,78,0.22)] sm:p-10 sm:px-11">
+            {redirectMessage ? (
+              <div
+                className="mb-6 rounded-xl bg-error-container/55 px-4 py-3 text-xs font-semibold text-on-error-container"
+                role="status"
+                aria-live="polite"
+              >
+                {redirectMessage}
+                {fromPath ? <span className="block pt-1 text-[11px] opacity-80">Requested: {fromPath}</span> : null}
+                {currentRole ? <span className="block text-[11px] opacity-80">Current role: {currentRole}</span> : null}
+              </div>
+            ) : null}
+            <div className="mb-8 flex items-stretch gap-3 sm:mb-9">
+              <span className="w-1 shrink-0 rounded-full bg-primary" aria-hidden />
+              <h2 className="flex items-center text-lg font-bold leading-snug tracking-tight text-primary sm:text-xl">
                 Sign In to Dashboard
               </h2>
             </div>
@@ -79,7 +116,7 @@ export default function HomePage() {
             <form className="space-y-6" onSubmit={onSubmit}>
               <div className="space-y-2">
                 <label
-                  className="block text-[11px] font-black tracking-widest uppercase text-on-surface-variant"
+                  className="block text-[11px] font-bold uppercase tracking-[0.14em] text-[#6b7280]"
                   htmlFor="role"
                 >
                   Access Role
@@ -88,13 +125,14 @@ export default function HomePage() {
                 <div className="relative">
                   <MaterialIcon
                     icon="manage_accounts"
-                    className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/70 text-lg"
+                    className="pointer-events-none absolute left-3.5 top-1/2 z-[1] -translate-y-1/2 text-[1.125rem] text-[#6b7280] sm:left-4"
                   />
                   <select
                     id="role"
                     value={role}
-                    onChange={(e) => setRole(e.target.value as Role | "")}
-                    className="w-full pl-12 pr-10 py-4 bg-surface-container-low rounded-xl border-none focus:ring-2 focus:ring-primary/20 text-on-surface font-semibold appearance-none cursor-pointer"
+                    onChange={(e) => setRole(e.target.value as AppRole | "")}
+                    className={`${fieldClass} cursor-pointer appearance-none pr-10 font-medium text-on-surface`}
+                    aria-describedby="role-help-text"
                   >
                     <option value="" disabled>
                       Select your identity
@@ -108,28 +146,28 @@ export default function HomePage() {
                   </select>
                   <MaterialIcon
                     icon="expand_more"
-                    className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant/70 pointer-events-none text-xl"
+                    className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-[1.25rem] text-[#6b7280]"
                   />
                 </div>
+                <p id="role-help-text" className="text-[11px] leading-relaxed text-[#9ca3af]">
+                  Select your role to continue to the right dashboard.
+                </p>
               </div>
 
               <div className="space-y-2">
-                <label
-                  className="block text-[11px] font-black tracking-widest uppercase text-on-surface-variant"
-                  htmlFor="username"
-                >
+                <label className="block text-[11px] font-bold uppercase tracking-[0.14em] text-[#6b7280]" htmlFor="username">
                   Username / ID
                 </label>
                 <div className="relative">
                   <MaterialIcon
                     icon="badge"
-                    className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/70 text-lg"
+                    className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[1.125rem] text-[#6b7280] sm:left-4"
                   />
                   <input
                     id="username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="w-full pl-12 pr-4 py-4 bg-surface-container-low rounded-xl border-none focus:ring-2 focus:ring-primary/20 text-on-surface font-semibold placeholder:text-on-surface-variant/60 outline-none"
+                    className={fieldClass}
                     placeholder="e.g. STU-2024-001"
                     type="text"
                     autoComplete="username"
@@ -138,90 +176,77 @@ export default function HomePage() {
               </div>
 
               <div className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <label
-                    className="block text-[11px] font-black tracking-widest uppercase text-on-surface-variant"
-                    htmlFor="password"
-                  >
+                <div className="flex items-baseline justify-between gap-3">
+                  <label className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#6b7280]" htmlFor="password">
                     Security Key
                   </label>
-                  <a
-                    className="text-xs font-bold text-primary underline decoration-primary/40 underline-offset-2 hover:decoration-primary transition-all"
-                    href="#"
+                  <button
+                    className="shrink-0 text-xs font-bold text-primary underline decoration-primary/35 underline-offset-2 transition-colors hover:text-primary-container"
                     onClick={(e) => e.preventDefault()}
+                    type="button"
                   >
                     Forgot Password?
-                  </a>
+                  </button>
                 </div>
 
                 <div className="relative">
                   <MaterialIcon
                     icon="lock"
-                    className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/70 text-lg"
+                    className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[1.125rem] text-[#6b7280] sm:left-4"
                   />
 
                   <input
                     id="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-12 pr-12 py-4 bg-surface-container-low rounded-xl border-none focus:ring-2 focus:ring-primary/20 text-on-surface font-semibold placeholder:text-on-surface-variant/60 outline-none"
+                    className={`${fieldClass} pr-11 sm:pr-12`}
                     placeholder="••••••••"
                     type={showPassword ? "text" : "password"}
                     autoComplete="current-password"
                   />
 
                   <button
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant/70 hover:text-primary transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1.5 text-[#6b7280] transition-colors hover:bg-black/[0.04] hover:text-primary"
                     type="button"
                     aria-label={showPassword ? "Hide password" : "Show password"}
                     onClick={() => setShowPassword((v) => !v)}
                   >
-                    <MaterialIcon
-                      icon={showPassword ? "visibility_off" : "visibility"}
-                      className="text-xl"
-                    />
+                    <MaterialIcon icon={showPassword ? "visibility_off" : "visibility"} className="text-[1.25rem]" />
                   </button>
                 </div>
               </div>
 
               <button
-                className="w-full bg-primary text-white py-4 rounded-xl font-extrabold tracking-wide shadow-lg shadow-primary/20 hover:opacity-95 active:scale-[0.99] transition-all flex items-center justify-center gap-2"
+                className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg bg-primary py-3.5 text-sm font-bold tracking-wide text-white shadow-[0_14px_28px_-16px_rgba(0,32,69,0.55)] transition-all hover:bg-[#001a38] active:scale-[0.99] disabled:cursor-not-allowed disabled:bg-primary/45 disabled:opacity-90 sm:py-4"
                 type="submit"
                 disabled={!canSubmit}
               >
                 Sign In
-                <MaterialIcon icon="arrow_forward" className="text-xl" />
+                <MaterialIcon icon="arrow_forward" className="text-[1.125rem] text-white" />
               </button>
             </form>
           </div>
 
-          <div className="mt-8 flex flex-col items-center gap-4">
-            <div className="flex items-center gap-8 text-sm font-semibold text-on-surface-variant">
-              <a
-                className="hover:text-primary transition-colors flex items-center gap-2"
-                href="#"
+          <div className="mt-9 flex flex-col items-center gap-5 sm:mt-10">
+            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm font-semibold text-[#6b7280]">
+              <button
+                className="inline-flex items-center gap-2 rounded-full bg-[#eceff3] px-4 py-2.5 text-[#43474e] transition-colors hover:bg-[#e2e6ec] hover:text-primary"
                 onClick={(e) => e.preventDefault()}
+                type="button"
               >
-                <MaterialIcon
-                  icon="help"
-                  className="text-lg text-on-surface-variant/80"
-                />
+                <MaterialIcon icon="help" className="text-[1.125rem]" />
                 Technical Support
-              </a>
-              <div className="h-1.5 w-1.5 bg-outline-variant/80 rounded-full" />
-              <a
-                className="hover:text-primary transition-colors flex items-center gap-2"
-                href="#"
-                onClick={(e) => e.preventDefault()}
+              </button>
+              <span className="hidden h-1 w-1 rounded-full bg-[#c4c6cf] sm:inline" aria-hidden />
+              <Link
+                className="inline-flex items-center gap-2 font-bold text-primary underline decoration-primary/40 underline-offset-4 transition-colors hover:text-primary-container"
+                href="/guest"
               >
-                <MaterialIcon
-                  icon="explore"
-                  className="text-lg text-on-surface-variant/80"
-                />
+                <MaterialIcon icon="explore" className="text-[1.125rem]" />
                 Browse Public Catalog
-              </a>
+              </Link>
             </div>
-            <p className="text-[10px] uppercase tracking-[0.25em] font-bold text-outline-variant/90">
+            <p className="text-center text-[10px] font-semibold uppercase tracking-[0.22em] text-[#9ca3af]">
               Powered by The Scholarly Curator v2.4
             </p>
           </div>

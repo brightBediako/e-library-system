@@ -1,58 +1,19 @@
 import Link from "next/link";
 import { DashboardShell } from "@/components/app-shell/DashboardShell";
+import { SidebarNavLink } from "@/components/app-shell/SidebarNavLink";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
-
-type NavItem = { label: string; icon: string; active?: boolean; href?: string; danger?: boolean };
-
-const navItems: NavItem[] = [
-  { label: "Dashboard", icon: "dashboard", active: true },
-  { label: "Digital Library", icon: "menu_book" },
-  { label: "My Borrowing", icon: "swap_horiz" },
-  { label: "Course Resources", icon: "inventory_2" },
-  { label: "Saved Items", icon: "bookmark" },
-];
-
-const resourceCards = [
-  { title: "Pathophysiology Foundations", sub: "Dr. Robert Chen • 2023", type: "E-BOOK", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCdCLCKXlWsaM02KD7w8Zi-as3V-CxzGKLvr8J4KbtmCCTSPI12uFlAIaY3wF6apikIZHwoHH6sTaJIv16Z42Kezvbmt9KdFBg3Jy3c2GSrMfCTeIPAPd9-RA7Ja1Y1X74RGxp_BgbbjyFD8NVvsc1H8jO8flvdxdJm_D8Jpz6mQBAbf69q6r3wyinaycRHgPBhHPwJC4ZW8XrMFbsywj3HWKhEQ2EluWt7UtAZvpFyAFvam891ZxillCXTpf2ktvTt64mXfma6Og0" },
-  { title: "Advanced Anatomy Atlas", sub: "University Press • Vol 12", type: "PDF", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAq6N2OyxPuNoWGtZhKCqtoTLIMUXxJk7hZVONQOcWIMXFO3thkLwShc2-xBQNidiyImhYAmw4nK33syPlgOUbrtOv5rZ2mja_F5JcUPVFmWgZegPimEZ1Yqt8Im_orGgIZCJaIsDTrhaoC0TqCU1tF9cJW2hKw8e9INCUHFmrfwa5VK8gtnLyUrmsVbBdXSgUrAOHVrF-2gN2u7yZFipGcTHDoTzzy7ikJYbtHtdx_PvX_wrkoMt1oNiTV_XydMKRYGfRSVcuAmRY" },
-] as const;
-
-type AlertItem = {
-  title: string;
-  body: string;
-  color: string;
-  muted?: boolean;
-};
-
-const alerts: AlertItem[] = [
-  { title: "Book Overdue", body: '"Modern Pediatrics" was due yesterday. Please return or renew to avoid daily fines.', color: "bg-error" },
-  { title: "New Course Upload", body: 'Prof. Amara uploaded "Clinical Ethics Case Studies" to your dashboard.', color: "bg-primary" },
-  { title: "System Update", body: "Digital Library will be under maintenance on Sunday from 02:00 AM.", color: "bg-outline-variant", muted: true },
-];
-
-function SidebarLink({ item }: Readonly<{ item: NavItem }>) {
-  let active = "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900";
-  if (item.active) {
-    active = "bg-white dark:bg-blue-900/20 text-blue-900 dark:text-blue-300 shadow-sm font-bold";
-  } else if (item.danger) {
-    active = "text-error hover:bg-error/5";
-  }
-  return (
-    <Link href={item.href ?? "#"} className={`flex items-center gap-3 rounded-lg px-4 py-3 transition-transform duration-200 hover:translate-x-1 ${active}`}>
-      <MaterialIcon icon={item.icon} />
-      <span className="text-sm">{item.label}</span>
-    </Link>
-  );
-}
+import { selectStudentDashboardData } from "@/lib/mock/studentDashboard";
 
 export const dynamic = "force-dynamic";
 
 export default function Page() {
+  const { navItems, resourceCards, alerts, activeLoans, profile, welcome } = selectStudentDashboardData();
+
   return (
     <DashboardShell
       rootClassName="antialiased"
       mainClassName="bg-background"
-      contentClassName="p-8 pt-20"
+      contentClassName="mx-auto max-w-[1400px] p-8 pb-12 pt-20"
       sidebarHeader={
         <div className="mb-8 px-4">
           <p className="text-[10px] font-black uppercase tracking-widest text-blue-900">The Scholarly Curator</p>
@@ -62,14 +23,14 @@ export default function Page() {
       sidebarNav={
         <>
           {navItems.map((item) => (
-            <SidebarLink key={item.label} item={item} />
+            <SidebarNavLink key={item.label} label={item.label} icon={item.icon} href={item.href ?? "/student"} />
           ))}
         </>
       }
       sidebarFooter={
-        <div className="space-y-1 border-t border-slate-200/50 pt-6">
-          <SidebarLink item={{ label: "Support", icon: "contact_support" }} />
-          <SidebarLink item={{ label: "Sign Out", icon: "logout", href: "/", danger: true }} />
+        <div className="space-y-1 pt-6">
+          <SidebarNavLink label="Support" icon="contact_support" href="/student" />
+          <SidebarNavLink label="Sign Out" icon="logout" href="/logout" danger />
         </div>
       }
       topbar={
@@ -85,7 +46,7 @@ export default function Page() {
             <div className="flex items-center gap-2">
               <button className="relative rounded-full p-2 text-slate-500 hover:bg-slate-50" type="button">
                 <MaterialIcon icon="notifications" />
-                <span className="absolute right-2 top-2 h-2 w-2 rounded-full border-2 border-white bg-error" />
+                <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-error shadow-[0_0_0_2px_rgba(255,255,255,1)]" />
               </button>
               <button className="rounded-full p-2 text-slate-500 hover:bg-slate-50" type="button"><MaterialIcon icon="settings" /></button>
               <button className="rounded-full p-2 text-slate-500 hover:bg-slate-50" type="button"><MaterialIcon icon="help" /></button>
@@ -93,10 +54,10 @@ export default function Page() {
             <div className="mx-2 h-8 w-px bg-outline-variant/30" />
             <div className="flex items-center gap-3">
               <div className="hidden text-right sm:block">
-                <p className="text-xs font-bold text-primary">Alex Sterling</p>
-                <p className="text-[10px] text-on-surface-variant">Nursing - Year 3</p>
+                <p className="text-xs font-bold text-primary">{profile.name}</p>
+                <p className="text-[10px] text-on-surface-variant">{profile.program}</p>
               </div>
-              <img alt="Student profile" className="h-10 w-10 rounded-full object-cover ring-2 ring-primary/10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXJgidGvkEZx4eXc5HR4v4nPw_ROU2bnGXonZE7-6ixhNg6t3btOQKxdGNiE765L_LJ4x1g2JdoRcR1Qv6OxYNdTlhn4xfY2BB-ifUEU7c9kD_DX6KI8pm4QlzKeqUR2CczS7Z7tR1PSi32-Jo1EDp8LW21iiGp6g7z7t2sYuudnAzAa-cIF02FQmt8c42uu_5WezZu3ylZq7_cVOCCqqhDU_rOeKUqfgLf_UNOpEYSU0_tph3BZ7Rr_mNUC7HniQ9G9oBNk3G2kU" />
+              <img alt="Student profile" className="h-10 w-10 rounded-full object-cover ring-2 ring-primary/10" src={profile.avatarUrl} />
             </div>
           </div>
         </>
@@ -111,13 +72,13 @@ export default function Page() {
       <div className="mx-auto max-w-7xl space-y-8">
           <section className="grid grid-cols-1 items-start gap-8 lg:grid-cols-3">
             <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary to-primary-container p-8 text-white shadow-xl lg:col-span-2">
-              <h1 className="mb-2 text-3xl font-bold tracking-tight">Welcome back, Alex.</h1>
-              <p className="mb-6 max-w-md text-on-primary-container">You have 2 books due this week and 4 new resource uploads in Clinical Practice III.</p>
+              <h1 className="mb-2 text-3xl font-bold tracking-tight">{welcome.title}</h1>
+              <p className="mb-6 max-w-md text-on-primary-container">{welcome.subtitle}</p>
               <div className="flex gap-4">
                 <button className="flex items-center gap-2 rounded-xl bg-surface-container-lowest px-6 py-2.5 text-sm font-bold text-primary hover:opacity-90" type="button">
                   <MaterialIcon icon="history" className="text-sm" /> Reading History
                 </button>
-                <button className="rounded-xl border border-white/20 bg-white/10 px-6 py-2.5 text-sm font-bold text-white hover:bg-white/20" type="button">Extend Loans</button>
+                <button className="rounded-xl bg-white/15 px-6 py-2.5 text-sm font-bold text-white hover:bg-white/25" type="button">Extend Loans</button>
               </div>
               <div className="absolute -bottom-16 -right-16 h-64 w-64 rounded-full bg-white/5 blur-3xl" />
             </div>
@@ -125,10 +86,7 @@ export default function Page() {
               <h3 className="flex items-center gap-2 font-bold text-primary">
                 <MaterialIcon icon="pending_actions" className="text-primary" /> Active Loans
               </h3>
-              {[
-                { title: "Essentials of Pharmacology", due: "Due in 2 days", warn: true },
-                { title: "Clinical Nursing Skills", due: "Due in 12 days" },
-              ].map((loan) => (
+              {activeLoans.map((loan) => (
                 <div key={loan.title} className="group flex cursor-pointer items-center justify-between">
                   <div>
                     <p className="text-sm font-bold text-on-surface">{loan.title}</p>
@@ -137,7 +95,7 @@ export default function Page() {
                   <MaterialIcon icon="chevron_right" className="text-outline transition-colors group-hover:text-primary" />
                 </div>
               ))}
-              <button className="w-full rounded-xl bg-surface-container-low py-3 text-xs font-bold text-primary hover:bg-surface-container-high" type="button">View All Borrowings</button>
+              <Link className="block w-full rounded-xl bg-surface-container-low py-3 text-center text-xs font-bold text-primary hover:bg-surface-container-high" href="/student">View All Borrowings</Link>
             </div>
           </section>
 
@@ -170,7 +128,7 @@ export default function Page() {
                   </div>
                 </div>
               ))}
-              <div className="flex flex-col rounded-3xl border border-transparent bg-surface-container-lowest p-6 shadow-sm transition-all hover:border-primary/10">
+              <div className="flex flex-col rounded-3xl bg-surface-container-lowest p-6 shadow-sm transition-all hover:bg-surface-container-low">
                 <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-secondary-fixed">
                   <MaterialIcon icon="school" className="text-on-secondary-fixed" />
                 </div>
@@ -222,7 +180,7 @@ export default function Page() {
                 </div>
               </div>
 
-              <div className="group relative overflow-hidden rounded-3xl border border-transparent bg-white p-8 shadow-sm transition-all hover:border-secondary-container">
+              <div className="group relative overflow-hidden rounded-3xl bg-white p-8 shadow-sm transition-all hover:bg-surface-container-lowest">
                 <span className="text-xs font-medium uppercase tracking-widest text-on-surface-variant">Favorite Subject</span>
                 <p className="mt-4 text-xl font-bold text-primary">Clinical Medicine</p>
                 <p className="mt-1 text-xs text-on-surface-variant">Based on 8 downloads</p>

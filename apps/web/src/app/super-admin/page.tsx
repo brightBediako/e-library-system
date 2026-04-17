@@ -1,112 +1,9 @@
-import Link from "next/link";
 import type { ReactNode } from "react";
+import Link from "next/link";
 import { DashboardShell } from "@/components/app-shell/DashboardShell";
+import { SidebarNavLink } from "@/components/app-shell/SidebarNavLink";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
-
-type NavItem = {
-  label: string;
-  icon: string;
-  active?: boolean;
-  href?: string;
-};
-
-const navItems: NavItem[] = [
-  { label: "Dashboard", icon: "dashboard", active: true },
-  { label: "System Health", icon: "health_and_safety" },
-  { label: "Institutions", icon: "account_balance" },
-  { label: "Feature Toggles", icon: "toggle_on" },
-  { label: "Logs", icon: "description" },
-  { label: "Settings", icon: "settings" },
-] ;
-
-const footerNavItems: NavItem[] = [
-  { label: "Support", icon: "contact_support" },
-  { label: "Sign Out", icon: "logout", href: "/" },
-];
-
-const stats = [
-  {
-    label: "Total Institutions",
-    value: "1",
-    icon: "account_balance",
-    meta: "Active",
-    metaClassName: "bg-primary-container text-primary-fixed-dim",
-  },
-  {
-    label: "Storage Usage",
-    value: "45%",
-    icon: "cloud",
-    detail: "4.5TB of 10TB total",
-    progress: 45,
-  },
-  {
-    label: "Bandwidth",
-    value: "Steady",
-    icon: "speed",
-    detail: "Network health nominal",
-    positive: true,
-  },
-  {
-    label: "Active Users",
-    value: "1.2k",
-    icon: "group",
-    detail: "+12% from last hour",
-  },
-] as const;
-
-const institutions = [
-  {
-    name: "NMTC Main Campus",
-    id: "INST-001-ALPHA",
-    status: "Active",
-    students: "5,000",
-    storage: "4.5TB",
-    storagePercent: 75,
-  },
-] as const;
-
-const configToggles = [
-  {
-    title: "Global Search",
-    description: "Cross-institution indexing",
-  },
-  {
-    title: "PDF Annotations",
-    description: "Real-time collaboration",
-  },
-] as const;
-
-const sessionImages = [
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuBACDxGQ_0JY_7jeEYmgn-HuPUP1OtHCMcOiN2ZJuoEBPggLtgoNk4rX_cJV9Bk3Pb4tcifSOlDPsmOBE69j5i8LVAImmcRWd9mhbuhE8JrPbb7_mv5p1vDTnYUOspYGmhmKrvAGxhg9L_xG9ebWHotVtTE1IKpJ9gV1Fn_rMx0OybCP2T7tr42feUj0RrMu53PPC5loNVpB23ZRp9M2vMeCbuOA4y3R8ZH-pgrohUB0iNk474QiVUQvNEDpiQKnUMWxv_vmbxoEa4",
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuDPJWw8iOxvRP-lyXn13B84-DRdxvl8HcYvPrf1sX8h5YlGX7VTTtXQjROgi72LHnUBNNbAjZcePyjPSF-H4gPXcF213jXLbwBs5QboYeA8473ryQAWOEwly2hQKAndR0fM09ZzqVdzuJRbpRTYSJlDOSY2oMfE6IJxQwnccDEFMpjQdsuHcyMWKaXI43_PnvMqLIBR0E4b2WLZwICceyTrhbfXOWOm_zm9PZZZmG_Ul7coraw5OlPOcaKGQ3ZsHdhL0St5gDMctGo",
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuDdSBbi5JaZoF-HJKt98DOtTcthIQwo4OlbSJnu9yoMCbkB1mpcgX_4kZPhqLDmcxhexaTK8BpH0nOgY0dgW5KmjSwAxxt92QmcOBsrBpde77ItUePDrqanoZaNueb-1d4Ctn9eKnEgH_8ApxH0sse0xX0sa5l_mYNPO33X4x4-zEwPcsTmvdoWNr-AVD8_Rk8Yv9V-w_ku2ihmPvD-ddWQvDmf0r6QO3ZA4v0gjEkUUfSXPAkxoF9WrpHXEd7Ys8Nv-Pg-3o0W0Kc",
-] as const;
-
-function SidebarLink({
-  label,
-  icon,
-  active = false,
-  href = "#",
-}: Readonly<{
-  label: string;
-  icon: string;
-  active?: boolean;
-  href?: string;
-}>) {
-  const classes = active
-    ? "bg-white text-blue-900 shadow-sm font-bold"
-    : "text-slate-600 hover:bg-slate-100 hover:translate-x-1";
-
-  return (
-    <Link
-      href={href}
-      className={`flex items-center gap-3 rounded-lg px-4 py-3 text-sm transition-transform duration-200 active:scale-95 ${classes}`}
-    >
-      <MaterialIcon icon={icon} className={active ? "text-blue-900" : undefined} />
-      <span>{label}</span>
-    </Link>
-  );
-}
+import { selectSuperAdminDashboardData } from "@/lib/mock/superAdminDashboard";
 
 function StatCard({
   label,
@@ -180,8 +77,11 @@ function getLatencyBarClassName(index: number) {
 export const dynamic = "force-dynamic";
 
 export default function Page() {
+  const { navItems, footerNavItems, stats, institutions, configToggles, sessionImages, topbar, media } = selectSuperAdminDashboardData();
+
   return (
     <DashboardShell
+      rootClassName="antialiased"
       sidebarHeader={
         <div className="mb-8 px-2">
           <h1 className="text-sm font-black uppercase tracking-widest text-blue-900">
@@ -193,19 +93,25 @@ export default function Page() {
       sidebarNav={
         <>
           {navItems.map((item) => (
-            <SidebarLink
+            <SidebarNavLink
               key={item.label}
               label={item.label}
               icon={item.icon}
-              active={item.active}
+              href={item.href ?? "/super-admin"}
             />
           ))}
         </>
       }
       sidebarFooter={
-        <div className="space-y-1 border-t border-slate-200 pt-4">
+        <div className="space-y-1 pt-4">
           {footerNavItems.map((item) => (
-            <SidebarLink key={item.label} label={item.label} icon={item.icon} href={item.href} />
+            <SidebarNavLink
+              key={item.label}
+              label={item.label}
+              icon={item.icon}
+              href={item.href ?? "/super-admin"}
+              danger={item.label === "Sign Out"}
+            />
           ))}
         </div>
       }
@@ -213,7 +119,7 @@ export default function Page() {
         <>
           <div className="flex items-center gap-4">
             <span className="text-xl font-extrabold tracking-tighter text-primary">
-              NMTC Library <span className="font-light text-slate-400">| Super Admin</span>
+              {topbar.title} <span className="font-light text-slate-400">| {topbar.subtitle}</span>
             </span>
           </div>
 
@@ -232,17 +138,17 @@ export default function Page() {
             <button className="rounded-lg bg-gradient-to-br from-primary to-primary-container px-5 py-2 text-sm font-semibold text-white shadow-md transition-all active:opacity-80">
               Quick Action
             </button>
-            <div className="flex items-center gap-3 border-l border-slate-200 pl-4">
+            <div className="flex items-center gap-3 pl-4">
               <img
                 alt="User profile avatar"
                 className="h-8 w-8 rounded-full object-cover"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAaFvrbMNAa8GOky1Xb-ZXAnvx7KrR6rfiK42RYfXr4eNjo9R4toa1o7nI-9x3jnpRxb1kWESLvv5_PgvGOLkTJ32FclZaOYlR08_BBS_6olliGmcAo0cZugVJ0BVg4NVrKev757PunFrbFaD7sh_euatrxn3KW1F3m-lzOy4lsGNBGsc9Bo4pvsIvL2w6OQRsyEPTwtNbblxHtlgm0JVZbdMO01Lh8AS_rHq7CJ1Fo-0bSwRAeMmMJcO6fV1N3HQrgOo4os-MDT0s"
+                src={topbar.avatarUrl}
               />
             </div>
           </div>
         </>
       }
-      contentClassName="mx-auto max-w-7xl space-y-8 px-8 pb-12 pt-24"
+      contentClassName="mx-auto max-w-[1400px] space-y-8 px-8 pb-12 pt-24"
     >
       <section className="grid grid-cols-1 gap-6 md:grid-cols-4">
         {stats.map((stat) => (
@@ -251,13 +157,6 @@ export default function Page() {
       </section>
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-          <section className="grid grid-cols-1 gap-6 md:grid-cols-4">
-            {stats.map((stat) => (
-              <StatCard key={stat.label} {...stat} />
-            ))}
-          </section>
-
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
             <div className="space-y-6 lg:col-span-2">
               <div className="flex items-end justify-between px-2">
                 <div>
@@ -266,9 +165,9 @@ export default function Page() {
                     Global overview of managed entities
                   </p>
                 </div>
-                <button className="flex items-center gap-1 text-sm font-bold text-primary hover:underline">
+                <Link className="flex items-center gap-1 text-sm font-bold text-primary hover:underline" href="/search">
                   View All Catalog <MaterialIcon icon="arrow_forward" className="text-sm" />
-                </button>
+                </Link>
               </div>
 
               <div className="overflow-hidden rounded-xl bg-surface-container-lowest shadow-[0_4px_24px_rgba(25,28,30,0.04)]">
@@ -433,12 +332,12 @@ export default function Page() {
                       Database backup pending for 12 hours. Manual trigger advised.
                     </p>
                   </div>
-                  <button className="mt-4 w-full rounded-lg border border-slate-200 bg-white py-2 text-xs font-bold text-primary transition-colors hover:bg-slate-50">
+                  <button className="mt-4 w-full rounded-lg bg-surface-container-lowest py-2 text-xs font-bold text-primary transition-colors hover:bg-surface-container-high">
                     Resolve Now
                   </button>
                 </div>
 
-                <div className="border-t border-slate-100 pt-4">
+                <div className="pt-4">
                   <button className="flex w-full items-center justify-center gap-2 rounded-lg bg-secondary-container py-3 text-sm font-bold text-on-secondary-container transition-all hover:opacity-90">
                     <MaterialIcon icon="save" className="text-sm" />
                     Save Changes
@@ -450,7 +349,7 @@ export default function Page() {
                 <img
                   alt="Luxury library interior"
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCS3v09xOyeLJIRfQ455wqMBqlycjLYtin1wOnA6G7-5MPThKh4KkMO2BWgXUivJUoEwAfVrJrU6XhVYrK_zSMST3IYZI9-hYfQfk0_G0gzUa6AJIYaRSOpRXGPkxiZID08jWpBKzNiDINyLuj9PE1LnAAFouDF8OlruNS2ChUWGKDb7d9X8_SWZSBDGD-WpekqOV9Gp72jNGpCDDMm4DqEOrhVEjgI3dLvPOmpX6DOJ4HpSWyr_rEmazZIKwFz2krFD2DDbaR0meA"
+                  src={media.securityBannerImageUrl}
                 />
                 <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-primary/90 to-transparent p-6">
                   <p className="text-xs font-bold uppercase tracking-widest text-white opacity-80">
@@ -462,7 +361,6 @@ export default function Page() {
                 </div>
               </div>
             </aside>
-          </div>
       </div>
     </DashboardShell>
   );

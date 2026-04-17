@@ -2,12 +2,13 @@ import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
-export default function CatchAllPage({
+export default async function CatchAllPage({
   params,
 }: {
-  params: { slug?: string[] };
+  params: Promise<{ slug?: string[] }>;
 }) {
-  const first = params.slug?.[0];
+  const resolvedParams = await params;
+  const first = resolvedParams.slug?.[0];
   if (!first || first === "login") redirect("/");
 
   const route =
