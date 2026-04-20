@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Digital Resources | The Curated Archive</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Public+Sans:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-high": "#e7e8e9",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-secondary-container": "#5e6472",
+                        "on-tertiary": "#ffffff",
+                        "background": "#f8f9fa",
+                        "on-error-container": "#93000a",
+                        "inverse-primary": "#aac7ff",
+                        "surface-bright": "#f8f9fa",
+                        "primary-fixed-dim": "#aac7ff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "on-primary-fixed": "#001b3e",
+                        "secondary-fixed": "#dde2f3",
+                        "on-error": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "tertiary-container": "#6a3600",
+                        "primary-container": "#1b437b",
+                        "surface-container": "#edeeef",
+                        "secondary-container": "#dde2f3",
+                        "outline": "#737781",
+                        "on-background": "#191c1d",
+                        "tertiary-fixed": "#ffdcc4",
+                        "surface-tint": "#3a5e98",
+                        "on-secondary-fixed-variant": "#414754",
+                        "outline-variant": "#c3c6d1",
+                        "on-surface": "#191c1d",
+                        "on-tertiary-fixed-variant": "#6e3902",
+                        "on-primary-fixed-variant": "#1f467e",
+                        "tertiary": "#492400",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed": "#161c27",
+                        "primary-fixed": "#d6e3ff",
+                        "surface-container-highest": "#e1e3e4",
+                        "on-secondary": "#ffffff",
+                        "on-primary-container": "#8fb1f0",
+                        "surface-container-low": "#f3f4f5",
+                        "tertiary-fixed-dim": "#ffb77f",
+                        "surface-dim": "#d9dadb",
+                        "primary": "#002c5f",
+                        "surface-variant": "#e1e3e4",
+                        "on-tertiary-fixed": "#2f1500",
+                        "on-tertiary-container": "#eba063",
+                        "on-surface-variant": "#434750",
+                        "inverse-surface": "#2e3132",
+                        "surface": "#f8f9fa",
+                        "secondary": "#585e6c",
+                        "secondary-fixed-dim": "#c1c6d7"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Public Sans"],
+                        "label": ["Public Sans"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Public Sans', sans-serif; }
+        h1, h2, h3, h4, .headline { font-family: 'Manrope', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- SideNavBar (Authority: JSON) -->
+<aside class="fixed left-0 top-0 h-screen w-64 z-40 bg-slate-100 dark:bg-slate-950 flex flex-col p-4 space-y-2">
+<div class="mb-8 px-2 flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary-container flex items-center justify-center text-white shadow-lg">
+<span class="material-symbols-outlined" data-icon="auto_stories">auto_stories</span>
+</div>
+<div>
+<div class="text-xl font-extrabold tracking-tighter text-[#1B437B] dark:text-blue-500">The Archive</div>
+<div class="text-[10px] uppercase tracking-widest font-bold text-slate-400">Academic Library</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 p-3 text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 ease-in-out font-manrope tracking-tight text-sm font-medium rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 p-3 bg-white dark:bg-slate-800 text-[#1B437B] dark:text-white font-bold rounded-lg shadow-sm font-manrope tracking-tight text-sm" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span>Library Catalog</span>
+</a>
+<a class="flex items-center gap-3 p-3 text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 ease-in-out font-manrope tracking-tight text-sm font-medium rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="shelves">shelves</span>
+<span>Digital Archive</span>
+</a>
+<a class="flex items-center gap-3 p-3 text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 ease-in-out font-manrope tracking-tight text-sm font-medium rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span>Member Directory</span>
+</a>
+<a class="flex items-center gap-3 p-3 text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 ease-in-out font-manrope tracking-tight text-sm font-medium rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="settings_suggest">settings_suggest</span>
+<span>System Settings</span>
+</a>
+</nav>
+<div class="pt-4 border-t border-slate-200 dark:border-slate-800 space-y-1">
+<a class="flex items-center gap-3 p-3 text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 ease-in-out font-manrope tracking-tight text-sm font-medium rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span>Support</span>
+</a>
+<a class="flex items-center gap-3 p-3 text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 ease-in-out font-manrope tracking-tight text-sm font-medium rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span>Sign Out</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Shell -->
+<main class="ml-64 relative">
+<!-- TopAppBar (Authority: JSON) -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl flex items-center justify-between px-8 h-20 w-full">
+<div class="flex items-center flex-1 max-w-xl">
+<div class="relative w-full">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline" data-icon="search">search</span>
+</div>
+<input class="w-full bg-surface-container-low border-none rounded-full py-2.5 pl-12 pr-4 focus:ring-2 focus:ring-primary/20 focus:bg-surface-bright transition-all text-sm" placeholder="Search the curated archive..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6 ml-8">
+<button class="text-slate-400 dark:text-slate-500 hover:text-[#1B437B] dark:hover:text-blue-300 transition-all opacity-80 active:opacity-100">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-slate-400 dark:text-slate-500 hover:text-[#1B437B] dark:hover:text-blue-300 transition-all opacity-80 active:opacity-100">
+<span class="material-symbols-outlined" data-icon="history_edu">history_edu</span>
+</button>
+<div class="h-10 w-10 rounded-full overflow-hidden border-2 border-primary/10">
+<img class="w-full h-full object-cover" data-alt="portrait of a professional academic researcher in a soft-lit office setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOR2N7LiNT8B7zHJGGO3IzYjbZft9prLeBzmFX_0uzaa5t11ne-Rn8BkUd-jr1znszb-9O8VLV6srbTh1CA9pgdSukTxpo4cMV-y75zbQI_J7PSPsfIMeJ_G3tS_8DSmau9UfoWlP6Z4bbH7pF3AGm74JQAYtffMa3cd513N9uiOUd8KT83He18uQidm1W8_INYU19lqkGswIuV9gqosCcnfo-Mhh5rT_frGVrqx6X5-8uWz-ke5JohWJ2J8baxhUG4urrT1i7Ew"/>
+</div>
+</div>
+</header>
+<!-- Content Canvas -->
+<div class="pt-28 px-10 pb-16">
+<!-- Hero / Title Area -->
+<div class="mb-12 max-w-4xl">
+<h1 class="text-5xl font-extrabold tracking-tight text-primary mb-4">Digital Resources</h1>
+<p class="text-lg text-secondary leading-relaxed max-w-2xl">Access curated scholarly materials, research papers, and lecture archives. Your intellectual gateway to the institution's preserved knowledge.</p>
+</div>
+<!-- Filters Section -->
+<div class="flex flex-wrap items-center gap-4 mb-10">
+<div class="flex items-center gap-2 p-1 bg-surface-container-low rounded-xl">
+<button class="px-6 py-2 rounded-lg bg-surface-container-lowest shadow-sm text-primary font-semibold text-sm">All Resources</button>
+<button class="px-6 py-2 rounded-lg text-secondary hover:bg-surface-bright transition-all text-sm">Lecture Notes</button>
+<button class="px-6 py-2 rounded-lg text-secondary hover:bg-surface-bright transition-all text-sm">Research Papers</button>
+<button class="px-6 py-2 rounded-lg text-secondary hover:bg-surface-bright transition-all text-sm">Past Exams</button>
+</div>
+<div class="h-8 w-px bg-outline-variant/30"></div>
+<div class="relative inline-block">
+<select class="appearance-none bg-surface-container-low border-none rounded-xl py-2 pl-4 pr-10 text-sm text-secondary focus:ring-2 focus:ring-primary/20">
+<option>Sort by: Newest First</option>
+<option>Most Downloaded</option>
+<option>A - Z</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-outline text-lg" data-icon="keyboard_arrow_down">keyboard_arrow_down</span>
+</div>
+</div>
+<!-- Bento-Inspired Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+<!-- Card 1: Featured PDF -->
+<div class="group bg-surface-container-lowest rounded-xl p-6 transition-all duration-300 hover:bg-surface-bright flex flex-col">
+<div class="w-12 h-12 rounded-lg bg-error-container/20 text-error flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-3xl" data-icon="picture_as_pdf">picture_as_pdf</span>
+</div>
+<div class="mb-2 flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase tracking-wider">PDF Document</span>
+<div class="flex-1 border-t border-dashed border-outline-variant/40"></div>
+</div>
+<h3 class="text-xl font-bold text-on-surface mb-2 leading-tight group-hover:text-primary transition-colors">Advanced Quantum Mechanics: Lecture Series 04</h3>
+<p class="text-sm text-secondary font-medium mb-8">Course: PHY402 - Theoretical Physics</p>
+<div class="mt-auto flex items-center gap-3">
+<button class="flex-1 py-2.5 rounded-lg bg-gradient-to-r from-primary to-primary-container text-white text-sm font-bold shadow-md opacity-90 hover:opacity-100 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-lg" data-icon="visibility">visibility</span>
+                            View
+                        </button>
+<button class="p-2.5 rounded-lg bg-surface-container-high text-primary hover:bg-primary/5 transition-all">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+</button>
+</div>
+</div>
+<!-- Card 2: Lecture Notes -->
+<div class="group bg-surface-container-lowest rounded-xl p-6 transition-all duration-300 hover:bg-surface-bright flex flex-col">
+<div class="w-12 h-12 rounded-lg bg-primary/10 text-primary flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-3xl" data-icon="description">description</span>
+</div>
+<div class="mb-2 flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase tracking-wider">Note Pack</span>
+<div class="flex-1 border-t border-dashed border-outline-variant/40"></div>
+</div>
+<h3 class="text-xl font-bold text-on-surface mb-2 leading-tight group-hover:text-primary transition-colors">Digital Humanities: Curating the Virtual Museum</h3>
+<p class="text-sm text-secondary font-medium mb-8">Course: ART215 - Digital Culture</p>
+<div class="mt-auto flex items-center gap-3">
+<button class="flex-1 py-2.5 rounded-lg bg-gradient-to-r from-primary to-primary-container text-white text-sm font-bold shadow-md opacity-90 hover:opacity-100 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-lg" data-icon="visibility">visibility</span>
+                            View
+                        </button>
+<button class="p-2.5 rounded-lg bg-surface-container-high text-primary hover:bg-primary/5 transition-all">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+</button>
+</div>
+</div>
+<!-- Card 3: Past Questions -->
+<div class="group bg-surface-container-lowest rounded-xl p-6 transition-all duration-300 hover:bg-surface-bright flex flex-col">
+<div class="w-12 h-12 rounded-lg bg-tertiary-fixed/30 text-tertiary flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-3xl" data-icon="quiz">quiz</span>
+</div>
+<div class="mb-2 flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase tracking-wider">Exam Archive</span>
+<div class="flex-1 border-t border-dashed border-outline-variant/40"></div>
+</div>
+<h3 class="text-xl font-bold text-on-surface mb-2 leading-tight group-hover:text-primary transition-colors">Microeconomics Finals 2022-2023 Comprehensive</h3>
+<p class="text-sm text-secondary font-medium mb-8">Course: ECO101 - Economics Foundation</p>
+<div class="mt-auto flex items-center gap-3">
+<button class="flex-1 py-2.5 rounded-lg bg-gradient-to-r from-primary to-primary-container text-white text-sm font-bold shadow-md opacity-90 hover:opacity-100 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-lg" data-icon="visibility">visibility</span>
+                            View
+                        </button>
+<button class="p-2.5 rounded-lg bg-surface-container-high text-primary hover:bg-primary/5 transition-all">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+</button>
+</div>
+</div>
+<!-- Card 4: Zip Archive -->
+<div class="group bg-surface-container-lowest rounded-xl p-6 transition-all duration-300 hover:bg-surface-bright flex flex-col">
+<div class="w-12 h-12 rounded-lg bg-secondary-container text-on-secondary-container flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-3xl" data-icon="folder_zip">folder_zip</span>
+</div>
+<div class="mb-2 flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase tracking-wider">Resource Pack</span>
+<div class="flex-1 border-t border-dashed border-outline-variant/40"></div>
+</div>
+<h3 class="text-xl font-bold text-on-surface mb-2 leading-tight group-hover:text-primary transition-colors">Latin American Literature: Essential Dataset</h3>
+<p class="text-sm text-secondary font-medium mb-8">Course: LIT330 - Global Narratives</p>
+<div class="mt-auto flex items-center gap-3">
+<button class="flex-1 py-2.5 rounded-lg bg-gradient-to-r from-primary to-primary-container text-white text-sm font-bold shadow-md opacity-90 hover:opacity-100 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-lg" data-icon="visibility">visibility</span>
+                            View
+                        </button>
+<button class="p-2.5 rounded-lg bg-surface-container-high text-primary hover:bg-primary/5 transition-all">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+</button>
+</div>
+</div>
+<!-- Card 5: Research Paper -->
+<div class="group bg-surface-container-lowest rounded-xl p-6 transition-all duration-300 hover:bg-surface-bright flex flex-col">
+<div class="w-12 h-12 rounded-lg bg-error-container/20 text-error flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-3xl" data-icon="menu_book">menu_book</span>
+</div>
+<div class="mb-2 flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase tracking-wider">Research</span>
+<div class="flex-1 border-t border-dashed border-outline-variant/40"></div>
+</div>
+<h3 class="text-xl font-bold text-on-surface mb-2 leading-tight group-hover:text-primary transition-colors">Neural Network Architectures for Linguistic Patterns</h3>
+<p class="text-sm text-secondary font-medium mb-8">Course: CSC550 - Artificial Intelligence</p>
+<div class="mt-auto flex items-center gap-3">
+<button class="flex-1 py-2.5 rounded-lg bg-gradient-to-r from-primary to-primary-container text-white text-sm font-bold shadow-md opacity-90 hover:opacity-100 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-lg" data-icon="visibility">visibility</span>
+                            View
+                        </button>
+<button class="p-2.5 rounded-lg bg-surface-container-high text-primary hover:bg-primary/5 transition-all">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+</button>
+</div>
+</div>
+<!-- Card 6: Spreadsheet -->
+<div class="group bg-surface-container-lowest rounded-xl p-6 transition-all duration-300 hover:bg-surface-bright flex flex-col">
+<div class="w-12 h-12 rounded-lg bg-green-100 text-green-800 flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-3xl" data-icon="table_chart">table_chart</span>
+</div>
+<div class="mb-2 flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase tracking-wider">Dataset</span>
+<div class="flex-1 border-t border-dashed border-outline-variant/40"></div>
+</div>
+<h3 class="text-xl font-bold text-on-surface mb-2 leading-tight group-hover:text-primary transition-colors">Historical Demographic Shifts: 1850-1920</h3>
+<p class="text-sm text-secondary font-medium mb-8">Course: HIS204 - Modern History</p>
+<div class="mt-auto flex items-center gap-3">
+<button class="flex-1 py-2.5 rounded-lg bg-gradient-to-r from-primary to-primary-container text-white text-sm font-bold shadow-md opacity-90 hover:opacity-100 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-lg" data-icon="visibility">visibility</span>
+                            View
+                        </button>
+<button class="p-2.5 rounded-lg bg-surface-container-high text-primary hover:bg-primary/5 transition-all">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+</button>
+</div>
+</div>
+<!-- Asymmetric Highlight Card -->
+<div class="md:col-span-2 bg-gradient-to-br from-primary to-primary-container rounded-xl p-8 relative overflow-hidden group">
+<div class="relative z-10 h-full flex flex-col">
+<div class="flex items-center gap-3 mb-6">
+<span class="px-3 py-1 rounded-full bg-white/20 text-white text-xs font-bold uppercase tracking-widest backdrop-blur-md">Faculty Pick</span>
+<span class="text-white/60 text-xs font-medium">New Release • Today</span>
+</div>
+<h2 class="text-3xl font-extrabold text-white mb-4 leading-tight">Comprehensive Guide to Academic Publishing 2024 Edition</h2>
+<p class="text-white/80 max-w-md mb-10 leading-relaxed">The definitive guide for emerging scholars looking to navigate the landscape of high-impact journal submissions and editorial processes.</p>
+<div class="mt-auto flex items-center gap-4">
+<button class="px-8 py-3 rounded-lg bg-white text-primary font-bold hover:bg-surface-bright transition-all shadow-xl">Start Reading</button>
+<button class="text-white/80 hover:text-white flex items-center gap-2 font-medium transition-all">
+<span class="material-symbols-outlined" data-icon="bookmark">bookmark</span>
+                                Save to Library
+                            </button>
+</div>
+</div>
+<!-- Decorative Element -->
+<div class="absolute -right-12 -bottom-12 w-64 h-64 bg-white/10 rounded-full blur-3xl group-hover:scale-125 transition-transform duration-700"></div>
+<div class="absolute right-10 top-10 opacity-20">
+<span class="material-symbols-outlined text-[140px] text-white" data-icon="auto_awesome">auto_awesome</span>
+</div>
+</div>
+</div>
+<!-- Empty State / Pagination Hint -->
+<div class="mt-16 flex flex-col items-center justify-center py-20 border-t border-outline-variant/20">
+<div class="text-[120px] font-black text-surface-container-highest tracking-tighter select-none mb-8">END OF FEED</div>
+<button class="px-10 py-4 rounded-full border-2 border-primary text-primary font-bold hover:bg-primary hover:text-white transition-all">
+                    Load More Resources
+                </button>
+</div>
+</div>
+</main>
+<!-- Floating Action Button (Highly Contextual) -->
+<button class="fixed bottom-8 right-8 w-16 h-16 rounded-full bg-gradient-to-tr from-primary to-primary-container text-white shadow-[0px_12px_32px_rgba(0,44,95,0.3)] flex items-center justify-center group z-50">
+<span class="material-symbols-outlined text-3xl group-hover:scale-110 transition-transform" data-icon="add">add</span>
+</button>
+</body></html>

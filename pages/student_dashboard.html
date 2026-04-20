@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Student Dashboard - The Curated Archive</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;600;700;800&amp;family=Public+Sans:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-high": "#e7e8e9",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-secondary-container": "#5e6472",
+                        "on-tertiary": "#ffffff",
+                        "background": "#f8f9fa",
+                        "on-error-container": "#93000a",
+                        "inverse-primary": "#aac7ff",
+                        "surface-bright": "#f8f9fa",
+                        "primary-fixed-dim": "#aac7ff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "on-primary-fixed": "#001b3e",
+                        "secondary-fixed": "#dde2f3",
+                        "on-error": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "tertiary-container": "#6a3600",
+                        "primary-container": "#1b437b",
+                        "surface-container": "#edeeef",
+                        "secondary-container": "#dde2f3",
+                        "outline": "#737781",
+                        "on-background": "#191c1d",
+                        "tertiary-fixed": "#ffdcc4",
+                        "surface-tint": "#3a5e98",
+                        "on-secondary-fixed-variant": "#414754",
+                        "outline-variant": "#c3c6d1",
+                        "on-surface": "#191c1d",
+                        "on-tertiary-fixed-variant": "#6e3902",
+                        "on-primary-fixed-variant": "#1f467e",
+                        "tertiary": "#492400",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed": "#161c27",
+                        "primary-fixed": "#d6e3ff",
+                        "surface-container-highest": "#e1e3e4",
+                        "on-secondary": "#ffffff",
+                        "on-primary-container": "#8fb1f0",
+                        "surface-container-low": "#f3f4f5",
+                        "tertiary-fixed-dim": "#ffb77f",
+                        "surface-dim": "#d9dadb",
+                        "primary": "#002c5f",
+                        "surface-variant": "#e1e3e4",
+                        "on-tertiary-fixed": "#2f1500",
+                        "on-tertiary-container": "#eba063",
+                        "on-surface-variant": "#434750",
+                        "inverse-surface": "#2e3132",
+                        "surface": "#f8f9fa",
+                        "secondary": "#585e6c",
+                        "secondary-fixed-dim": "#c1c6d7"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Public Sans"],
+                        "label": ["Public Sans"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Public Sans', sans-serif; }
+        h1, h2, h3, .font-headline { font-family: 'Manrope', sans-serif; }
+        .glass { background: rgba(248, 249, 250, 0.8); backdrop-filter: blur(20px); }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- SideNavBar Component -->
+<aside class="fixed left-0 top-0 h-screen w-64 z-40 bg-slate-100 flex flex-col p-4 space-y-2">
+<div class="mb-10 px-2">
+<div class="text-xl font-extrabold tracking-tighter text-[#1B437B]">The Archive</div>
+<div class="text-xs font-medium tracking-tight text-slate-500 uppercase">Academic Library</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 p-3 bg-white text-[#1B437B] font-bold rounded-lg shadow-sm" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-manrope tracking-tight text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 p-3 text-slate-500 hover:bg-slate-200/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-manrope tracking-tight text-sm font-medium">Library Catalog</span>
+</a>
+<a class="flex items-center gap-3 p-3 text-slate-500 hover:bg-slate-200/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">shelves</span>
+<span class="font-manrope tracking-tight text-sm font-medium">Digital Archive</span>
+</a>
+<a class="flex items-center gap-3 p-3 text-slate-500 hover:bg-slate-200/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-manrope tracking-tight text-sm font-medium">Member Directory</span>
+</a>
+<a class="flex items-center gap-3 p-3 text-slate-500 hover:bg-slate-200/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">settings_suggest</span>
+<span class="font-manrope tracking-tight text-sm font-medium">System Settings</span>
+</a>
+</nav>
+<div class="pt-4 border-t border-slate-200 space-y-1">
+<a class="flex items-center gap-3 p-3 text-slate-500 hover:bg-slate-200/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-manrope tracking-tight text-sm font-medium">Support</span>
+</a>
+<a class="flex items-center gap-3 p-3 text-slate-500 hover:bg-slate-200/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-manrope tracking-tight text-sm font-medium">Sign Out</span>
+</a>
+</div>
+</aside>
+<!-- TopAppBar Component -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] z-30 bg-white/80 backdrop-blur-xl flex items-center justify-between px-8 h-20">
+<div class="flex items-center gap-6">
+<div class="relative group">
+<span class="absolute inset-y-0 left-3 flex items-center text-outline">
+<span class="material-symbols-outlined">search</span>
+</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-full w-64 focus:ring-2 focus:ring-primary focus:bg-surface-bright transition-all text-sm" placeholder="Search resources..." type="text"/>
+</div>
+</div>
+<div class="text-lg font-bold text-[#1B437B]">The Curated Archive</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-400 hover:text-[#1B437B] transition-all opacity-80 active:opacity-100">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-[#1B437B] transition-all opacity-80 active:opacity-100">
+<span class="material-symbols-outlined">history_edu</span>
+</button>
+<div class="h-10 w-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container ml-2">
+<span class="material-symbols-outlined">account_circle</span>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-24 min-h-screen p-8 bg-surface">
+<div class="max-w-7xl mx-auto">
+<!-- Hero Header -->
+<section class="mb-12">
+<h1 class="text-4xl font-headline font-extrabold text-primary tracking-tight mb-2">Good morning, Julian.</h1>
+<p class="text-on-surface-variant body-lg leading-relaxed max-w-2xl">Ready to continue your research? You have 3 books due within the next 48 hours and 12 saved items in your archive.</p>
+</section>
+<!-- Quick Access Bento Grid -->
+<div class="grid grid-cols-12 gap-6 mb-12">
+<!-- Overview Cards Section -->
+<div class="col-span-12 lg:col-span-8 grid grid-cols-3 gap-6">
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/20 flex flex-col justify-between group hover:bg-surface-bright transition-colors">
+<div>
+<span class="material-symbols-outlined text-primary mb-4" style="font-variation-settings: 'FILL' 1;">book</span>
+<h3 class="text-sm font-semibold text-secondary uppercase tracking-wider mb-1">Borrowed</h3>
+</div>
+<div class="flex items-end justify-between">
+<span class="text-4xl font-headline font-bold text-on-surface">08</span>
+<span class="text-xs text-primary font-medium">View All</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/20 flex flex-col justify-between hover:bg-surface-bright transition-colors">
+<div>
+<span class="material-symbols-outlined text-error mb-4">alarm</span>
+<h3 class="text-sm font-semibold text-secondary uppercase tracking-wider mb-1">Due Soon</h3>
+</div>
+<div class="flex items-end justify-between">
+<span class="text-4xl font-headline font-bold text-error">03</span>
+<span class="bg-error-container text-on-error-container px-2 py-0.5 rounded-full text-[10px] font-bold">URGENT</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/20 flex flex-col justify-between hover:bg-surface-bright transition-colors">
+<div>
+<span class="material-symbols-outlined text-on-tertiary-container mb-4">analytics</span>
+<h3 class="text-sm font-semibold text-secondary uppercase tracking-wider mb-1">Available</h3>
+</div>
+<div class="flex items-end justify-between">
+<span class="text-4xl font-headline font-bold text-on-surface">2.4k</span>
+<span class="text-xs text-on-secondary-container font-medium">Catalog</span>
+</div>
+</div>
+<!-- Quick Access Buttons (Large Span) -->
+<div class="col-span-3 grid grid-cols-3 gap-4 mt-2">
+<button class="flex items-center justify-center gap-3 bg-gradient-to-br from-primary to-primary-container text-on-primary p-4 rounded-xl font-bold text-sm hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined">auto_stories</span>
+                            Library Catalog
+                        </button>
+<button class="flex items-center justify-center gap-3 bg-surface-container-high text-primary p-4 rounded-xl font-bold text-sm hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined">quiz</span>
+                            Past Questions
+                        </button>
+<button class="flex items-center justify-center gap-3 bg-surface-container-high text-primary p-4 rounded-xl font-bold text-sm hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined">download</span>
+                            Downloads
+                        </button>
+</div>
+</div>
+<!-- Featured Resource Card (Asymmetric Design) -->
+<div class="col-span-12 lg:col-span-4 bg-primary rounded-xl overflow-hidden relative min-h-[320px] flex flex-col justify-end p-8">
+<img class="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-overlay" data-alt="Interior of a modern academic library with tall shelves and warm atmospheric lighting through large windows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjMcQyDrFeHDIni10bz7AIutUYcKSsO4lfotTiwl18as4ubCf_GaWiYc0nSIPNCU40_zdYOjQVez5NTh7ofmBR59cWj57MMS7hiCaj732CKOYs7wNXqAxUQMpoE7jXctdnARg065dQ4sp_2xh1HqNcb7Mhe5KaqelhIEwDdJpXE4nTJR5b3y1tXZyB3ZVRiibMZPu-Dpw3bSXRm-epufC82eaLjdMciQdhylyi98UShaklz3JucjV9LgSMpkNgAN5xdDkWniGpew"/>
+<div class="relative z-10">
+<span class="bg-tertiary-fixed text-on-tertiary-fixed px-3 py-1 rounded-full text-[10px] font-bold tracking-widest mb-4 inline-block uppercase">New Collection</span>
+<h2 class="text-white text-2xl font-headline font-bold mb-2">Modern Philosophy &amp; Cognitive Science</h2>
+<p class="text-primary-fixed text-sm mb-6 opacity-80 leading-relaxed">Explore our latest curation of peer-reviewed journals and digital first-editions.</p>
+<button class="bg-white text-primary px-6 py-2 rounded-full font-bold text-xs uppercase tracking-tighter hover:bg-surface-bright transition-colors">Browse Collection</button>
+</div>
+</div>
+</div>
+<!-- Main Content Area: Activity and Suggested -->
+<div class="grid grid-cols-12 gap-8">
+<!-- Recent Activity Feed -->
+<div class="col-span-12 md:col-span-7 lg:col-span-8">
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-xl font-headline font-bold text-on-surface">Recent Activity</h2>
+<button class="text-primary text-sm font-semibold">View History</button>
+</div>
+<div class="space-y-1">
+<div class="flex items-center gap-6 p-4 rounded-xl bg-surface-container-lowest hover:bg-surface-container-low transition-colors group">
+<div class="w-12 h-16 bg-surface-container-high rounded shadow-sm overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Close-up of a minimalist book cover titled Design Systems with clean white typography on deep blue background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmjkje2BNWQla2OkVjQ7GJkkHFRrjbJLnshYYGsuwPret-aMPzgnYkJOw6cBzlcaMCYtCiUqwUlOmWWOjl0SM4HTDbwbURc0tQIun-RIrCnA1Rgm1xvHc8i2jSWNH01A60O4BoG51s-_I4LjZxA9HtBv1or1yv-h0pjniUm9f5bt9b536opawkEt26MbhoVh2TxHCzU6wItJ9D4Cy4Y_OXF6mTbwHPReB3QHC4Mp2wezQglcwgZIooAI9_s1ARqOKOMjV4cQUH2g"/>
+</div>
+<div class="flex-1">
+<h4 class="font-semibold text-on-surface text-base group-hover:text-primary transition-colors">Architectural Patterns in Modern Web</h4>
+<p class="text-sm text-secondary">Author: Sarah Drasner • <span class="italic">Accessed 2 hours ago</span></p>
+</div>
+<div class="flex flex-col items-end gap-1">
+<div class="w-32 h-1 bg-outline-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[65%]"></div>
+</div>
+<span class="text-[10px] font-bold text-outline">65% READ</span>
+</div>
+</div>
+<div class="flex items-center gap-6 p-4 rounded-xl bg-surface-container-low/50 hover:bg-surface-container-low transition-colors group">
+<div class="w-12 h-16 bg-surface-container-high rounded shadow-sm overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Classic book cover with golden ornaments on leather texture background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5Qn5U_BK98-42aEq6FOH3sFkN54pVJ5BTAg_9_R5BhJsbL0vxrZD5t30uTQI2aUG8xSBPcuo9RP_UF48O-9uV9lQYsIpN0Lf5iXwUFfdFGAXzo4B6jqNOwM0JaluQYvYZwuTIbO7VCSWqMRf_XqIawfH9bqEebGBx6lexnFF92N-7eIsSbrQqqbsgV-gkPTsyJp1e49q1e_oyED7GSyaEMgdpsVvjq5siZdmXS2UI_ybrpaWsD2aleXLmtHT8QclRe4xqrgbKZw"/>
+</div>
+<div class="flex-1">
+<h4 class="font-semibold text-on-surface text-base group-hover:text-primary transition-colors">Ethics of Artificial Intelligence</h4>
+<p class="text-sm text-secondary">Author: Michael J. Sandel • <span class="italic">Accessed yesterday</span></p>
+</div>
+<div class="flex flex-col items-end">
+<span class="material-symbols-outlined text-secondary-container">cloud_done</span>
+<span class="text-[10px] font-bold text-outline">DOWNLOADED</span>
+</div>
+</div>
+<div class="flex items-center gap-6 p-4 rounded-xl bg-surface-container-lowest hover:bg-surface-container-low transition-colors group">
+<div class="w-12 h-16 bg-surface-container-high rounded shadow-sm overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Detailed vintage scientific illustration of human anatomy on aged paper" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCO4ut1995DBAZUe2lkic6bK9m7BaIFsDOwVGxsBeVGF9GQdutBlZKdraEzpFkqrF-HBrUmOziF6NDg9VRLfB_iVqSNeL8ZHzmCyXeQGzpmduw4M-GasHq7s09J1tw_NVA8j-RRaoh9kMuy-60zxzsD8oP-z-v0052pxH6gKCcijXHHtramlRLUthg0bufRKYRb4f48MOHaQ4nJ0irIVaiQxrxjd9uqXAjB82UvgfspEnrH06yF2KQgHcFYcFgApdy4dJSBW-M3FA"/>
+</div>
+<div class="flex-1">
+<h4 class="font-semibold text-on-surface text-base group-hover:text-primary transition-colors">Constitutional Law: Volume IV</h4>
+<p class="text-sm text-secondary">Publication: Oxford University Press • <span class="italic">Returned 3 days ago</span></p>
+</div>
+<div class="flex flex-col items-end">
+<span class="bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded text-[10px] font-bold">RETURNED</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Suggested / Resource Sidebar -->
+<div class="col-span-12 md:col-span-5 lg:col-span-4">
+<div class="bg-surface-container-low p-8 rounded-2xl border border-outline-variant/10">
+<h2 class="text-xl font-headline font-bold text-on-surface mb-6">Upcoming Deadlines</h2>
+<div class="space-y-6">
+<div class="relative pl-6 before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-error before:rounded-full">
+<h4 class="font-bold text-on-surface text-sm">Advanced Calculus: Methods</h4>
+<p class="text-xs text-error font-semibold mt-1">Due: Oct 24, 2023 (Tomorrow)</p>
+<div class="mt-3 flex gap-2">
+<button class="bg-primary text-white text-[10px] font-bold px-3 py-1.5 rounded-lg uppercase tracking-wider">Renew</button>
+<button class="border border-outline text-outline text-[10px] font-bold px-3 py-1.5 rounded-lg uppercase tracking-wider">View Item</button>
+</div>
+</div>
+<div class="relative pl-6 before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-tertiary-container/30 before:rounded-full">
+<h4 class="font-bold text-on-surface text-sm">Principles of Economics</h4>
+<p class="text-xs text-secondary font-medium mt-1">Due: Oct 28, 2023</p>
+</div>
+<div class="relative pl-6 before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-tertiary-container/30 before:rounded-full">
+<h4 class="font-bold text-on-surface text-sm">Psychology: A Discovery</h4>
+<p class="text-xs text-secondary font-medium mt-1">Due: Nov 02, 2023</p>
+</div>
+</div>
+<div class="mt-10 p-6 bg-surface-container-lowest rounded-xl border border-outline-variant/20">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">stars</span>
+<h3 class="font-bold text-sm">Librarian's Tip</h3>
+</div>
+<p class="text-xs text-on-surface-variant leading-relaxed italic">"Check the Digital Archive for the newly uploaded 2023 past questions for the Faculty of Sciences."</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>
