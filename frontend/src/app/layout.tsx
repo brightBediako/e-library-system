@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Manrope, Public_Sans } from "next/font/google";
+import { QueryProvider } from "@/components/providers/query-provider";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -13,7 +14,7 @@ const publicSans = Public_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "The Curated Archive",
+  title: "NMTC",
   description: "Academic Library Portal",
 };
 
@@ -33,7 +34,9 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <QueryProvider>{children}</QueryProvider>
+      </body>
     </html>
   );
 }

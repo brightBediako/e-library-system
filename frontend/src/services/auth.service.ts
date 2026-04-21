@@ -1,3 +1,5 @@
+import { AxiosError } from "axios";
+import { apiClient } from "@/services/api-client";
 import type { AuthUser, UserRole } from "@/store/auth-store";
 
 export interface LoginPayload {
@@ -10,45 +12,37 @@ export interface LoginResponse {
   user: AuthUser;
 }
 
-const roleMap: Record<string, UserRole> = {
-  admin: "admin",
-  librarian: "librarian",
-  student: "student",
-};
+interface LoginApiResponse {
+  access_token: string;
+  user: {
+    id: string;
+    email: string;
+    fullName: string;
+    role: UserRole;
+  };
+}
 
-const wait = (ms: number): Promise<void> =>
-  new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-
-const deriveRoleFromEmail = (email: string): UserRole => {
-  const localPart = email.split("@")[0]?.toLowerCase() ?? "";
-
-  if (localPart in roleMap) {
-    return roleMap[localPart];
-  }
-
-  return "student";
-};
-
-export const mockLogin = async ({ email, password }: LoginPayload): Promise<LoginResponse> => {
-  await wait(700);
-
-  if (!email || !password) {
+export const login = async ({ email, password }: LoginPayload): Promise<LoginResponse> => {
+  if (!email.trim() || !password.trim()) {
     throw new Error("Email and password are required.");
   }
 
-  const normalizedEmail = email.trim().toLowerCase();
-  const fullName = normalizedEmail.split("@")[0]?.replace(".", " ") ?? "Library User";
-  const role = deriveRoleFromEmail(normalizedEmail);
+  try {
+    const response = await apiClient.post<LoginApiResponse>("/auth/login", {
+      email: email.trim().toLowerCase(),
+      password,
+    });
 
-  return {
-    token: `mock-jwt-token-${Date.now()}`,
-    user: {
-      id: "user-001",
-      email: normalizedEmail,
-      fullName,
-      role,
-    },
-  };
+    return {
+      token: response.data.access_token,
+      user: response.data.user,
+    };
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      const message = (error.response?.data as { message?: string } | undefined)?.message;
+      throw new Error(message ?? "Login request failed.");
+    }
+
+    throw error;
+  }
 };

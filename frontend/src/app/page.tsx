@@ -1,14 +1,16 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
-import { mockLogin } from "@/services/auth.service";
-import { useAuthStore } from "@/store/auth-store";
+import { login } from "@/services/auth.service";
+import { useAuthStore, type UserRole } from "@/store/auth-store";
 
 export default function Home() {
   const router = useRouter();
   const setAuth = useAuthStore((state) => state.setAuth);
+  const [selectedRole, setSelectedRole] = useState<UserRole>("admin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -20,7 +22,8 @@ export default function Home() {
     setIsSubmitting(true);
 
     try {
-      const response = await mockLogin({ email, password });
+      const normalizedEmail = email.trim() || `${selectedRole}@institution.edu`;
+      const response = await login({ email: normalizedEmail, password });
       setAuth(response);
       router.push("/dashboard");
     } catch (error) {
@@ -42,7 +45,7 @@ export default function Home() {
               <span className="material-symbols-outlined text-primary text-4xl">menu_book</span>
             </div>
             <h1 className="font-headline text-primary mb-2 text-3xl font-extrabold tracking-tighter">
-              The Archive
+              NMTC
             </h1>
             <p className="font-body text-on-surface-variant text-sm font-semibold tracking-tight uppercase">
               Academic Library Portal
@@ -50,6 +53,31 @@ export default function Home() {
           </div>
 
           <div className="subtle-shadow bg-surface-container-lowest border-outline-variant/10 rounded-xl border p-8 sm:p-10">
+            <div className="mb-6">
+              <p className="text-on-surface-variant mb-2 ml-1 text-[11px] font-bold tracking-widest uppercase">
+                Role Switcher
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {(["admin", "librarian", "student"] as UserRole[]).map((role) => (
+                  <button
+                    key={role}
+                    className={`rounded-lg px-3 py-2 text-xs font-bold tracking-wider uppercase transition-colors ${
+                      selectedRole === role
+                        ? "bg-primary text-white"
+                        : "bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high"
+                    }`}
+                    type="button"
+                    onClick={() => {
+                      setSelectedRole(role);
+                      setEmail(`${role}@institution.edu`);
+                    }}
+                  >
+                    {role}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <form className="space-y-6" onSubmit={handleLogin}>
               <div className="space-y-2">
                 <label
@@ -106,7 +134,7 @@ export default function Home() {
               ) : null}
 
               <button
-                className="editorial-gradient w-full rounded-xl py-4 text-base font-bold text-white shadow-lg transition-all hover:shadow-primary/20 active:scale-[0.98]"
+                className="editorial-gradient w-full rounded-xl py-4 text-base font-bold text-white shadow-lg transition-all hover:shadow-primary/20 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70"
                 type="submit"
                 disabled={isSubmitting}
               >
@@ -137,6 +165,29 @@ export default function Home() {
           </div>
 
           <footer className="mt-8 space-y-4 text-center">
+            <div className="bg-surface-container-low rounded-xl p-3">
+              <p className="text-on-surface-variant mb-2 text-[11px] font-bold tracking-widest uppercase">
+                Quick Access
+              </p>
+              <div className="flex flex-wrap items-center justify-center gap-3 text-xs font-semibold">
+                <Link className="text-primary hover:underline focus-visible:ring-primary/30 rounded-sm focus-visible:ring-2 focus-visible:outline-none" href="/dashboard">
+                  Dashboard
+                </Link>
+                <span className="bg-outline-variant h-1 w-1 rounded-full" />
+                <Link className="text-primary hover:underline focus-visible:ring-primary/30 rounded-sm focus-visible:ring-2 focus-visible:outline-none" href="/books">
+                  Books
+                </Link>
+                <span className="bg-outline-variant h-1 w-1 rounded-full" />
+                <Link className="text-primary hover:underline focus-visible:ring-primary/30 rounded-sm focus-visible:ring-2 focus-visible:outline-none" href="/resources">
+                  Resources
+                </Link>
+                <span className="bg-outline-variant h-1 w-1 rounded-full" />
+                <Link className="text-primary hover:underline focus-visible:ring-primary/30 rounded-sm focus-visible:ring-2 focus-visible:outline-none" href="/borrowed">
+                  Borrowed
+                </Link>
+              </div>
+            </div>
+
             <p className="text-on-surface-variant text-sm">
               Need help accessing the catalog?{" "}
               <a className="text-primary font-bold hover:underline" href="#">

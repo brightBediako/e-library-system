@@ -1,25 +1,145 @@
 "use client";
 
+import { FormEvent, useState } from "react";
+import { AxiosError } from "axios";
+import Link from "next/link";
 import { BaseLayout } from "@/components/layout/base-layout";
+import { createBook, type BookType } from "@/services/books.service";
+import { createLibrarian } from "@/services/librarian.service";
 import { useAuthStore, type UserRole } from "@/store/auth-store";
+
+interface LibrarianRecord {
+  id: string;
+  fullName: string;
+  email: string;
+}
+
+interface AddedBookRecord {
+  id: string;
+  title: string;
+  author: string;
+  isbn: string;
+  bookType: BookType;
+  storage: string;
+}
 
 export default function DashboardPage() {
   const user = useAuthStore((state) => state.user);
-  const setUser = useAuthStore((state) => state.setUser);
   const activeRole: UserRole = user?.role ?? "admin";
+  const [librarianName, setLibrarianName] = useState("");
+  const [librarianEmail, setLibrarianEmail] = useState("");
+  const [librarianPassword, setLibrarianPassword] = useState("");
+  const [librarianFeedback, setLibrarianFeedback] = useState<string | null>(null);
+  const [isCreatingLibrarian, setIsCreatingLibrarian] = useState(false);
+  const [createdLibrarians, setCreatedLibrarians] = useState<LibrarianRecord[]>([]);
 
-  const switchRole = (role: UserRole) => {
-    if (user) {
-      setUser({ ...user, role });
+  const [bookTitle, setBookTitle] = useState("");
+  const [bookAuthor, setBookAuthor] = useState("");
+  const [bookIsbn, setBookIsbn] = useState("");
+  const [bookType, setBookType] = useState<BookType>("physical");
+  const [storageInput, setStorageInput] = useState("");
+  const [bookFeedback, setBookFeedback] = useState<string | null>(null);
+  const [isCreatingBook, setIsCreatingBook] = useState(false);
+  const [addedBooks, setAddedBooks] = useState<AddedBookRecord[]>([]);
+
+  const getApiErrorMessage = (error: unknown, fallbackMessage: string): string => {
+    if (error instanceof AxiosError) {
+      const payloadMessage = (error.response?.data as { message?: string } | undefined)?.message;
+      return payloadMessage ?? fallbackMessage;
+    }
+
+    if (error instanceof Error) {
+      return error.message;
+    }
+
+    return fallbackMessage;
+  };
+
+  const handleCreateLibrarian = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setLibrarianFeedback(null);
+
+    if (!librarianName.trim() || !librarianEmail.trim() || !librarianPassword.trim()) {
+      setLibrarianFeedback("Please fill in all librarian fields.");
       return;
     }
 
-    setUser({
-      id: "user-001",
-      email: "admin@institution.edu",
-      fullName: "Library User",
-      role,
-    });
+    setIsCreatingLibrarian(true);
+
+    try {
+      const payload = await createLibrarian({
+        fullName: librarianName.trim(),
+        email: librarianEmail.trim().toLowerCase(),
+        password: librarianPassword,
+      });
+
+      setCreatedLibrarians((previous) => [
+        {
+          id: payload.id,
+          fullName: payload.fullName,
+          email: payload.email,
+        },
+        ...previous,
+      ]);
+
+      setLibrarianFeedback("Librarian created successfully.");
+      setLibrarianName("");
+      setLibrarianEmail("");
+      setLibrarianPassword("");
+    } catch (error) {
+      setLibrarianFeedback(
+        getApiErrorMessage(error, "Unable to create librarian. Ensure backend endpoint is running."),
+      );
+    } finally {
+      setIsCreatingLibrarian(false);
+    }
+  };
+
+  const handleAddBook = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setBookFeedback(null);
+
+    if (!bookTitle.trim() || !bookAuthor.trim() || !bookIsbn.trim() || !storageInput.trim()) {
+      setBookFeedback("Please complete all book fields.");
+      return;
+    }
+
+    setIsCreatingBook(true);
+
+    try {
+      const payload = await createBook({
+        title: bookTitle.trim(),
+        author: bookAuthor.trim(),
+        isbn: bookIsbn.trim(),
+        bookType,
+        storage: storageInput.trim(),
+      });
+
+      setAddedBooks((previous) => [
+        {
+          id: payload.id,
+          title: payload.title,
+          author: payload.author,
+          isbn: payload.isbn,
+          bookType: payload.bookType,
+          storage: payload.storage,
+        },
+        ...previous,
+      ]);
+
+      setBookFeedback("Book added successfully.");
+      setBookTitle("");
+      setBookAuthor("");
+      setBookIsbn("");
+      setBookType("physical");
+      setStorageInput("");
+    } catch (error) {
+      setBookFeedback(
+        getApiErrorMessage(error, "Unable to add book. Ensure backend endpoint is running."),
+      );
+    } finally {
+      setIsCreatingBook(false);
+    }
   };
 
   return (
@@ -28,27 +148,167 @@ export default function DashboardPage() {
       pageDescription="Real-time health monitoring, user distribution, and academic resource engagement across the institution."
       role={activeRole}
     >
-      <section className="bg-surface-container-lowest subtle-shadow rounded-xl p-6">
-        <p className="text-on-surface-variant mb-3 text-xs font-semibold tracking-wider uppercase">
-          Manual Role Switch (Task 9 Validation)
-        </p>
-        <div className="flex flex-wrap gap-3">
-          {(["admin", "librarian", "student"] as UserRole[]).map((role) => (
-            <button
-              key={role}
-              className={`rounded-lg px-4 py-2 text-xs font-bold tracking-wider uppercase transition-colors ${
-                activeRole === role
-                  ? "bg-primary text-white"
-                  : "bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high"
-              }`}
-              type="button"
-              onClick={() => switchRole(role)}
+      {activeRole === "admin" ? (
+        <section className="bg-surface-container-lowest subtle-shadow rounded-2xl p-6">
+          <div className="mb-5">
+            <h3 className="font-headline text-primary text-2xl font-extrabold">
+              Create New Librarian
+            </h3>
+            <p className="text-on-surface-variant text-sm">
+              Register librarian credentials for catalog and circulation management.
+            </p>
+          </div>
+
+          <form className="grid grid-cols-1 gap-4 md:grid-cols-3" onSubmit={handleCreateLibrarian}>
+            <input
+              className="bg-surface-container-low rounded-xl border-none px-4 py-3 text-sm"
+              placeholder="Full name"
+              type="text"
+              value={librarianName}
+              onChange={(event) => setLibrarianName(event.target.value)}
+            />
+            <input
+              className="bg-surface-container-low rounded-xl border-none px-4 py-3 text-sm"
+              placeholder="Email address"
+              type="email"
+              value={librarianEmail}
+              onChange={(event) => setLibrarianEmail(event.target.value)}
+            />
+            <input
+              className="bg-surface-container-low rounded-xl border-none px-4 py-3 text-sm"
+              placeholder="Temporary password"
+              type="password"
+              value={librarianPassword}
+              onChange={(event) => setLibrarianPassword(event.target.value)}
+            />
+            <div className="md:col-span-3 flex flex-wrap items-center gap-3">
+              <button
+                className="from-primary to-primary-container rounded-xl bg-gradient-to-r px-5 py-3 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-70"
+                type="submit"
+                disabled={isCreatingLibrarian}
+              >
+                {isCreatingLibrarian ? "Creating..." : "Create Librarian"}
+              </button>
+              {librarianFeedback ? (
+                <p
+                  className={`text-sm font-semibold ${
+                    librarianFeedback.toLowerCase().includes("success") ? "text-primary" : "text-error"
+                  }`}
+                >
+                  {librarianFeedback}
+                </p>
+              ) : null}
+            </div>
+          </form>
+
+          {createdLibrarians.length > 0 ? (
+            <div className="mt-6 space-y-2">
+              <p className="text-on-surface-variant text-xs font-bold tracking-wider uppercase">
+                Recently Added Librarians
+              </p>
+              {createdLibrarians.slice(0, 3).map((librarian) => (
+                <div
+                  key={librarian.id}
+                  className="bg-surface-container-low flex items-center justify-between rounded-xl px-4 py-3"
+                >
+                  <p className="text-sm font-semibold">{librarian.fullName}</p>
+                  <p className="text-on-surface-variant text-xs">{librarian.email}</p>
+                </div>
+              ))}
+            </div>
+          ) : null}
+        </section>
+      ) : null}
+
+      {activeRole === "librarian" ? (
+        <section className="bg-surface-container-lowest subtle-shadow rounded-2xl p-6">
+          <div className="mb-5">
+            <h3 className="font-headline text-primary text-2xl font-extrabold">Add New Book</h3>
+            <p className="text-on-surface-variant text-sm">
+              Add either a physical shelf copy or a digital resource file.
+            </p>
+          </div>
+
+          <form className="grid grid-cols-1 gap-4 md:grid-cols-2" onSubmit={handleAddBook}>
+            <input
+              className="bg-surface-container-low rounded-xl border-none px-4 py-3 text-sm"
+              placeholder="Book title"
+              type="text"
+              value={bookTitle}
+              onChange={(event) => setBookTitle(event.target.value)}
+            />
+            <input
+              className="bg-surface-container-low rounded-xl border-none px-4 py-3 text-sm"
+              placeholder="Author"
+              type="text"
+              value={bookAuthor}
+              onChange={(event) => setBookAuthor(event.target.value)}
+            />
+            <input
+              className="bg-surface-container-low rounded-xl border-none px-4 py-3 text-sm"
+              placeholder="ISBN"
+              type="text"
+              value={bookIsbn}
+              onChange={(event) => setBookIsbn(event.target.value)}
+            />
+            <select
+              className="bg-surface-container-low rounded-xl border-none px-4 py-3 text-sm"
+              value={bookType}
+              onChange={(event) => setBookType(event.target.value as BookType)}
             >
-              {role}
-            </button>
-          ))}
-        </div>
-      </section>
+              <option value="physical">Physical Book</option>
+              <option value="digital">Digital Book</option>
+            </select>
+            <input
+              className="bg-surface-container-low rounded-xl border-none px-4 py-3 text-sm md:col-span-2"
+              placeholder={
+                bookType === "physical"
+                  ? "Shelf location (e.g. Aisle 4 - Row B)"
+                  : "Digital file URL or path"
+              }
+              type="text"
+              value={storageInput}
+              onChange={(event) => setStorageInput(event.target.value)}
+            />
+
+            <div className="md:col-span-2 flex flex-wrap items-center gap-3">
+              <button
+                className="from-primary to-primary-container rounded-xl bg-gradient-to-r px-5 py-3 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-70"
+                type="submit"
+                disabled={isCreatingBook}
+              >
+                {isCreatingBook ? "Adding..." : "Add Book"}
+              </button>
+              {bookFeedback ? (
+                <p
+                  className={`text-sm font-semibold ${
+                    bookFeedback.toLowerCase().includes("success") ? "text-primary" : "text-error"
+                  }`}
+                >
+                  {bookFeedback}
+                </p>
+              ) : null}
+            </div>
+          </form>
+
+          {addedBooks.length > 0 ? (
+            <div className="mt-6 space-y-2">
+              <p className="text-on-surface-variant text-xs font-bold tracking-wider uppercase">
+                Recently Added Books
+              </p>
+              {addedBooks.slice(0, 3).map((book) => (
+                <div
+                  key={book.id}
+                  className="bg-surface-container-low flex flex-wrap items-center justify-between gap-2 rounded-xl px-4 py-3"
+                >
+                  <p className="text-sm font-semibold">{book.title}</p>
+                  <p className="text-on-surface-variant text-xs uppercase">{book.bookType}</p>
+                </div>
+              ))}
+            </div>
+          ) : null}
+        </section>
+      ) : null}
 
       <section className="grid grid-cols-1 gap-6 md:grid-cols-3 lg:grid-cols-4">
         <article className="bg-surface-container-lowest hover:bg-surface-bright col-span-1 flex flex-col justify-between rounded-xl p-8 transition-all lg:col-span-2">
@@ -113,9 +373,9 @@ export default function DashboardPage() {
             <p className="mt-1 text-xs opacity-70">92% of provisioned capacity</p>
           </div>
           <div className="border-on-primary/20 mt-4 border-t pt-4">
-            <button className="flex items-center gap-2 text-xs font-bold hover:underline" type="button">
+            <Link className="flex items-center gap-2 text-xs font-bold hover:underline" href="/resources">
               MANAGE STORAGE <span className="material-symbols-outlined text-sm">arrow_forward</span>
-            </button>
+            </Link>
           </div>
         </article>
       </section>
@@ -165,18 +425,18 @@ export default function DashboardPage() {
           </div>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <button
+            <Link
               className="bg-surface-container-low hover:bg-primary group rounded-xl p-6 text-left transition-all"
-              type="button"
+              href="/dashboard"
             >
               <span className="material-symbols-outlined text-primary group-hover:text-on-primary mb-3 block">
                 manage_accounts
               </span>
               <span className="text-primary group-hover:text-on-primary text-sm font-bold">User Roles</span>
-            </button>
-            <button
+            </Link>
+            <Link
               className="bg-surface-container-low hover:bg-primary group rounded-xl p-6 text-left transition-all"
-              type="button"
+              href="/dashboard"
             >
               <span className="material-symbols-outlined text-primary group-hover:text-on-primary mb-3 block">
                 tune
@@ -184,16 +444,16 @@ export default function DashboardPage() {
               <span className="text-primary group-hover:text-on-primary text-sm font-bold">
                 System Settings
               </span>
-            </button>
-            <button
+            </Link>
+            <Link
               className="bg-surface-container-low hover:bg-primary group rounded-xl p-6 text-left transition-all"
-              type="button"
+              href="/dashboard"
             >
               <span className="material-symbols-outlined text-primary group-hover:text-on-primary mb-3 block">
                 rule_folder
               </span>
               <span className="text-primary group-hover:text-on-primary text-sm font-bold">Audit Trails</span>
-            </button>
+            </Link>
           </div>
         </div>
 
