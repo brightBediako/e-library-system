@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BorrowService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
-const crypto_1 = require("crypto");
+const node_crypto_1 = require("node:crypto");
 const typeorm_2 = require("typeorm");
 const book_entity_1 = require("../books/book.entity");
 const user_entity_1 = require("../users/user.entity");
@@ -29,7 +29,13 @@ let BorrowService = class BorrowService {
         this.usersRepository = usersRepository;
         this.booksRepository = booksRepository;
     }
-    getBorrows() {
+    getBorrows(actor) {
+        if (actor.role === 'student') {
+            return this.borrowRepository.find({
+                where: { userId: actor.sub },
+                order: { borrowedAt: 'DESC' },
+            });
+        }
         return this.borrowRepository.find({
             order: { borrowedAt: 'DESC' },
         });
@@ -55,7 +61,7 @@ let BorrowService = class BorrowService {
             throw new common_1.BadRequestException('Book is already borrowed.');
         }
         const borrow = this.borrowRepository.create({
-            id: (0, crypto_1.randomUUID)(),
+            id: (0, node_crypto_1.randomUUID)(),
             userId: payload.userId,
             bookId: payload.bookId,
             borrowedAt: new Date(),

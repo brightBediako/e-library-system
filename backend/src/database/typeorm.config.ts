@@ -2,6 +2,7 @@ import { config as dotenvConfig } from 'dotenv';
 import { DataSource } from 'typeorm';
 import { BookEntity } from '../books/book.entity';
 import { BorrowEntity } from '../borrow/borrow.entity';
+import { DigitalResourceEntity } from '../resources/digital-resource.entity';
 import { UserEntity } from '../users/user.entity';
 
 dotenvConfig();
@@ -13,7 +14,7 @@ export default new DataSource({
   username: process.env.DB_USERNAME ?? 'postgres',
   password: process.env.DB_PASSWORD ?? 'postgres',
   database: process.env.DB_NAME ?? 'e_library_system',
-  entities: [UserEntity, BookEntity, BorrowEntity],
+  entities: [UserEntity, BookEntity, BorrowEntity, DigitalResourceEntity],
   migrations: ['src/database/migrations/*.ts'],
   synchronize: false,
 });

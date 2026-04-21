@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { join } from 'node:path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
@@ -16,16 +17,43 @@ import { UsersModule } from './users/users.module';
     }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get<string>('DB_HOST', 'localhost'),
-        port: configService.get<number>('DB_PORT', 5432),
-        username: configService.get<string>('DB_USERNAME', 'postgres'),
-        password: configService.get<string>('DB_PASSWORD', 'postgres'),
-        database: configService.get<string>('DB_NAME', 'e_library_system'),
-        autoLoadEntities: true,
-        synchronize: false,
-      }),
+      useFactory: (configService: ConfigService) => {
+        const e2eSqlite = configService.get<string>('E2E_SQLITE');
+        if (e2eSqlite === 'true') {
+          return {
+            type: 'sqlite' as const,
+            database: ':memory:',
+            autoLoadEntities: true,
+            synchronize: true,
+          };
+        }
+
+        const devSqlite = configService.get<string>('DEV_SQLITE');
+        if (devSqlite === 'true') {
+          if (process.env.NODE_ENV === 'production') {
+            throw new Error(
+              'DEV_SQLITE is for local development only. Use PostgreSQL in production.',
+            );
+          }
+          return {
+            type: 'sqlite' as const,
+            database: join(process.cwd(), 'dev.sqlite'),
+            autoLoadEntities: true,
+            synchronize: true,
+          };
+        }
+
+        return {
+          type: 'postgres' as const,
+          host: configService.get<string>('DB_HOST', 'localhost'),
+          port: Number(configService.get<string>('DB_PORT') ?? 5432),
+          username: configService.get<string>('DB_USERNAME', 'postgres'),
+          password: configService.get<string>('DB_PASSWORD', 'postgres'),
+          database: configService.get<string>('DB_NAME', 'e_library_system'),
+          autoLoadEntities: true,
+          synchronize: false,
+        };
+      },
     }),
     AuthModule,
     UsersModule,

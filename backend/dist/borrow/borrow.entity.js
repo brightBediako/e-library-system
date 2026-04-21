@@ -36,15 +36,15 @@ __decorate([
     __metadata("design:type", String)
 ], BorrowEntity.prototype, "bookId", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ name: 'borrowed_at', type: 'timestamp' }),
+    (0, typeorm_1.Column)({ name: 'borrowed_at', type: 'datetime' }),
     __metadata("design:type", Date)
 ], BorrowEntity.prototype, "borrowedAt", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ name: 'due_date', type: 'timestamp' }),
+    (0, typeorm_1.Column)({ name: 'due_date', type: 'datetime' }),
     __metadata("design:type", Date)
 ], BorrowEntity.prototype, "dueDate", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ name: 'returned_at', type: 'timestamp', nullable: true }),
+    (0, typeorm_1.Column)({ name: 'returned_at', type: 'datetime', nullable: true }),
     __metadata("design:type", Object)
 ], BorrowEntity.prototype, "returnedAt", void 0);
 __decorate([
@@ -52,11 +52,11 @@ __decorate([
     __metadata("design:type", String)
 ], BorrowEntity.prototype, "status", void 0);
 __decorate([
-    (0, typeorm_1.CreateDateColumn)({ name: 'created_at', type: 'timestamp' }),
+    (0, typeorm_1.CreateDateColumn)({ name: 'created_at' }),
     __metadata("design:type", Date)
 ], BorrowEntity.prototype, "createdAt", void 0);
 __decorate([
-    (0, typeorm_1.UpdateDateColumn)({ name: 'updated_at', type: 'timestamp' }),
+    (0, typeorm_1.UpdateDateColumn)({ name: 'updated_at' }),
     __metadata("design:type", Date)
 ], BorrowEntity.prototype, "updatedAt", void 0);
 exports.BorrowEntity = BorrowEntity = __decorate([

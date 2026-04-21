@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { ReactNode } from "react";
 import { RouteGuard } from "@/components/auth/route-guard";
-import { isMockDataEnabled } from "@/config/mock-mode";
 import type { UserRole } from "@/store/auth-store";
 import { useAuthStore } from "@/store/auth-store";
 
@@ -129,11 +128,6 @@ export function BaseLayout({
           </div>
 
           <div className="ml-3 flex shrink-0 items-center gap-2 md:ml-4 md:gap-6">
-            {isMockDataEnabled ? (
-              <span className="bg-warning-container text-on-warning-container hidden rounded-full px-3 py-1 text-[10px] font-bold tracking-widest uppercase sm:inline-flex">
-                Mock Mode
-              </span>
-            ) : null}
             <Link
               aria-label="Borrowed notifications"
               className="text-on-surface-variant hover:text-primary rounded-full p-1 transition-colors focus-visible:ring-primary/30 focus-visible:ring-2 focus-visible:outline-none"

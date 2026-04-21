@@ -25,9 +25,9 @@ export class UserEntity {
   @Column({ type: 'varchar', length: 20, default: 'student' })
   role: UserRole;
 
-  @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
+  @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
+  @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 }

@@ -1,14 +1,19 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
-import Link from "next/link";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { useCallback, useMemo, useState } from "react";
 import { BaseLayout } from "@/components/layout/base-layout";
 import {
   type DigitalResource,
   type ResourceCategory,
 } from "@/features/resources/mock-resources";
-import { fetchResources } from "@/services/resources.service";
+import {
+  type ResourceAccessTag,
+  fetchResourceBlob,
+  fetchResources,
+  uploadResource,
+} from "@/services/resources.service";
 import { useAuthStore, type UserRole } from "@/store/auth-store";
 
 const categoryTabs: ResourceCategory[] = [
@@ -60,6 +65,9 @@ const resolveVisualType = (mimetype: string, title: string) => {
 export default function ResourcesPage() {
   const user = useAuthStore((state) => state.user);
   const activeRole: UserRole = user?.role ?? "admin";
+  const queryClient = useQueryClient();
+  const canManageResources = activeRole === "admin" || activeRole === "librarian";
+  const [uploadAccessTag, setUploadAccessTag] = useState<ResourceAccessTag>("standard");
   const [activeCategory, setActiveCategory] = useState<ResourceCategory>("All Resources");
   const [sortBy, setSortBy] = useState<SortOption>("Sort by: Newest First");
   const { data: apiResources = [], isLoading, isError } = useQuery({
@@ -67,10 +75,19 @@ export default function ResourcesPage() {
     queryFn: fetchResources,
   });
 
-  const resources = useMemo<DigitalResource[]>(() => {
+  const uploadMutation = useMutation({
+    mutationFn: ({ file, accessTag }: { file: File; accessTag: ResourceAccessTag }) =>
+      uploadResource(file, accessTag),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["resources-list"] });
+    },
+  });
+
+  const resources = useMemo<(DigitalResource & { apiPath: string; accessTag: ResourceAccessTag })[]>(() => {
     const mappedResources = apiResources.map((resource) => {
       const displayName = resource.originalName || resource.filename;
       const visualType = resolveVisualType(resource.mimetype, displayName);
+      const accessTag: ResourceAccessTag = resource.accessTag ?? "standard";
 
       return {
         id: resource.id,
@@ -80,10 +97,12 @@ export default function ResourcesPage() {
         category: resolveCategory(displayName),
         icon: visualType.icon,
         iconWrapperClass: visualType.iconWrapperClass,
+        apiPath: resource.path,
+        accessTag,
       };
     });
 
-    let filtered: DigitalResource[] =
+    let filtered: (DigitalResource & { apiPath: string; accessTag: ResourceAccessTag })[] =
       activeCategory === "All Resources"
         ? [...mappedResources]
         : mappedResources.filter((resource) => resource.category === activeCategory);
@@ -99,12 +118,106 @@ export default function ResourcesPage() {
     return filtered;
   }, [activeCategory, apiResources, sortBy]);
 
+  const [blobActionId, setBlobActionId] = useState<string | null>(null);
+
+  const openResourceWithAuth = useCallback(
+    async (apiPath: string, resourceId: string, mode: "view" | "download") => {
+      setBlobActionId(resourceId);
+      try {
+        const blob = await fetchResourceBlob(apiPath, mode);
+        const objectUrl = URL.createObjectURL(blob);
+        if (mode === "view") {
+          globalThis.open(objectUrl, "_blank", "noopener,noreferrer");
+          globalThis.setTimeout(() => URL.revokeObjectURL(objectUrl), 60_000);
+        } else {
+          const link = document.createElement("a");
+          link.href = objectUrl;
+          const fileSegment = decodeURIComponent(apiPath.split("/").pop()?.split("?")[0] ?? "download");
+          link.download = fileSegment;
+          link.rel = "noopener noreferrer";
+          link.click();
+          URL.revokeObjectURL(objectUrl);
+        }
+      } catch (error) {
+        const axiosError = error instanceof AxiosError ? error : undefined;
+        if (axiosError?.response?.status === 403) {
+          globalThis.alert(
+            "This document is restricted: downloading is not permitted. Use View to open it in the browser.",
+          );
+        } else {
+          globalThis.alert("Could not open the file. Check that you are signed in and try again.");
+        }
+      } finally {
+        setBlobActionId(null);
+      }
+    },
+    [],
+  );
+
   return (
     <BaseLayout
       pageTitle="Digital Resources"
       pageDescription="Access curated scholarly materials, research papers, and lecture archives."
       role={activeRole}
     >
+      {canManageResources ? (
+        <section className="bg-surface-container-lowest border-outline-variant/30 mb-8 rounded-xl border p-5">
+          <h2 className="text-on-surface mb-3 text-lg font-bold">Add digital resource</h2>
+          <p className="text-secondary mb-4 text-sm">
+            Choose access: <strong>Standard</strong> allows download; <strong>Restricted</strong> allows in-app viewing
+            only (API blocks download requests). Browser copy/paste cannot be fully prevented.
+          </p>
+          <form
+            className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end"
+            onSubmit={(event) => {
+              event.preventDefault();
+              const form = event.currentTarget;
+              const fileInput = form.elements.namedItem("resource-file") as HTMLInputElement;
+              const file = fileInput?.files?.[0];
+              if (!file) {
+                globalThis.alert("Choose a file to upload.");
+                return;
+              }
+              uploadMutation.mutate({ file, accessTag: uploadAccessTag });
+              fileInput.value = "";
+            }}
+          >
+            <label className="flex min-w-[200px] flex-1 flex-col gap-1 text-sm font-medium">
+              <span className="mb-0.5">File</span>
+              <input
+                accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg,.gif,.webp,.zip"
+                className="border-outline-variant/40 text-on-surface bg-surface-container-low rounded-lg border px-3 py-2 text-sm file:mr-3"
+                name="resource-file"
+                type="file"
+              />
+            </label>
+            <label className="flex min-w-[220px] flex-col gap-1 text-sm font-medium">
+              <span className="mb-0.5">Access tag</span>
+              <select
+                className="border-outline-variant/40 text-on-surface bg-surface-container-low rounded-lg border px-3 py-2 text-sm"
+                value={uploadAccessTag}
+                onChange={(event) => setUploadAccessTag(event.target.value as ResourceAccessTag)}
+              >
+                <option value="standard">Standard — download allowed</option>
+                <option value="restricted">Restricted — view only</option>
+              </select>
+            </label>
+            <button
+              className="bg-primary text-on-primary hover:opacity-90 cursor-pointer rounded-lg px-6 py-2.5 text-sm font-bold shadow disabled:cursor-not-allowed disabled:opacity-60"
+              disabled={uploadMutation.isPending}
+              type="submit"
+            >
+              {uploadMutation.isPending ? "Uploading…" : "Upload"}
+            </button>
+          </form>
+          {uploadMutation.isError ? (
+            <p className="text-error mt-3 text-sm font-medium">
+              Upload failed. Ensure you have librarian or admin access and the API is reachable.
+            </p>
+          ) : null}
+        </section>
+      ) : null}
+
       <section className="mb-10 flex flex-wrap items-center gap-4">
         <div className="bg-surface-container-low flex items-center gap-2 rounded-xl p-1">
           {categoryTabs.map((category) => (
@@ -169,30 +282,52 @@ export default function ResourcesPage() {
             >
               <span className="material-symbols-outlined text-3xl">{resource.icon}</span>
             </div>
-            <div className="mb-2 flex items-center gap-2">
+            <div className="mb-2 flex flex-wrap items-center gap-2">
               <span className="bg-secondary-container text-on-secondary-container rounded-full px-2 py-0.5 text-[10px] font-bold tracking-wider uppercase">
                 {resource.label}
               </span>
-              <div className="border-outline-variant/40 flex-1 border-t border-dashed" />
+              {resource.accessTag === "restricted" ? (
+                <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold tracking-wider text-amber-900 uppercase dark:bg-amber-900/40 dark:text-amber-100">
+                  Restricted
+                </span>
+              ) : null}
+              <div className="border-outline-variant/40 min-w-[40px] flex-1 border-t border-dashed" />
             </div>
             <h3 className="text-on-surface group-hover:text-primary mb-2 text-xl leading-tight font-bold transition-colors">
               {resource.title}
             </h3>
             <p className="text-secondary mb-8 text-sm font-medium">{resource.course}</p>
             <div className="mt-auto flex items-center gap-3">
-              <Link
-                className="from-primary to-primary-container flex flex-1 items-center justify-center gap-2 rounded-lg bg-gradient-to-r py-2.5 text-sm font-bold text-white opacity-90 shadow-md transition-all hover:opacity-100"
-                href="/reader"
+              <button
+                className="from-primary to-primary-container flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg bg-gradient-to-r py-2.5 text-sm font-bold text-white opacity-90 shadow-md transition-all hover:opacity-100 disabled:cursor-not-allowed disabled:opacity-60"
+                disabled={blobActionId === resource.id}
+                type="button"
+                onClick={() => void openResourceWithAuth(resource.apiPath, resource.id, "view")}
               >
                 <span className="material-symbols-outlined text-lg">visibility</span>
-                View
-              </Link>
-              <button
-                className="bg-surface-container-high text-primary hover:bg-primary/5 rounded-lg p-2.5 transition-all"
-                type="button"
-              >
-                <span className="material-symbols-outlined">download</span>
+                {blobActionId === resource.id ? "Opening…" : "View"}
               </button>
+              {resource.accessTag === "restricted" ? (
+                <button
+                  className="bg-surface-container-high text-outline inline-flex cursor-not-allowed rounded-lg p-2.5 opacity-60"
+                  disabled
+                  title="Download is disabled for restricted documents"
+                  type="button"
+                  aria-label="Download not available for restricted resources"
+                >
+                  <span className="material-symbols-outlined">download</span>
+                </button>
+              ) : (
+                <button
+                  className="bg-surface-container-high text-primary hover:bg-primary/5 inline-flex cursor-pointer rounded-lg p-2.5 transition-all disabled:cursor-not-allowed disabled:opacity-60"
+                  disabled={blobActionId === resource.id}
+                  type="button"
+                  aria-label="Download"
+                  onClick={() => void openResourceWithAuth(resource.apiPath, resource.id, "download")}
+                >
+                  <span className="material-symbols-outlined">download</span>
+                </button>
+              )}
             </div>
           </article>
         ))}
@@ -224,7 +359,7 @@ export default function ResourcesPage() {
                 type="button"
               >
                 <span className="material-symbols-outlined">bookmark</span>
-                Save to Library
+                <span>Save to Library</span>
               </button>
             </div>
           </div>

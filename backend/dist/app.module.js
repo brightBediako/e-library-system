@@ -10,6 +10,7 @@ exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const typeorm_1 = require("@nestjs/typeorm");
+const node_path_1 = require("node:path");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const auth_module_1 = require("./auth/auth.module");
@@ -28,16 +29,39 @@ exports.AppModule = AppModule = __decorate([
             }),
             typeorm_1.TypeOrmModule.forRootAsync({
                 inject: [config_1.ConfigService],
-                useFactory: (configService) => ({
-                    type: 'postgres',
-                    host: configService.get('DB_HOST', 'localhost'),
-                    port: configService.get('DB_PORT', 5432),
-                    username: configService.get('DB_USERNAME', 'postgres'),
-                    password: configService.get('DB_PASSWORD', 'postgres'),
-                    database: configService.get('DB_NAME', 'e_library_system'),
-                    autoLoadEntities: true,
-                    synchronize: false,
-                }),
+                useFactory: (configService) => {
+                    const e2eSqlite = configService.get('E2E_SQLITE');
+                    if (e2eSqlite === 'true') {
+                        return {
+                            type: 'sqlite',
+                            database: ':memory:',
+                            autoLoadEntities: true,
+                            synchronize: true,
+                        };
+                    }
+                    const devSqlite = configService.get('DEV_SQLITE');
+                    if (devSqlite === 'true') {
+                        if (process.env.NODE_ENV === 'production') {
+                            throw new Error('DEV_SQLITE is for local development only. Use PostgreSQL in production.');
+                        }
+                        return {
+                            type: 'sqlite',
+                            database: (0, node_path_1.join)(process.cwd(), 'dev.sqlite'),
+                            autoLoadEntities: true,
+                            synchronize: true,
+                        };
+                    }
+                    return {
+                        type: 'postgres',
+                        host: configService.get('DB_HOST', 'localhost'),
+                        port: Number(configService.get('DB_PORT') ?? 5432),
+                        username: configService.get('DB_USERNAME', 'postgres'),
+                        password: configService.get('DB_PASSWORD', 'postgres'),
+                        database: configService.get('DB_NAME', 'e_library_system'),
+                        autoLoadEntities: true,
+                        synchronize: false,
+                    };
+                },
             }),
             auth_module_1.AuthModule,
             users_module_1.UsersModule,

@@ -1,7 +1,11 @@
 import axios, { AxiosError } from "axios";
 import { useAuthStore } from "@/store/auth-store";
 
-const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3000/api";
+/**
+ * Same-origin `/api` is rewritten by Next to the Nest server (see `next.config.ts`) — no CORS in dev.
+ * Set `NEXT_PUBLIC_API_BASE_URL` to an absolute URL to talk to the API directly (e.g. production).
+ */
+const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "/api";
 
 export const apiClient = axios.create({
   baseURL,
@@ -17,6 +21,10 @@ apiClient.interceptors.request.use(
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    if (typeof FormData !== "undefined" && config.data instanceof FormData) {
+      delete config.headers["Content-Type"];
     }
 
     return config;

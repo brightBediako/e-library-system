@@ -15,13 +15,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
-const crypto_1 = require("crypto");
+const node_crypto_1 = require("node:crypto");
 const typeorm_2 = require("typeorm");
+const password_hash_service_1 = require("../auth/password-hash.service");
 const user_entity_1 = require("./user.entity");
 let UsersService = class UsersService {
     usersRepository;
-    constructor(usersRepository) {
+    passwordHashService;
+    constructor(usersRepository, passwordHashService) {
         this.usersRepository = usersRepository;
+        this.passwordHashService = passwordHashService;
     }
     async getUsers() {
         const users = await this.usersRepository.find({
@@ -37,9 +40,9 @@ let UsersService = class UsersService {
         }));
     }
     async createLibrarian(payload) {
-        const passwordHash = (0, crypto_1.createHash)('sha256').update(payload.password).digest('hex');
+        const passwordHash = await this.passwordHashService.hashPassword(payload.password);
         const librarian = this.usersRepository.create({
-            id: (0, crypto_1.randomUUID)(),
+            id: (0, node_crypto_1.randomUUID)(),
             fullName: payload.fullName.trim(),
             email: payload.email.trim().toLowerCase(),
             passwordHash,
@@ -57,6 +60,7 @@ exports.UsersService = UsersService;
 exports.UsersService = UsersService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(user_entity_1.UserEntity)),
-    __metadata("design:paramtypes", [typeorm_2.Repository])
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        password_hash_service_1.PasswordHashService])
 ], UsersService);
 //# sourceMappingURL=users.service.js.map

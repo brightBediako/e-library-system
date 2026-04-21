@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { createHash, randomUUID } from 'crypto';
+import { randomUUID } from 'node:crypto';
 import { Repository } from 'typeorm';
+import { PasswordHashService } from '../auth/password-hash.service';
 import { UserEntity } from './user.entity';
 
 interface CreateLibrarianPayload {
@@ -24,6 +25,7 @@ export class UsersService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly usersRepository: Repository<UserEntity>,
+    private readonly passwordHashService: PasswordHashService,
   ) {}
 
   async getUsers(): Promise<UserListItem[]> {
@@ -42,7 +44,7 @@ export class UsersService {
   }
 
   async createLibrarian(payload: CreateLibrarianPayload) {
-    const passwordHash = createHash('sha256').update(payload.password).digest('hex');
+    const passwordHash = await this.passwordHashService.hashPassword(payload.password);
     const librarian = this.usersRepository.create({
       id: randomUUID(),
       fullName: payload.fullName.trim(),

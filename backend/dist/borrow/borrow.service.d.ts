@@ -1,4 +1,5 @@
 import { Repository } from 'typeorm';
+import type { JwtPayload } from '../auth/jwt-payload.interface';
 import { BookEntity } from '../books/book.entity';
 import { UserEntity } from '../users/user.entity';
 import { BorrowEntity } from './borrow.entity';
@@ -12,7 +13,7 @@ export declare class BorrowService {
     private readonly usersRepository;
     private readonly booksRepository;
     constructor(borrowRepository: Repository<BorrowEntity>, usersRepository: Repository<UserEntity>, booksRepository: Repository<BookEntity>);
-    getBorrows(): Promise<BorrowEntity[]>;
+    getBorrows(actor: JwtPayload): Promise<BorrowEntity[]>;
     issueBorrow(payload: IssueBorrowPayload): Promise<BorrowEntity>;
     returnBorrow(id: string): Promise<BorrowEntity>;
 }

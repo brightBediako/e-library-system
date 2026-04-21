@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
-import { isMockDataEnabled } from "@/config/mock-mode";
 import { login } from "@/services/auth.service";
 import { useAuthStore, type UserRole } from "@/store/auth-store";
 
@@ -45,13 +44,6 @@ export default function Home() {
             <div className="subtle-shadow bg-surface-container-lowest mb-4 inline-flex items-center justify-center rounded-xl p-4">
               <span className="material-symbols-outlined text-primary text-4xl">menu_book</span>
             </div>
-            {isMockDataEnabled ? (
-              <div className="mb-3">
-                <span className="bg-warning-container text-on-warning-container inline-flex rounded-full px-3 py-1 text-[10px] font-bold tracking-widest uppercase">
-                  Mock Mode
-                </span>
-              </div>
-            ) : null}
             <h1 className="font-headline text-primary mb-2 text-3xl font-extrabold tracking-tighter">
               NMTC
             </h1>

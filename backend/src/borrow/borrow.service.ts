@@ -4,8 +4,9 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { randomUUID } from 'crypto';
+import { randomUUID } from 'node:crypto';
 import { Repository } from 'typeorm';
+import type { JwtPayload } from '../auth/jwt-payload.interface';
 import { BookEntity } from '../books/book.entity';
 import { UserEntity } from '../users/user.entity';
 import { BorrowEntity } from './borrow.entity';
@@ -27,7 +28,14 @@ export class BorrowService {
     private readonly booksRepository: Repository<BookEntity>,
   ) {}
 
-  getBorrows() {
+  getBorrows(actor: JwtPayload) {
+    if (actor.role === 'student') {
+      return this.borrowRepository.find({
+        where: { userId: actor.sub },
+        order: { borrowedAt: 'DESC' },
+      });
+    }
+
     return this.borrowRepository.find({
       order: { borrowedAt: 'DESC' },
     });

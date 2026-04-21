@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from '../auth/auth.module';
 import { BookEntity } from '../books/book.entity';
 import { UserEntity } from '../users/user.entity';
 import { BorrowController } from './borrow.controller';
@@ -7,7 +8,7 @@ import { BorrowEntity } from './borrow.entity';
 import { BorrowService } from './borrow.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([BorrowEntity, UserEntity, BookEntity])],
+  imports: [TypeOrmModule.forFeature([BorrowEntity, UserEntity, BookEntity]), AuthModule],
   controllers: [BorrowController],
   providers: [BorrowService],
 })
