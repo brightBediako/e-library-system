@@ -10,7 +10,6 @@ exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const typeorm_1 = require("@nestjs/typeorm");
-const node_path_1 = require("node:path");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const auth_module_1 = require("./auth/auth.module");
@@ -18,6 +17,14 @@ const books_module_1 = require("./books/books.module");
 const borrow_module_1 = require("./borrow/borrow.module");
 const resources_module_1 = require("./resources/resources.module");
 const users_module_1 = require("./users/users.module");
+const walk_ins_module_1 = require("./walk-ins/walk-ins.module");
+const requireConfig = (configService, key) => {
+    const value = configService.get(key)?.trim();
+    if (!value) {
+        throw new Error(`Missing required environment variable: ${key}. Update backend/.env with PostgreSQL settings.`);
+    }
+    return value;
+};
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -39,25 +46,22 @@ exports.AppModule = AppModule = __decorate([
                             synchronize: true,
                         };
                     }
-                    const devSqlite = configService.get('DEV_SQLITE');
-                    if (devSqlite === 'true') {
-                        if (process.env.NODE_ENV === 'production') {
-                            throw new Error('DEV_SQLITE is for local development only. Use PostgreSQL in production.');
-                        }
-                        return {
-                            type: 'sqlite',
-                            database: (0, node_path_1.join)(process.cwd(), 'dev.sqlite'),
-                            autoLoadEntities: true,
-                            synchronize: true,
-                        };
+                    const host = requireConfig(configService, 'DB_HOST');
+                    const portRaw = requireConfig(configService, 'DB_PORT');
+                    const username = requireConfig(configService, 'DB_USERNAME');
+                    const password = requireConfig(configService, 'DB_PASSWORD');
+                    const database = requireConfig(configService, 'DB_NAME');
+                    const port = Number(portRaw);
+                    if (Number.isNaN(port) || port <= 0) {
+                        throw new Error(`Invalid DB_PORT value "${portRaw}". Set a valid PostgreSQL port number in backend/.env.`);
                     }
                     return {
                         type: 'postgres',
-                        host: configService.get('DB_HOST', 'localhost'),
-                        port: Number(configService.get('DB_PORT') ?? 5432),
-                        username: configService.get('DB_USERNAME', 'postgres'),
-                        password: configService.get('DB_PASSWORD', 'postgres'),
-                        database: configService.get('DB_NAME', 'e_library_system'),
+                        host,
+                        port,
+                        username,
+                        password,
+                        database,
                         autoLoadEntities: true,
                         synchronize: false,
                     };
@@ -68,6 +72,7 @@ exports.AppModule = AppModule = __decorate([
             books_module_1.BooksModule,
             borrow_module_1.BorrowModule,
             resources_module_1.ResourcesModule,
+            walk_ins_module_1.WalkInsModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

@@ -39,6 +39,3 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-# local SQLite fallback (DEV_SQLITE=true)
-/dev.sqlite

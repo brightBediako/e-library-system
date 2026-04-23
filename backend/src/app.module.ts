@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { join } from 'node:path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
@@ -9,6 +8,20 @@ import { BooksModule } from './books/books.module';
 import { BorrowModule } from './borrow/borrow.module';
 import { ResourcesModule } from './resources/resources.module';
 import { UsersModule } from './users/users.module';
+import { WalkInsModule } from './walk-ins/walk-ins.module';
+
+const requireConfig = (
+  configService: ConfigService,
+  key: 'DB_HOST' | 'DB_PORT' | 'DB_USERNAME' | 'DB_PASSWORD' | 'DB_NAME',
+) => {
+  const value = configService.get<string>(key)?.trim();
+  if (!value) {
+    throw new Error(
+      `Missing required environment variable: ${key}. Update backend/.env with PostgreSQL settings.`,
+    );
+  }
+  return value;
+};
 
 @Module({
   imports: [
@@ -28,28 +41,26 @@ import { UsersModule } from './users/users.module';
           };
         }
 
-        const devSqlite = configService.get<string>('DEV_SQLITE');
-        if (devSqlite === 'true') {
-          if (process.env.NODE_ENV === 'production') {
-            throw new Error(
-              'DEV_SQLITE is for local development only. Use PostgreSQL in production.',
-            );
-          }
-          return {
-            type: 'sqlite' as const,
-            database: join(process.cwd(), 'dev.sqlite'),
-            autoLoadEntities: true,
-            synchronize: true,
-          };
+        const host = requireConfig(configService, 'DB_HOST');
+        const portRaw = requireConfig(configService, 'DB_PORT');
+        const username = requireConfig(configService, 'DB_USERNAME');
+        const password = requireConfig(configService, 'DB_PASSWORD');
+        const database = requireConfig(configService, 'DB_NAME');
+        const port = Number(portRaw);
+
+        if (Number.isNaN(port) || port <= 0) {
+          throw new Error(
+            `Invalid DB_PORT value "${portRaw}". Set a valid PostgreSQL port number in backend/.env.`,
+          );
         }
 
         return {
           type: 'postgres' as const,
-          host: configService.get<string>('DB_HOST', 'localhost'),
-          port: Number(configService.get<string>('DB_PORT') ?? 5432),
-          username: configService.get<string>('DB_USERNAME', 'postgres'),
-          password: configService.get<string>('DB_PASSWORD', 'postgres'),
-          database: configService.get<string>('DB_NAME', 'e_library_system'),
+          host,
+          port,
+          username,
+          password,
+          database,
           autoLoadEntities: true,
           synchronize: false,
         };
@@ -60,6 +71,7 @@ import { UsersModule } from './users/users.module';
     BooksModule,
     BorrowModule,
     ResourcesModule,
+    WalkInsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
