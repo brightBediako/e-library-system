@@ -19,21 +19,21 @@ export class BorrowEntity {
   @Column({ name: 'book_id', type: 'varchar', length: 40 })
   bookId: string;
 
-  @Column({ name: 'borrowed_at', type: 'timestamp' })
+  @Column({ name: 'borrowed_at', type: 'datetime' })
   borrowedAt: Date;
 
-  @Column({ name: 'due_date', type: 'timestamp' })
+  @Column({ name: 'due_date', type: 'datetime' })
   dueDate: Date;
 
-  @Column({ name: 'returned_at', type: 'timestamp', nullable: true })
+  @Column({ name: 'returned_at', type: 'datetime', nullable: true })
   returnedAt: Date | null;
 
   @Column({ type: 'varchar', length: 20, default: 'active' })
   status: BorrowStatus;
 
-  @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
+  @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
+  @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 }

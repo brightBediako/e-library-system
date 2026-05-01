@@ -35,6 +35,11 @@ export const fetchBooks = async (): Promise<BookApiRecord[]> => {
   return response.data;
 };
 
+export const fetchBookById = async (id: string): Promise<BookApiRecord> => {
+  const response = await apiClient.get<BookApiRecord>(`/books/${encodeURIComponent(id)}`);
+  return response.data;
+};
+
 export const createBook = async (payload: CreateBookPayload): Promise<CreateBookResponse> => {
   const response = await apiClient.post<CreateBookResponse>("/books", payload);
   return response.data;

@@ -8,43 +8,41 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
+const typeorm_1 = require("@nestjs/typeorm");
+const typeorm_2 = require("typeorm");
+const password_hash_service_1 = require("./password-hash.service");
+const user_entity_1 = require("../users/user.entity");
 let AuthService = class AuthService {
+    usersRepository;
     jwtService;
-    mockUsers = [
-        {
-            id: 'user-001',
-            email: 'admin@institution.edu',
-            fullName: 'Admin User',
-            role: 'admin',
-            password: 'Pass123!',
-        },
-        {
-            id: 'user-002',
-            email: 'librarian@institution.edu',
-            fullName: 'Librarian User',
-            role: 'librarian',
-            password: 'Pass123!',
-        },
-        {
-            id: 'user-003',
-            email: 'student@institution.edu',
-            fullName: 'Student User',
-            role: 'student',
-            password: 'Pass123!',
-        },
-    ];
-    constructor(jwtService) {
+    passwordHashService;
+    constructor(usersRepository, jwtService, passwordHashService) {
+        this.usersRepository = usersRepository;
         this.jwtService = jwtService;
+        this.passwordHashService = passwordHashService;
     }
     async login(payload) {
         const normalizedEmail = payload.email.trim().toLowerCase();
-        const user = this.mockUsers.find((candidate) => candidate.email === normalizedEmail && candidate.password === payload.password);
+        const user = await this.usersRepository.findOne({
+            where: { email: normalizedEmail },
+        });
         if (!user) {
             throw new common_1.UnauthorizedException('Invalid email or password.');
+        }
+        const { valid, upgradedHash } = await this.passwordHashService.verifyAndMaybeUpgrade(payload.password, user.passwordHash);
+        if (!valid) {
+            throw new common_1.UnauthorizedException('Invalid email or password.');
+        }
+        if (upgradedHash) {
+            await this.usersRepository.update(user.id, { passwordHash: upgradedHash });
+            user.passwordHash = upgradedHash;
         }
         const tokenPayload = {
             sub: user.id,
@@ -66,6 +64,9 @@ let AuthService = class AuthService {
 exports.AuthService = AuthService;
 exports.AuthService = AuthService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [jwt_1.JwtService])
+    __param(0, (0, typeorm_1.InjectRepository)(user_entity_1.UserEntity)),
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        jwt_1.JwtService,
+        password_hash_service_1.PasswordHashService])
 ], AuthService);
 //# sourceMappingURL=auth.service.js.map

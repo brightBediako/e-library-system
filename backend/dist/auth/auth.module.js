@@ -10,14 +10,20 @@ exports.AuthModule = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const jwt_1 = require("@nestjs/jwt");
+const typeorm_1 = require("@nestjs/typeorm");
+const user_entity_1 = require("../users/user.entity");
 const auth_controller_1 = require("./auth.controller");
 const auth_service_1 = require("./auth.service");
+const jwt_auth_guard_1 = require("./jwt-auth.guard");
+const password_hash_service_1 = require("./password-hash.service");
+const roles_guard_1 = require("./roles.guard");
 let AuthModule = class AuthModule {
 };
 exports.AuthModule = AuthModule;
 exports.AuthModule = AuthModule = __decorate([
     (0, common_1.Module)({
         imports: [
+            typeorm_1.TypeOrmModule.forFeature([user_entity_1.UserEntity]),
             jwt_1.JwtModule.registerAsync({
                 inject: [config_1.ConfigService],
                 useFactory: (configService) => ({
@@ -29,7 +35,8 @@ exports.AuthModule = AuthModule = __decorate([
             }),
         ],
         controllers: [auth_controller_1.AuthController],
-        providers: [auth_service_1.AuthService],
+        providers: [auth_service_1.AuthService, password_hash_service_1.PasswordHashService, jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard],
+        exports: [jwt_1.JwtModule, auth_service_1.AuthService, password_hash_service_1.PasswordHashService, jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard],
     })
 ], AuthModule);
 //# sourceMappingURL=auth.module.js.map

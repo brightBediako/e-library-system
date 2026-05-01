@@ -14,14 +14,17 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BorrowController = void 0;
 const common_1 = require("@nestjs/common");
+const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
+const roles_decorator_1 = require("../auth/roles.decorator");
+const roles_guard_1 = require("../auth/roles.guard");
 const borrow_service_1 = require("./borrow.service");
 let BorrowController = class BorrowController {
     borrowService;
     constructor(borrowService) {
         this.borrowService = borrowService;
     }
-    getBorrows() {
-        return this.borrowService.getBorrows();
+    getBorrows(req) {
+        return this.borrowService.getBorrows(req.user);
     }
     issueBorrow(body) {
         return this.borrowService.issueBorrow(body);
@@ -33,12 +36,15 @@ let BorrowController = class BorrowController {
 exports.BorrowController = BorrowController;
 __decorate([
     (0, common_1.Get)(),
+    __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], BorrowController.prototype, "getBorrows", null);
 __decorate([
     (0, common_1.Post)('issue'),
+    (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)('admin', 'librarian'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -46,6 +52,8 @@ __decorate([
 ], BorrowController.prototype, "issueBorrow", null);
 __decorate([
     (0, common_1.Patch)(':id/return'),
+    (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)('admin', 'librarian'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -53,6 +61,7 @@ __decorate([
 ], BorrowController.prototype, "returnBorrow", null);
 exports.BorrowController = BorrowController = __decorate([
     (0, common_1.Controller)('borrow'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __metadata("design:paramtypes", [borrow_service_1.BorrowService])
 ], BorrowController);
 //# sourceMappingURL=borrow.controller.js.map

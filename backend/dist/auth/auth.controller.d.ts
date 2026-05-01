@@ -12,7 +12,7 @@ export declare class AuthController {
             id: string;
             email: string;
             fullName: string;
-            role: "admin" | "librarian" | "student";
+            role: import("../users/user.entity").UserRole;
         };
     }>;
 }

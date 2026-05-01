@@ -1,11 +1,12 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { useEffect, useState } from "react";
 import { AxiosError } from "axios";
 import Link from "next/link";
 import { BaseLayout } from "@/components/layout/base-layout";
 import { createBook, type BookType } from "@/services/books.service";
 import { createLibrarian } from "@/services/librarian.service";
+import { checkInWalkIn, checkOutWalkIn, fetchWalkIns } from "@/services/walk-ins.service";
 import { useAuthStore, type UserRole } from "@/store/auth-store";
 
 interface LibrarianRecord {
@@ -21,6 +22,15 @@ interface AddedBookRecord {
   isbn: string;
   bookType: BookType;
   storage: string;
+}
+
+interface WalkInRecord {
+  id: string;
+  studentName: string;
+  indexNo: string;
+  className: string;
+  timeIn: string;
+  timeOut: string | null;
 }
 
 export default function DashboardPage() {
@@ -41,6 +51,14 @@ export default function DashboardPage() {
   const [bookFeedback, setBookFeedback] = useState<string | null>(null);
   const [isCreatingBook, setIsCreatingBook] = useState(false);
   const [addedBooks, setAddedBooks] = useState<AddedBookRecord[]>([]);
+  const [walkInName, setWalkInName] = useState("");
+  const [walkInIndexNo, setWalkInIndexNo] = useState("");
+  const [walkInClassName, setWalkInClassName] = useState("");
+  const [walkInFeedback, setWalkInFeedback] = useState<string | null>(null);
+  const [isCheckingIn, setIsCheckingIn] = useState(false);
+  const [isLoadingWalkIns, setIsLoadingWalkIns] = useState(false);
+  const [checkingOutId, setCheckingOutId] = useState<string | null>(null);
+  const [walkInRecords, setWalkInRecords] = useState<WalkInRecord[]>([]);
 
   const getApiErrorMessage = (error: unknown, fallbackMessage: string): string => {
     if (error instanceof AxiosError) {
@@ -55,7 +73,7 @@ export default function DashboardPage() {
     return fallbackMessage;
   };
 
-  const handleCreateLibrarian = async (event: FormEvent<HTMLFormElement>) => {
+  const handleCreateLibrarian = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLibrarianFeedback(null);
 
@@ -95,7 +113,7 @@ export default function DashboardPage() {
     }
   };
 
-  const handleAddBook = async (event: FormEvent<HTMLFormElement>) => {
+  const handleAddBook = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setBookFeedback(null);
 
@@ -139,6 +157,76 @@ export default function DashboardPage() {
       );
     } finally {
       setIsCreatingBook(false);
+    }
+  };
+
+  const loadWalkIns = async () => {
+    if (activeRole !== "librarian" && activeRole !== "admin") {
+      return;
+    }
+
+    setIsLoadingWalkIns(true);
+    try {
+      const records = await fetchWalkIns();
+      setWalkInRecords(records);
+    } catch {
+      setWalkInFeedback("Unable to load walk-in records right now.");
+    } finally {
+      setIsLoadingWalkIns(false);
+    }
+  };
+
+  useEffect(() => {
+    void loadWalkIns();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeRole]);
+
+  const handleStudentCheckIn = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setWalkInFeedback(null);
+
+    if (!walkInName.trim() || !walkInIndexNo.trim() || !walkInClassName.trim()) {
+      setWalkInFeedback("Please fill all walk-in fields.");
+      return;
+    }
+
+    setIsCheckingIn(true);
+
+    try {
+      const record = await checkInWalkIn({
+        studentName: walkInName.trim(),
+        indexNo: walkInIndexNo.trim(),
+        className: walkInClassName.trim(),
+      });
+
+      setWalkInRecords((prev) => [record, ...prev]);
+      setWalkInFeedback("Student check-in recorded.");
+      setWalkInName("");
+      setWalkInIndexNo("");
+      setWalkInClassName("");
+    } catch (error) {
+      setWalkInFeedback(
+        getApiErrorMessage(error, "Unable to record check-in. Please try again."),
+      );
+    } finally {
+      setIsCheckingIn(false);
+    }
+  };
+
+  const handleStudentCheckOut = async (id: string) => {
+    setWalkInFeedback(null);
+    setCheckingOutId(id);
+
+    try {
+      const updated = await checkOutWalkIn(id);
+      setWalkInRecords((prev) => prev.map((entry) => (entry.id === id ? updated : entry)));
+      setWalkInFeedback("Student check-out recorded.");
+    } catch (error) {
+      setWalkInFeedback(
+        getApiErrorMessage(error, "Unable to record check-out. Please try again."),
+      );
+    } finally {
+      setCheckingOutId(null);
     }
   };
 
@@ -221,15 +309,122 @@ export default function DashboardPage() {
       ) : null}
 
       {activeRole === "librarian" ? (
-        <section className="bg-surface-container-lowest subtle-shadow rounded-2xl p-6">
-          <div className="mb-5">
-            <h3 className="font-headline text-primary text-2xl font-extrabold">Add New Book</h3>
-            <p className="text-on-surface-variant text-sm">
-              Add either a physical shelf copy or a digital resource file.
-            </p>
-          </div>
+        <div className="space-y-6">
+          <section className="bg-surface-container-lowest subtle-shadow rounded-2xl p-6">
+            <div className="mb-5">
+              <h3 className="font-headline text-primary text-2xl font-extrabold">
+                Student Walk-In Register
+              </h3>
+              <p className="text-on-surface-variant text-sm">
+                Record library visitors with name, index number, class, time-in and time-out.
+              </p>
+            </div>
 
-          <form className="grid grid-cols-1 gap-4 md:grid-cols-2" onSubmit={handleAddBook}>
+            <form className="grid grid-cols-1 gap-4 md:grid-cols-3" onSubmit={handleStudentCheckIn}>
+              <input
+                className="bg-surface-container-low rounded-xl border-none px-4 py-3 text-sm"
+                placeholder="Student name"
+                type="text"
+                value={walkInName}
+                onChange={(event) => setWalkInName(event.target.value)}
+              />
+              <input
+                className="bg-surface-container-low rounded-xl border-none px-4 py-3 text-sm"
+                placeholder="Index number"
+                type="text"
+                value={walkInIndexNo}
+                onChange={(event) => setWalkInIndexNo(event.target.value)}
+              />
+              <input
+                className="bg-surface-container-low rounded-xl border-none px-4 py-3 text-sm"
+                placeholder="Class (e.g. Form 2A)"
+                type="text"
+                value={walkInClassName}
+                onChange={(event) => setWalkInClassName(event.target.value)}
+              />
+
+              <div className="md:col-span-3 flex flex-wrap items-center gap-3">
+                <button
+                  className="from-primary to-primary-container rounded-xl bg-gradient-to-r px-5 py-3 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-70"
+                  type="submit"
+                  disabled={isCheckingIn}
+                >
+                  {isCheckingIn ? "Saving..." : "Record Time-In"}
+                </button>
+                <button
+                  className="bg-surface-container-high text-primary rounded-xl px-4 py-3 text-sm font-semibold"
+                  type="button"
+                  onClick={() => void loadWalkIns()}
+                  disabled={isLoadingWalkIns}
+                >
+                  {isLoadingWalkIns ? "Refreshing..." : "Refresh"}
+                </button>
+                {walkInFeedback ? (
+                  <p
+                    className={`text-sm font-semibold ${
+                      walkInFeedback.toLowerCase().includes("recorded")
+                        ? "text-primary"
+                        : "text-error"
+                    }`}
+                  >
+                    {walkInFeedback}
+                  </p>
+                ) : null}
+              </div>
+            </form>
+
+            <div className="mt-6 space-y-2">
+              <p className="text-on-surface-variant text-xs font-bold tracking-wider uppercase">
+                Latest Walk-Ins
+              </p>
+              {walkInRecords.length === 0 ? (
+                <p className="text-on-surface-variant text-sm">
+                  No walk-in records yet. Use the form above to record the first student.
+                </p>
+              ) : (
+                walkInRecords.slice(0, 8).map((record) => (
+                  <div
+                    key={record.id}
+                    className="bg-surface-container-low flex flex-wrap items-center justify-between gap-3 rounded-xl px-4 py-3"
+                  >
+                    <div>
+                      <p className="text-sm font-bold">{record.studentName}</p>
+                      <p className="text-on-surface-variant text-xs">
+                        {record.indexNo} · {record.className}
+                      </p>
+                    </div>
+                    <div className="text-on-surface-variant text-xs">
+                      In: {new Date(record.timeIn).toLocaleTimeString()}
+                    </div>
+                    <div className="text-on-surface-variant text-xs">
+                      Out:{" "}
+                      {record.timeOut ? new Date(record.timeOut).toLocaleTimeString() : "Still in library"}
+                    </div>
+                    {!record.timeOut ? (
+                      <button
+                        className="bg-primary text-on-primary rounded-lg px-3 py-1.5 text-xs font-bold disabled:cursor-not-allowed disabled:opacity-70"
+                        type="button"
+                        onClick={() => void handleStudentCheckOut(record.id)}
+                        disabled={checkingOutId === record.id}
+                      >
+                        {checkingOutId === record.id ? "Saving..." : "Record Time-Out"}
+                      </button>
+                    ) : null}
+                  </div>
+                ))
+              )}
+            </div>
+          </section>
+
+          <section className="bg-surface-container-lowest subtle-shadow rounded-2xl p-6">
+            <div className="mb-5">
+              <h3 className="font-headline text-primary text-2xl font-extrabold">Add New Book</h3>
+              <p className="text-on-surface-variant text-sm">
+                Add either a physical shelf copy or a digital resource file.
+              </p>
+            </div>
+
+            <form className="grid grid-cols-1 gap-4 md:grid-cols-2" onSubmit={handleAddBook}>
             <input
               className="bg-surface-container-low rounded-xl border-none px-4 py-3 text-sm"
               placeholder="Book title"
@@ -291,23 +486,24 @@ export default function DashboardPage() {
             </div>
           </form>
 
-          {addedBooks.length > 0 ? (
-            <div className="mt-6 space-y-2">
-              <p className="text-on-surface-variant text-xs font-bold tracking-wider uppercase">
-                Recently Added Books
-              </p>
-              {addedBooks.slice(0, 3).map((book) => (
-                <div
-                  key={book.id}
-                  className="bg-surface-container-low flex flex-wrap items-center justify-between gap-2 rounded-xl px-4 py-3"
-                >
-                  <p className="text-sm font-semibold">{book.title}</p>
-                  <p className="text-on-surface-variant text-xs uppercase">{book.bookType}</p>
-                </div>
-              ))}
-            </div>
-          ) : null}
-        </section>
+            {addedBooks.length > 0 ? (
+              <div className="mt-6 space-y-2">
+                <p className="text-on-surface-variant text-xs font-bold tracking-wider uppercase">
+                  Recently Added Books
+                </p>
+                {addedBooks.slice(0, 3).map((book) => (
+                  <div
+                    key={book.id}
+                    className="bg-surface-container-low flex flex-wrap items-center justify-between gap-2 rounded-xl px-4 py-3"
+                  >
+                    <p className="text-sm font-semibold">{book.title}</p>
+                    <p className="text-on-surface-variant text-xs uppercase">{book.bookType}</p>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+          </section>
+        </div>
       ) : null}
 
       <section className="grid grid-cols-1 gap-6 md:grid-cols-3 lg:grid-cols-4">

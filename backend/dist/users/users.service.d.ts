@@ -1,4 +1,5 @@
 import { Repository } from 'typeorm';
+import { PasswordHashService } from '../auth/password-hash.service';
 import { UserEntity } from './user.entity';
 interface CreateLibrarianPayload {
     fullName: string;
@@ -15,7 +16,8 @@ export interface UserListItem {
 }
 export declare class UsersService {
     private readonly usersRepository;
-    constructor(usersRepository: Repository<UserEntity>);
+    private readonly passwordHashService;
+    constructor(usersRepository: Repository<UserEntity>, passwordHashService: PasswordHashService);
     getUsers(): Promise<UserListItem[]>;
     createLibrarian(payload: CreateLibrarianPayload): Promise<{
         id: string;
